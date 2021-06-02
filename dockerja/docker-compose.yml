@@ -1,0 +1,34 @@
+version: '3.8'
+services: # each service run simultaneously (parallel)
+  nosqlclient:
+    image: mongoclient/mongoclient:2.2.0
+    container_name: gunn_mongo_client
+    ports:
+      - 3000:3000
+    depends_on:  # depends-on specified that it is in need to run that one (mongo) first before running this service
+      - mongo
+    hostname: gunnmongoclientja
+
+
+  mongo:
+    image: mongo:4.4 # need to specify the version to prevent code corruption
+    container_name: gunn_mongo
+    environment: # variable of the server or OS
+      MONGO_INITDB_DATABASE: gunn_mongo
+      MONGO_INITDB_ROOT_USERNAME: gunn_mongo
+      MONGO_INITDB_ROOT_PASSWORD: touchjaeiei
+    volumes: # need to know where the specific file of that service locate at. Search "data path {service name}"
+      - "$PWD/data:/data/db"
+    ports:
+      - 28017:27017
+
+  redis:
+    image: redis:alpine3.13
+    container_name: gunn_redis
+    volumes:
+      - "$PWD/config/redis.conf:/redis.conf"
+    ports:
+      - 6379:6379
+
+
+
