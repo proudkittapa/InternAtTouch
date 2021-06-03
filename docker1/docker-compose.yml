@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  mongodb:
+    image: "mongo:latest"
+    container_name: "mongodb"
+    environment: 
+      - MONGO_INITDB_DATABASE=kittapa
+      - MONGO_INITDB_ROOT_USERNAME=kittapa
+      - MONGO_INITDB_ROOT_PASSWORD=hello
+    # hostname: mongodb
+    volumes:
+      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+      - ./mongo-volume:/data/db
+    ports: 
+      - '28017:27017'
+
+  mongoclient:
+    image: mongoclient/mongoclient:2.2.0
+    container_name: mongoclient
+    hostname: mongoclient
+    depends_on:
+      - mongodb
+    ports:
+      - 3300:3000
+
+  redis:
+    image: redis:alpine3.13
+    container_name: redisdb
+    volumes:
+      - "$PWD/config/redis.conf:/redis.conf"
+    ports:
+      - 6379:6379

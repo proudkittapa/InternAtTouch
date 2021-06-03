@@ -6,3 +6,6 @@ docker02-06-21/.DS_Store
 docker02-06-21/dockerja/data/journal/WiredTigerLog.0000000004
 docker02-06-21/dockerja/data/journal/WiredTigerPreplog.0000000001
 docker02-06-21/dockerja/data/journal/WiredTigerPreplog.0000000002
+docker1/mongo-volume/journal/WiredTigerLog.0000000013
+docker1/mongo-volume/journal/WiredTigerPreplog.0000000001
+docker1/mongo-volume/journal/WiredTigerPreplog.0000000002
