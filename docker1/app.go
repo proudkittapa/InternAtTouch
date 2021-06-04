@@ -46,7 +46,7 @@ func test(rw http.ResponseWriter, req *http.Request ){
 }
 
 func db(){
-	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://kittapa:hello@localhost:28017"))
+	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://kittapa:hello@localhost:27017"))
 	collection := client.Database("test").Collection("your_collection_name")
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 	err = client.Connect(ctx)
