@@ -16,8 +16,6 @@ type Person struct {
 	Name string
 }
 
-var name string
-
 func main(){
 
 	http.HandleFunc("/", test)
@@ -41,7 +39,7 @@ func test(rw http.ResponseWriter, req *http.Request ){
 }
 
 func db(name Person){
-	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://g@localhost:28017"))
+	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://@localhost:28017"))
 	collection := client.Database("test").Collection("pond")
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 	err = client.Connect(ctx)
