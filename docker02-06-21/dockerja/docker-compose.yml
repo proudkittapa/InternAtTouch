@@ -2,13 +2,14 @@ version: '3.8'
 services: # each service run simultaneously (parallel)
 
   my-app:
-    build:
-      context: .. # Use an image built from the specified dockerfile in the current directory.
-      dockerfile: Dockerfile
+    image: app:1.2
     depends_on:
       - mongo
+    restart: unless-stopped
     ports:
-      - "8080:8080"
+      - 8080:8080
+    environment: # variable of the server or OS
+      MONGODB_URI : "mongodb://gunn_mongo:touchjaeiei@mongo:27017"
     networks:
       - backend
 
@@ -20,6 +21,8 @@ services: # each service run simultaneously (parallel)
     depends_on:  # depends-on specified that it is in need to run that one (mongo) first before running this service
       - mongo
     hostname: gunnmongoclientja
+    networks:
+      - backend
 
 
   mongo:
@@ -32,7 +35,7 @@ services: # each service run simultaneously (parallel)
     volumes: # need to know where the specific file of that service locate at. Search "data path {service name}"
       - "$PWD/data:/data/db"
     ports:
-      - 28017:27017
+      - 27017:27017
     networks:
       - backend
 

@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"time"
 )
 
@@ -21,7 +22,7 @@ var name string
 func main(){
 
 	http.HandleFunc("/", test)
-	log.Fatal(http.ListenAndServe("localhost:8080", nil))
+	log.Fatal(http.ListenAndServe(":8080", nil))
 
 }
 
@@ -40,8 +41,9 @@ func test(rw http.ResponseWriter, req *http.Request ){
 	db(t)
 }
 
-func db(name Person){
-	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://gunn_mongo:touchjaeiei@localhost:28017"))
+func db(name Person) {
+	uri := os.Getenv("MONGODB_URI")
+	client, err := mongo.NewClient(options.Client().ApplyURI(uri))
 	collection := client.Database("test").Collection("simp")
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 	err = client.Connect(ctx)
