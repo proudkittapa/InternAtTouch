@@ -52,7 +52,5 @@ func db(name Person){
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	fmt.Println("Inserted a single document: ", insertResult.InsertedID)
-
 }
