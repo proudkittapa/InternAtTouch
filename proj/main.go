@@ -1,4 +1,3 @@
-
 package main
 
 import (
@@ -38,14 +37,11 @@ func test(rw http.ResponseWriter, req *http.Request ){
 		panic(err)
 	}
 	log.Println(t.Name)
-	name = t.Name
-	db()
-	//collection = client.Database("test").Collection("your_collection_name")
-	//fmt.Println(collection)
+	db(t)
 }
 
-func db(){
-	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://@localhost:28017"))
+func db(name Person){
+	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://g@localhost:28017"))
 	collection := client.Database("test").Collection("pond")
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 	err = client.Connect(ctx)
@@ -53,9 +49,8 @@ func db(){
 		log.Fatal(err)
 	}
 	defer client.Disconnect(ctx)
-	fmt.Println("name", name)
-	p:=Person{name}
-	insertResult, err := collection.InsertOne(context.TODO(), p)
+	fmt.Println("name", name.Name)
+	insertResult, err := collection.InsertOne(context.TODO(), name)
 	if err != nil {
 		log.Fatal(err)
 	}
