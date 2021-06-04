@@ -1,28 +1,28 @@
 version: '3.8'
 services: # each service run simultaneously (parallel)
 
-  my-app:
-    image: app:1.2
-    depends_on:
-      - mongo
-    restart: unless-stopped
-    ports:
-      - 8080:8080
-    environment: # variable of the server or OS
-      MONGODB_URI : "mongodb://gunn_mongo:touchjaeiei@mongo:27017"
-    networks:
-      - backend
+#  my-app:
+#    image: app:1.2
+#    depends_on:
+#      - mongo
+#    restart: unless-stopped
+#    ports:
+#      - 8080:8080
+#    environment: # variable of the server or OS
+#      MONGODB_URI : "mongodb://gunn_mongo:touchjaeiei@mongo:27017"
+#    networks:
+#      - backend
 
-  nosqlclient:
-    image: mongoclient/mongoclient:2.2.0
-    container_name: gunn_mongo_client
-    ports:
-      - 3000:3000
-    depends_on:  # depends-on specified that it is in need to run that one (mongo) first before running this service
-      - mongo
-    hostname: gunnmongoclientja
-    networks:
-      - backend
+#  nosqlclient:
+#    image: mongoclient/mongoclient:2.2.0
+#    container_name: gunn_mongo_client
+#    ports:
+#      - 3000:3000
+#    depends_on:  # depends-on specified that it is in need to run that one (mongo) first before running this service
+#      - mongo
+#    hostname: gunnmongoclientja
+#    networks:
+#      - backend
 
 
   mongo:
