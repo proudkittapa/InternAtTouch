@@ -1,5 +1,17 @@
 version: '3.8'
 services: # each service run simultaneously (parallel)
+
+  my-app:
+    build:
+      context: .. # Use an image built from the specified dockerfile in the current directory.
+      dockerfile: Dockerfile
+    depends_on:
+      - mongo
+    ports:
+      - "8080:8080"
+    networks:
+      - backend
+
   nosqlclient:
     image: mongoclient/mongoclient:2.2.0
     container_name: gunn_mongo_client
@@ -21,6 +33,9 @@ services: # each service run simultaneously (parallel)
       - "$PWD/data:/data/db"
     ports:
       - 28017:27017
+    networks:
+      - backend
+
 
   redis:
     image: redis:alpine3.13
@@ -30,5 +45,5 @@ services: # each service run simultaneously (parallel)
     ports:
       - 6379:6379
 
-
-
+networks:
+  backend:
