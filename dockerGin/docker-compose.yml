@@ -1,0 +1,60 @@
+version: '3'
+
+services:
+
+#    build: .
+#    ports:
+#      - "5000:5000"
+#  volumes:
+#    - .:/go/src/go-with-compose
+#  working_dir: /go/src/go-with-compose
+
+
+  mongodb:
+    image: "mongo:4.4"
+    container_name: "mongodb2"
+    environment: 
+      - MONGO_INITDB_DATABASE=kittapa
+      - MONGO_INITDB_ROOT_USERNAME=kittapa
+      - MONGO_INITDB_ROOT_PASSWORD=hello
+
+    # hostname: mongodb
+    volumes:
+      - ./mongo-volume:/data/db
+    ports: 
+      - '27017:27017'
+    networks:
+      - backend
+
+  # mongoclient:
+  #   image: mongoclient/mongoclient:2.2.0
+  #   container_name: mongoclient
+  #   hostname: mongoclient
+  #   depends_on:
+  #     - mongodb
+  #   ports:
+  #     - 3000:3000
+
+  redis:
+    image: redis:alpine3.13
+    container_name: redisdb2
+    volumes:
+      - "$PWD/config/redis.conf:/redis.conf"
+    ports:
+      - 6379:6379
+
+  # app:
+  #   image: test:1.8
+  #   ports:
+  #     - "8080:8080"
+  #   restart: unless-stopped
+  #   depends_on:
+  #     - mongodb # This service depends on redis. Start that first.
+  #   environment: # Pass environment variables to the service
+  #     MONGODB_URI: "mongodb://kittapa:hello@mongodb:27017"
+  #   networks: # Networks to join (Services on the same network can communicate with each other using their name)
+  #     - backend
+
+
+networks:
+  backend:

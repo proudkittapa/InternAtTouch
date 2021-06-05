@@ -4,30 +4,30 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
-	//"time"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type Person struct {
 	Name string
-
 }
 
 var name string
 
-func main(){
+func main() {
 
 	http.HandleFunc("/", test)
-	log.Fatal(http.ListenAndServe("localhost:8080", nil))
+	log.Fatal(http.ListenAndServe(":8080", nil))
 
 }
-func test(rw http.ResponseWriter, req *http.Request ){
+
+func test(rw http.ResponseWriter, req *http.Request) {
 	body, err := ioutil.ReadAll(req.Body)
 	if err != nil {
 		panic(err)
@@ -39,14 +39,12 @@ func test(rw http.ResponseWriter, req *http.Request ){
 		panic(err)
 	}
 	log.Println(t.Name)
-	name = t.Name
-	db()
-	//collection = client.Database("test").Collection("your_collection_name")
-	//fmt.Println(collection)
+	db(t)
 }
 
-func db(){
-	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://kittapa:hello@localhost:27017"))
+func db(name Person) {
+	uri := os.Getenv("MONGODB_URI")
+	client, err := mongo.NewClient(options.Client().ApplyURI(uri))
 	collection := client.Database("test").Collection("your_collection_name")
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 	err = client.Connect(ctx)
@@ -54,9 +52,8 @@ func db(){
 		log.Fatal(err)
 	}
 	defer client.Disconnect(ctx)
-	fmt.Println("nameee", name)
-	p:=Person{name}
-	insertResult, err := collection.InsertOne(context.TODO(), p)
+	fmt.Println("name", name.Name)
+	insertResult, err := collection.InsertOne(context.TODO(), name)
 	if err != nil {
 		log.Fatal(err)
 	}
