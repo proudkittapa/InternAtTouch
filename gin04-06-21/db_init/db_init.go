@@ -42,10 +42,11 @@ func main(){
 
 
 	defer client.Disconnect(ctx)
-	for _ ,v := range Sp_list{
+	for k ,v := range Sp_list{
 		//g := &Sp{v.Name, v.Actual_name, v.Gender, v.Age, v.Super_power}
 		//fmt.Println(v.Name, v.Actual_name, v.Gender, v.Age, v.Super_power)
 		_, err = collection.InsertOne(ctx, bson.D{
+			{"ID", k+1},
 			{"Name", v.Name},
 			{"Actual_name", v.Actual_name},
 			{"Gender", v.Gender},
