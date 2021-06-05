@@ -1,0 +1,39 @@
+version: '3.8'
+services: # each service run simultaneously (parallel)
+
+#  my-app:
+#    image: app:1.2
+#    depends_on:
+#      - mongodb
+#    restart: unless-stopped
+#    ports:
+#      - 8080:8080
+#    environment: # variable of the server or OS
+#      MONGODB_URI : "mongodb://touch:touchja@mongodb:27017"
+#    networks:
+#      - backend
+
+  mongodb:
+    image: mongo:4.4 # need to specify the version to prevent code corruption
+    container_name: mongodb
+    environment: # variable of the server or OS
+      MONGO_INITDB_DATABASE: gin
+      MONGO_INITDB_ROOT_USERNAME: touch
+      MONGO_INITDB_ROOT_PASSWORD: touchja
+    volumes: # need to know where the specific file of that service locate at. Search "data path {service name}"
+      - "$PWD/data:/data/db"
+    ports:
+      - 27017:27017
+    networks:
+      - backend
+
+  redis:
+    image: redis:alpine3.13
+    container_name: redis
+    volumes:
+      - "$PWD/config/redis.conf:/redis.conf"
+    ports:
+      - 6379:6379
+
+networks:
+  backend:
