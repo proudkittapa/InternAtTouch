@@ -29,8 +29,12 @@ func main() {
 func setupRouter() *gin.Engine {
 	r := gin.Default()
 	r.POST("/insert", insert)
-	r.POST("/update", update)
-	r.POST("/delete", delete)
+	r.POST("/updateById/:id", updateId)
+	r.POST("/deleteById/:id", deleteId)
+	r.POST("/updateByName/:name", updateName)
+	r.POST("/deleteByName/:name", deleteName)
+
+	r.GET("/viewall", viewall)
 	// h := CustomerHandler{}
 	// h.Initialize()
 
@@ -56,30 +60,29 @@ func insert(c *gin.Context) {
 	c.JSON(http.StatusOK, reqBody)
 }
 
-func update(c *gin.Context) {
-	buf := make([]byte, 1024)
-	num, _ := c.Request.Body.Read(buf)
-	reqBody := string(buf[0:num])
-	var t Person
-	err := json.Unmarshal(buf[0:num], &t)
-	if err != nil {
-		panic(err)
-	}
-	updateDb(t)
-	c.JSON(http.StatusOK, reqBody)
+func updateId(c *gin.Context) {
+	id := c.Param("id")
+	c.JSON(http.StatusOK, id)
 }
 
-func delete(c *gin.Context) {
-	buf := make([]byte, 1024)
-	num, _ := c.Request.Body.Read(buf)
-	reqBody := string(buf[0:num])
-	var t Person
-	err := json.Unmarshal(buf[0:num], &t)
-	if err != nil {
-		panic(err)
-	}
-	deleteDb(t)
-	c.JSON(http.StatusOK, reqBody)
+func deleteId(c *gin.Context) {
+	id := c.Param("id")
+	c.JSON(http.StatusOK, id)
+}
+
+func viewall(c *gin.Context) {
+
+	c.JSON(http.StatusOK, "viewall")
+}
+
+func updateName(c *gin.Context) {
+	name := c.Param("name")
+	c.JSON(http.StatusOK, name)
+}
+
+func deleteName(c *gin.Context) {
+	name := c.Param("name")
+	c.JSON(http.StatusOK, name)
 }
 
 func insertDb(name Person) {
@@ -101,12 +104,4 @@ func insertDb(name Person) {
 
 	fmt.Println("Inserted a single document: ", insertResult.InsertedID)
 
-}
-
-func updateDb(name Person) {
-	fmt.Println("updateDb")
-}
-
-func deleteDb(name Person) {
-	fmt.Println("deleteDb")
 }
