@@ -33,7 +33,6 @@ func setupRouter() *gin.Engine {
 	r.POST("/deleteById/:id", deleteId)
 	r.POST("/updateByName/:name", updateName)
 	r.POST("/deleteByName/:name", deleteName)
-
 	r.GET("/viewall", viewall)
 	// h := CustomerHandler{}
 	// h.Initialize()
@@ -101,7 +100,6 @@ func insertDb(name Person) {
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	fmt.Println("Inserted a single document: ", insertResult.InsertedID)
 
 }
