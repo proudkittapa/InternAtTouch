@@ -1,4 +1,4 @@
-package main
+package Database
 
 import (
 	"context"
@@ -29,7 +29,7 @@ var Sp_list =  []Sp{
 	{"Captain America", "Steve Rogers", "Male", 93, "Immunity and Strength"},
 }
 
-func main(){
+func Db_init(){
 
 	uri := "mongodb://touch:touchja@localhost:27017"
 	client, err := mongo.NewClient(options.Client().ApplyURI(uri))
@@ -45,6 +45,7 @@ func main(){
 	for k ,v := range Sp_list{
 		//g := &Sp{v.Name, v.Actual_name, v.Gender, v.Age, v.Super_power}
 		//fmt.Println(v.Name, v.Actual_name, v.Gender, v.Age, v.Super_power)
+		//_, err = collection.InsertOne(ctx, g)
 		_, err = collection.InsertOne(ctx, bson.D{
 			{"ID", k+1},
 			{"Name", v.Name},
@@ -53,6 +54,7 @@ func main(){
 			{"Age", v.Age},
 			{"Super_power", v.Super_power},
 		})
+
 		if err != nil {
 			log.Fatal(err)
 		}

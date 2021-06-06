@@ -5,22 +5,29 @@ import (
 	"encoding/json"
 	"fmt"
 	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
-	"time"
+	"touch/Database"
 )
 
 type Person struct {
 	Name string
 }
 
-var name string
+type Sp struct {
+	ID 			int		`bson:"ID"`
+	Name  		string	`bson:"Name"`
+	Actual_name string	`bson:"Actual_name"`
+	Gender 		string	`bson:"Gender"`
+	Age 		int		`bson:"Age"`
+	Super_power string	`bson:"Super_power"`
+}
+
+
 
 func main(){
-
+	Database.Db_init()
 	http.HandleFunc("/", test)
 	log.Fatal(http.ListenAndServe(":8080", nil))
 
@@ -42,21 +49,10 @@ func test(rw http.ResponseWriter, req *http.Request ){
 }
 
 func db(name Person) {
-	uri := os.Getenv("MONGODB_URI")
-	client, err := mongo.NewClient(options.Client().ApplyURI(uri))
-	collection := client.Database("test").Collection("simp")
-	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-	err = client.Connect(ctx)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer client.Disconnect(ctx)
 	fmt.Println("name", name.Name)
 	insertResult, err := collection.InsertOne(context.TODO(), name)
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	fmt.Println("Inserted a single document: ", insertResult.InsertedID)
-
 }
