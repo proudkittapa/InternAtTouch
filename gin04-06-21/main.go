@@ -29,12 +29,19 @@ func main() {
 
 func setupRouter() *gin.Engine {
 	r := gin.Default()
-	r.POST("/insert", insert)
-	r.PUT("/update/:id", updateId)
-	r.DELETE("/delete/:id", deleteId)
-	r.GET("/view/:id", viewId)
-	r.GET("/viewall", viewall)
-	r.GET("/search", search)
+	// r.POST("/insert", insert)
+	// r.PUT("/update/:id", updateId)
+	// r.DELETE("/delete/:id", deleteId)
+	// r.GET("/view/:id", viewId)
+	// r.GET("/viewall", viewall)
+	// r.GET("/search", search)
+	r.POST("/superheroes", insert)
+	r.PUT("/superheroes/:id", updateId)
+	r.DELETE("/superheroes/:id", deleteId)
+	r.GET("/superheroes/:id", viewId)
+	r.GET("/superheroes", viewall)
+	r.GET("/superheroes/search", search)
+
 	return r
 }
 
