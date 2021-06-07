@@ -9,20 +9,25 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"time"
+
+	//"time"
 )
 
 type Person struct {
 	Name string
+
 }
+
+var name string
 
 func main(){
 
 	http.HandleFunc("/", test)
-	log.Fatal(http.ListenAndServe("localhost:8080", nil))
+	log.Fatal(http.ListenAndServe(":8080", nil))
 
 }
-
 func test(rw http.ResponseWriter, req *http.Request ){
 	body, err := ioutil.ReadAll(req.Body)
 	if err != nil {
@@ -35,11 +40,16 @@ func test(rw http.ResponseWriter, req *http.Request ){
 		panic(err)
 	}
 	log.Println(t.Name)
-	db(t)
+	name = t.Name
+	db()
+	//collection = client.Database("test").Collection("your_collection_name")
+	//fmt.Println(collection)
 }
 
-func db(name Person){
-	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://@localhost:28017"))
+func db(){
+	uri := os.Getenv("MONGODB_URI")
+	fmt.Println(uri)
+	client, err := mongo.NewClient(options.Client().ApplyURI(uri))
 	collection := client.Database("test").Collection("pond")
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 	err = client.Connect(ctx)
@@ -47,8 +57,9 @@ func db(name Person){
 		log.Fatal(err)
 	}
 	defer client.Disconnect(ctx)
-	fmt.Println("name", name.Name)
-	insertResult, err := collection.InsertOne(context.TODO(), name)
+	fmt.Println("nameee", name)
+	p:=Person{name}
+	insertResult, err := collection.InsertOne(context.TODO(), p)
 	if err != nil {
 		log.Fatal(err)
 	}

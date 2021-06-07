@@ -27,7 +27,7 @@ func (this superhero) ToString() string {
 
 func GetMongoDB() (*mgo.Database, error) {
 	host := "mongodb://localhost:27017"
-	dbName := "learn_mongodb_golang"
+	dbName := "superheros"
 	session, err := mgo.Dial(host)
 	if err != nil {
 		return nil, err
@@ -39,9 +39,9 @@ func GetMongoDB() (*mgo.Database, error) {
 type hero struct {
 }
 
-func (hero) FindNameStartsWith(keyword string) (superhero, error) {
+func (this hero) FindNameStartsWith(keyword string) ([]superhero, error) {
 	db, err := GetMongoDB()
-	var heroes superhero
+	var heroes []superhero
 	if err != nil {
 		return heroes, err
 	} else {
@@ -64,13 +64,13 @@ func main(){
 	var search hero
 
 	fmt.Println("Find the product with the name starting with lap")
-	results, err := search.FindNameStartsWith("lap")
+	results, err := search.FindNameStartsWith("Su")
 	if err != nil {
 		fmt.Println(err)
 	} else {
-		//for _, temp := range results {
-			fmt.Println(results.ToString())
+		for _, temp := range results {
+			fmt.Println(temp.ToString())
 			fmt.Println("---------------------------")
-		//}
+		}
 	}
 }
