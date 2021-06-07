@@ -1,3 +1,4 @@
+
 package main
 
 import (
@@ -9,15 +10,11 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
 	"time"
-
-	//"time"
 )
 
 type Person struct {
 	Name string
-
 }
 
 var name string
@@ -25,9 +22,10 @@ var name string
 func main(){
 
 	http.HandleFunc("/", test)
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe("localhost:8080", nil))
 
 }
+
 func test(rw http.ResponseWriter, req *http.Request ){
 	body, err := ioutil.ReadAll(req.Body)
 	if err != nil {
@@ -47,9 +45,7 @@ func test(rw http.ResponseWriter, req *http.Request ){
 }
 
 func db(){
-	uri := os.Getenv("MONGODB_URI")
-	fmt.Println(uri)
-	client, err := mongo.NewClient(options.Client().ApplyURI(uri))
+	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://@localhost:28017"))
 	collection := client.Database("test").Collection("pond")
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 	err = client.Connect(ctx)
@@ -57,11 +53,13 @@ func db(){
 		log.Fatal(err)
 	}
 	defer client.Disconnect(ctx)
-	fmt.Println("nameee", name)
+	fmt.Println("name", name)
 	p:=Person{name}
 	insertResult, err := collection.InsertOne(context.TODO(), p)
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	fmt.Println("Inserted a single document: ", insertResult.InsertedID)
+
 }

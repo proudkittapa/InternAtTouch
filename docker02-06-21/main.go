@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"time"
 )
 
@@ -21,7 +22,7 @@ var name string
 func main(){
 
 	http.HandleFunc("/", test)
-	log.Fatal(http.ListenAndServe("localhost:8080", nil))
+	log.Fatal(http.ListenAndServe(":8080", nil))
 
 }
 
@@ -37,24 +38,21 @@ func test(rw http.ResponseWriter, req *http.Request ){
 		panic(err)
 	}
 	log.Println(t.Name)
-	name = t.Name
-	db()
-	//collection = client.Database("test").Collection("your_collection_name")
-	//fmt.Println(collection)
+	db(t)
 }
 
-func db(){
-	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://gunn_mongo:touchjaeiei@localhost:28017"))
-	collection := client.Database("test").Collection("your_collection_name")
+func db(name Person) {
+	uri := os.Getenv("MONGODB_URI")
+	client, err := mongo.NewClient(options.Client().ApplyURI(uri))
+	collection := client.Database("test").Collection("simp")
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 	err = client.Connect(ctx)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer client.Disconnect(ctx)
-	fmt.Println("name", name)
-	p:=Person{name}
-	insertResult, err := collection.InsertOne(context.TODO(), p)
+	fmt.Println("name", name.Name)
+	insertResult, err := collection.InsertOne(context.TODO(), name)
 	if err != nil {
 		log.Fatal(err)
 	}
