@@ -68,9 +68,7 @@ func updateId(c *gin.Context) {
 		c.JSON(http.StatusNotFound, "wrong format should be int not string")
 		return
 	}
-	//check if id exist
 	if !Database.Check_exist_ID(i) {
-		// fmt.Println("this id doesn't exist")
 		c.JSON(http.StatusNotFound, "this id doens't exist")
 		return
 	}
@@ -127,7 +125,7 @@ func viewId(c *gin.Context) {
 
 func viewall(c *gin.Context) {
 	p := pagination(c)
-	a := Database.Viewall(p.Limit, p.Page)
+	a := Database.View_byPage(p.Limit, p.Page)
 	if a == nil {
 		c.JSON(http.StatusNotFound, "this page is not available")
 		return
