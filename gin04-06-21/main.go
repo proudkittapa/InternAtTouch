@@ -11,8 +11,8 @@ import (
 )
 
 type Pagination struct {
-	Limit  int `json:"limit"`
-	Offset int `json:"offset"`
+	Limit int `json:"limit"`
+	Page  int `json:"page"`
 }
 
 type Person struct {
@@ -130,7 +130,11 @@ func viewId(c *gin.Context) {
 
 func viewall(c *gin.Context) {
 	p := pagination(c)
-	a := Database.Viewall(p.Limit, p.Offset)
+	a := Database.Viewall(p.Limit, p.page)
+	if a == nil {
+		c.JSON(http.StatusNotFound, "this page is not available")
+		return
+	}
 	c.JSON(http.StatusOK, a)
 }
 
@@ -144,14 +148,14 @@ func pagination(c *gin.Context) Pagination {
 		case "limit":
 			limit, _ = strconv.Atoi(queryValue)
 			break
-		case "offset":
+		case "Page":
 			page, _ = strconv.Atoi(queryValue)
 			break
 		}
 	}
 	return Pagination{
-		Limit:  limit,
-		Offset: page,
+		Limit: limit,
+		Page:  page,
 	}
 }
 
