@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 	"touch/Database"
@@ -66,8 +67,23 @@ func updateId(c *gin.Context) {
 		c.Status(http.StatusNotFound)
 		return
 	}
-	//Database.Update()
-	c.JSON(http.StatusOK, i)
+	buf := make([]byte, 1024)
+	num, _ := c.Request.Body.Read(buf)
+	reqBody := string(buf[0:num])
+	var t Database.Superhero_q
+	err = json.Unmarshal(buf[0:num], &t)
+	if err != nil {
+		panic(err)
+	}
+	t.ID = i
+	fmt.Println("Name:", t.Name == "")
+	fmt.Println("Age:", t.Age == 0)
+	fmt.Println("Gender:", t.Gender == "")
+	if t.Age < 0 {
+		fmt.Println("age is less than 0:", t.Age)
+	}
+	Database.Update(t, i)
+	c.JSON(http.StatusOK, reqBody)
 }
 
 func deleteId(c *gin.Context) {
