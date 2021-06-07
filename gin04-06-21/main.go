@@ -39,7 +39,7 @@ func setupRouter() *gin.Engine {
 	r.PUT("/superheroes/:id", updateId)
 	r.DELETE("/superheroes/:id", deleteId)
 	r.GET("/superheroes/:id", viewId)
-	r.GET("/superheroes", viewall)
+	r.GET("/superheroes", viewAll)
 	r.GET("/superheroes/search", search)
 
 	return r
@@ -130,7 +130,7 @@ func viewId(c *gin.Context) {
 	c.JSON(http.StatusOK, a)
 }
 
-func viewall(c *gin.Context) {
+func viewAll(c *gin.Context) {
 	p := pagination(c)
 	a := Database.Viewall(p.Limit, p.Page)
 	if a == nil {
