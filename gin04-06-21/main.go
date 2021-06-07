@@ -133,7 +133,7 @@ func pagination(c *gin.Context) Pagination {
 		case "limit":
 			limit, _ = strconv.Atoi(queryValue)
 			break
-		case "page":
+		case "offset":
 			page, _ = strconv.Atoi(queryValue)
 			break
 		}
