@@ -1,27 +1,13 @@
 package main
 
 import (
-	"context"
 	"encoding/json"
-	"fmt"
-	"log"
 	"net/http"
 	"strconv"
-	"time"
+	"touch/Database"
 
 	"github.com/gin-gonic/gin"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
-
-type Sp struct {
-	ID          int    `bson:"ID"`
-	Name        string `bson:"Name"`
-	Actual_name string `bson:"Actual_name"`
-	Gender      string `bson:"Gender"`
-	Age         int    `bson:"Age"`
-	Super_power string `bson:"Super_power"`
-}
 
 type Pagination struct {
 	Limit  int `json:"limit"`
@@ -37,6 +23,7 @@ var name string
 func main() {
 
 	r := setupRouter()
+	Database.InitDB()
 	r.Run()
 
 }
@@ -63,12 +50,12 @@ func insert(c *gin.Context) {
 	buf := make([]byte, 1024)
 	num, _ := c.Request.Body.Read(buf)
 	reqBody := string(buf[0:num])
-	var t Sp
+	var t Database.Superhero_q
 	err := json.Unmarshal(buf[0:num], &t)
 	if err != nil {
 		panic(err)
 	}
-	insertDb(t)
+	Database.Insert(t)
 	c.JSON(http.StatusOK, reqBody)
 }
 
@@ -79,6 +66,7 @@ func updateId(c *gin.Context) {
 		c.Status(http.StatusNotFound)
 		return
 	}
+	//Database.Update()
 	c.JSON(http.StatusOK, i)
 }
 
@@ -90,6 +78,7 @@ func deleteId(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "No todo found!"})
 		return
 	}
+	Database.Delete(i)
 	c.JSON(http.StatusOK, i)
 }
 
@@ -100,33 +89,14 @@ func viewId(c *gin.Context) {
 		c.Status(http.StatusNotFound)
 		return
 	}
-	c.JSON(http.StatusOK, i)
+	var a Database.Superhero_q = Database.View(i) //return struct
+	c.JSON(http.StatusOK, a)
 }
 
 func viewall(c *gin.Context) {
-	fmt.Println(pagination(c))
-	c.JSON(http.StatusOK, "viewall")
-}
-
-func insertDb(name Sp) {
-	// uri := os.Getenv("MONGODB_URI")
-	uri := "mongodb://kittapa:hello@localhost:27017"
-	client, err := mongo.NewClient(options.Client().ApplyURI(uri))
-	collection := client.Database("test").Collection("your_collection_name")
-	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-	err = client.Connect(ctx)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer client.Disconnect(ctx)
-	fmt.Println("name", name.Name)
-	insertResult, err := collection.InsertOne(context.TODO(), name)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println("Inserted a single document: ", insertResult.InsertedID)
-	fmt.Println(name)
-
+	p := pagination(c)
+	a := Database.Viewall(p.Limit, p.Offset)
+	c.JSON(http.StatusOK, a)
 }
 
 func pagination(c *gin.Context) Pagination {
