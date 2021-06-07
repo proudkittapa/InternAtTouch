@@ -76,7 +76,7 @@ func updateId(c *gin.Context) {
 		return
 	}
 	if !Database.CheckExistID(i) {
-		c.JSON(http.StatusNotFound, "this id doens't exist")
+		c.JSON(http.StatusNotFound, "this id doesn't exist")
 		return
 	}
 	buf := make([]byte, 1024)
@@ -106,7 +106,7 @@ func deleteId(c *gin.Context) {
 	}
 	if !Database.CheckExistID(i) {
 		// fmt.Println("this id doesn't exist")
-		c.JSON(http.StatusNotFound, "this id doens't exist")
+		c.JSON(http.StatusNotFound, "this id doesn't exist")
 		return
 	}
 	Database.Delete(i)
@@ -122,7 +122,7 @@ func viewId(c *gin.Context) {
 	}
 	if !Database.CheckExistID(i) {
 		// fmt.Println("this id doesn't exist")
-		c.JSON(http.StatusNotFound, "this id doens't exist")
+		c.JSON(http.StatusNotFound, "this id doesn't exist")
 		return
 	}
 
