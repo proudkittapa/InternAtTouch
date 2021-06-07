@@ -153,5 +153,19 @@ func pagination(c *gin.Context) Pagination {
 }
 
 func search(c *gin.Context) {
-	c.JSON(http.StatusOK, "search")
+	buf := make([]byte, 1024)
+	num, _ := c.Request.Body.Read(buf)
+	reqBody := string(buf[0:num])
+	fmt.Println(reqBody)
+	var v Database.SearchValue
+	err := json.Unmarshal(buf[0:num], &v)
+	if err != nil {
+		fmt.Println(err)
+	}
+	a := Database.Search(v.Value)
+	if a == nil {
+		c.JSON(http.StatusOK, "No result")
+		return
+	}
+	c.JSON(http.StatusOK, a)
 }
