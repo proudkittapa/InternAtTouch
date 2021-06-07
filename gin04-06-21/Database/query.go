@@ -156,7 +156,7 @@ func ViewByPage(perPage int, page int) []SuperheroQ {
 	return display
 }
 
-func Viewall(limit int, offset int) []SuperheroQ {
+func ViewAll(limit int, offset int) []SuperheroQ {
 	var display []SuperheroQ
 	cursor, err := Coll.Find(Ctx, bson.M{})
 	if err != nil {
