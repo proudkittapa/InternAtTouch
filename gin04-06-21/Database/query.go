@@ -11,32 +11,32 @@ import (
 type SuperheroQ struct {
 	ID          int    `bson:"ID"`
 	Name        string `bson:"Name"`
-	Actual_name string `bson:"Actual_name"`
+	ActualName string `bson:"Actual_name"`
 	Gender      string `bson:"Gender"`
 	Age         int    `bson:"Age"`
-	Super_power string `bson:"Super_power"`
+	SuperPower string `bson:"Super_power"`
 }
 
 func MaxId() int {
 	var result bson.M
-	var curr_id SuperheroQ
+	var currID SuperheroQ
 	opts := options.FindOne().SetSort(bson.D{{"ID", -1}})
 	err := Coll.FindOne(Ctx, bson.D{{}}, opts).Decode(&result)
 	if err != nil {
 		log.Fatal(err)
 	}
 	bsonBytes, _ := bson.Marshal(result)
-	bson.Unmarshal(bsonBytes, &curr_id)
-	return curr_id.ID
+	bson.Unmarshal(bsonBytes, &currID)
+	return currID.ID
 }
 
-func udOne(id int, key string, val_int int, val_str string) {
-	if val_int == -1 {
+func udOne(id int, key string, valInt int, valStr string) {
+	if valInt == -1 {
 		_, err := Coll.UpdateOne(
 			Ctx,
 			bson.M{"ID": id},
 			bson.D{
-				{"$set", bson.D{{key, val_str}}},
+				{"$set", bson.D{{key, valStr}}},
 			},
 		)
 		if err != nil {
@@ -44,12 +44,12 @@ func udOne(id int, key string, val_int int, val_str string) {
 		}
 	}
 
-	if val_str == "" {
+	if valStr == "" {
 		_, err := Coll.UpdateOne(
 			Ctx,
 			bson.M{"ID": id},
 			bson.D{
-				{"$set", bson.D{{key, val_int}}},
+				{"$set", bson.D{{key, valInt}}},
 			},
 		)
 		if err != nil {
@@ -84,10 +84,10 @@ func Insert(figure SuperheroQ) {
 	_, err := Coll.InsertOne(Ctx, bson.D{
 		{"ID", MaxId() + 1},
 		{"Name", figure.Name},
-		{"Actual_name", figure.Actual_name},
+		{"Actual_name", figure.ActualName},
 		{"Gender", figure.Gender},
 		{"Age", figure.Age},
-		{"Super_power", figure.Super_power},
+		{"Super_power", figure.SuperPower},
 	})
 	if err != nil {
 		log.Fatal(err)
@@ -106,8 +106,8 @@ func Update(figure SuperheroQ, id int) {
 	if figure.Name != "" {
 		udOne(id, "Name", -1, figure.Name)
 	}
-	if figure.Actual_name != "" {
-		udOne(id, "Actual_name", -1, figure.Actual_name)
+	if figure.ActualName != "" {
+		udOne(id, "Actual_name", -1, figure.ActualName)
 	}
 	if figure.Gender != "" {
 		udOne(id, "Gender", -1, figure.Gender)
@@ -115,25 +115,25 @@ func Update(figure SuperheroQ, id int) {
 	if figure.Age != -1 {
 		udOne(id, "Age", figure.Age, "")
 	}
-	if figure.Super_power != "" {
-		udOne(id, "Super_power", -1, figure.Super_power)
+	if figure.SuperPower != "" {
+		udOne(id, "Super_power", -1, figure.SuperPower)
 	}
 }
 
 func View(id int) SuperheroQ {
-	var result_bson bson.M
-	var result_struct SuperheroQ
-	err := Coll.FindOne(Ctx, bson.D{{"ID", id}}).Decode(&result_bson)
+	var resultBson bson.M
+	var resultStruct SuperheroQ
+	err := Coll.FindOne(Ctx, bson.D{{"ID", id}}).Decode(&resultBson)
 	if err != nil {
 		log.Fatal(err)
 	}
-	bsonBytes, _ := bson.Marshal(result_bson)
-	bson.Unmarshal(bsonBytes, &result_struct)
-	fmt.Println(result_struct)
-	return result_struct
+	bsonBytes, _ := bson.Marshal(resultBson)
+	bson.Unmarshal(bsonBytes, &resultStruct)
+	fmt.Println(resultStruct)
+	return resultStruct
 }
 
-func View_byPage(perPage int, page int) []SuperheroQ {
+func ViewByPage(perPage int, page int) []SuperheroQ {
 	skip := int64(page * perPage)
 	limit := int64(perPage)
 	opts := options.FindOptions{
@@ -144,14 +144,14 @@ func View_byPage(perPage int, page int) []SuperheroQ {
 	cursor, err := Coll.Find(nil, bson.M{}, &opts)
 	var display []SuperheroQ
 	for cursor.Next(Ctx) {
-		var result_bson bson.M
-		var result_struct SuperheroQ
-		if err = cursor.Decode(&result_bson); err != nil {
+		var resultBson bson.M
+		var resultStruct SuperheroQ
+		if err = cursor.Decode(&resultBson); err != nil {
 			log.Fatal(err)
 		}
-		bsonBytes, _ := bson.Marshal(result_bson)
-		bson.Unmarshal(bsonBytes, &result_struct)
-		display = append(display, result_struct)
+		bsonBytes, _ := bson.Marshal(resultBson)
+		bson.Unmarshal(bsonBytes, &resultStruct)
+		display = append(display, resultStruct)
 	}
 	return display
 }
@@ -168,14 +168,14 @@ func Viewall(limit int, offset int) []SuperheroQ {
 	stop := (offset + 1) * limit
 	for cursor.Next(Ctx) {
 		if count > start && count <= stop {
-			var result_bson bson.M
-			var result_struct SuperheroQ
-			if err = cursor.Decode(&result_bson); err != nil {
+			var resultBson bson.M
+			var resultStruct SuperheroQ
+			if err = cursor.Decode(&resultBson); err != nil {
 				log.Fatal(err)
 			}
-			bsonBytes, _ := bson.Marshal(result_bson)
-			bson.Unmarshal(bsonBytes, &result_struct)
-			display = append(display, result_struct)
+			bsonBytes, _ := bson.Marshal(resultBson)
+			bson.Unmarshal(bsonBytes, &resultStruct)
+			display = append(display, resultStruct)
 
 			if count == stop {
 				fmt.Println(display)
