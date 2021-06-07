@@ -31,9 +31,10 @@ func setupRouter() *gin.Engine {
 	r := gin.Default()
 	r.POST("/insert", insert)
 	r.POST("/update/:id", updateId)
-	r.POST("/delete/:id", deleteId)
+	r.DELETE("/delete/:id", deleteId)
 	r.GET("/view/:id", viewId)
 	r.GET("/viewall", viewall)
+	r.GET("/search", search)
 	return r
 }
 
@@ -47,13 +48,13 @@ func insert(c *gin.Context) {
 		panic(err)
 	}
 	if t.Name == "" {
-		fmt.Println("Need name to insert")
-		c.Status(http.StatusNotFound)
+		// fmt.Println("Need name to insert")
+		c.JSON(http.StatusNotFound, "Need name to insert")
 		return
 	}
 	if t.Age < 0 {
 		fmt.Println("age is less than 0:", t.Age)
-		c.Status(http.StatusNotFound)
+		c.JSON(http.StatusNotFound, "age is less than 0")
 		return
 	}
 	Database.Insert(t)
@@ -64,13 +65,13 @@ func updateId(c *gin.Context) {
 	id := c.Param("id")
 	i, err := strconv.Atoi(id)
 	if err != nil {
-		c.Status(http.StatusNotFound)
+		c.JSON(http.StatusNotFound, "wrong format should be int not string")
 		return
 	}
 	//check if id exist
 	if !Database.Check_exist_ID(i) {
-		fmt.Println("this id doesn't exist")
-		c.Status(http.StatusNotFound)
+		// fmt.Println("this id doesn't exist")
+		c.JSON(http.StatusNotFound, "this id doens't exist")
 		return
 	}
 	buf := make([]byte, 1024)
@@ -82,12 +83,12 @@ func updateId(c *gin.Context) {
 		panic(err)
 	}
 	t.ID = i
-	fmt.Println("Name:", t.Name == "")
-	fmt.Println("Age:", t.Age == 0)
-	fmt.Println("Gender:", t.Gender == "")
+	// fmt.Println("Name:", t.Name == "")
+	// fmt.Println("Age:", t.Age == 0)
+	// fmt.Println("Gender:", t.Gender == "")
 	if t.Age < 0 {
-		fmt.Println("age is less than 0:", t.Age)
-		c.Status(http.StatusNotFound)
+		// fmt.Println("age is less than 0:", t.Age)
+		c.JSON(http.StatusNotFound, "age is less than 0")
 		return
 	}
 	Database.Update(t, i)
@@ -98,8 +99,12 @@ func deleteId(c *gin.Context) {
 	id := c.Param("id")
 	i, err := strconv.Atoi(id)
 	if err != nil {
-		// c.Status(http.StatusNotFound)
-		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "No todo found!"})
+		c.JSON(http.StatusNotFound, "wrong format should be int not string")
+		return
+	}
+	if !Database.Check_exist_ID(i) {
+		// fmt.Println("this id doesn't exist")
+		c.JSON(http.StatusNotFound, "this id doens't exist")
 		return
 	}
 	Database.Delete(i)
@@ -110,9 +115,15 @@ func viewId(c *gin.Context) {
 	id := c.Param("id")
 	i, err := strconv.Atoi(id)
 	if err != nil {
-		c.Status(http.StatusNotFound)
+		c.JSON(http.StatusNotFound, "wrong format should be int not string")
 		return
 	}
+	if !Database.Check_exist_ID(i) {
+		// fmt.Println("this id doesn't exist")
+		c.JSON(http.StatusNotFound, "this id doens't exist")
+		return
+	}
+
 	var a Database.Superhero_q = Database.View(i) //return struct
 	c.JSON(http.StatusOK, a)
 }
@@ -142,4 +153,8 @@ func pagination(c *gin.Context) Pagination {
 		Limit:  limit,
 		Offset: page,
 	}
+}
+
+func search(c *gin.Context) {
+	c.JSON(http.StatusOK, "search")
 }
