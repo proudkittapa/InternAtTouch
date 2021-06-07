@@ -2,17 +2,18 @@ package Database
 
 import (
 	"context"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
 	"os"
 	"time"
+
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
+
 var Coll *mongo.Collection
 var Ctx context.Context
 
-
-func InitDB(){
+func InitDB() {
 	uri := os.Getenv("MONGODB_URI")
 	client, err := mongo.NewClient(options.Client().ApplyURI(uri))
 	if err != nil {
