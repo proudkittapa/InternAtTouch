@@ -19,7 +19,7 @@ func InitDB() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	Coll = client.Database("superheroes").Collection("list")
+	Coll = client.Database("superhero").Collection("lists")
 	Ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 	err = client.Connect(Ctx)
 }

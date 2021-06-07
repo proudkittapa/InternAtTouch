@@ -22,15 +22,15 @@ func Search(keyword string) []SuperheroQ {
 		log.Fatal(err)
 	}
 	for cursor.Next(Ctx) {
-		var result_bson bson.M
-		var result_struct SuperheroQ
-		if err = cursor.Decode(&result_bson); err != nil {
+		var resultBson bson.M
+		var resultStruct SuperheroQ
+		if err = cursor.Decode(&resultBson); err != nil {
 			log.Fatal(err)
 		}
-		bsonBytes, _ := bson.Marshal(result_bson)
-		bson.Unmarshal(bsonBytes, &result_struct)
-		fmt.Println(result_struct)
-		result = append(result, result_struct)
+		bsonBytes, _ := bson.Marshal(resultBson)
+		bson.Unmarshal(bsonBytes, &resultStruct)
+		fmt.Println(resultStruct)
+		result = append(result, resultStruct)
 	}
 	return result
 }

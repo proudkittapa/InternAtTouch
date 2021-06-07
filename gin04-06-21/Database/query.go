@@ -2,19 +2,21 @@ package Database
 
 import (
 	"fmt"
-	"log"
-
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"log"
+	"time"
 )
 
 type SuperheroQ struct {
-	ID          int    `bson:"ID"`
-	Name        string `bson:"Name"`
-	ActualName string `bson:"Actual_name"`
-	Gender      string `bson:"Gender"`
-	Age         int    `bson:"Age"`
-	SuperPower string `bson:"Super_power"`
+	ID          int    		`bson:"ID"`
+	Name        string 		`bson:"Name"`
+	ActualName 	string 		`bson:"ActualName"`
+	Gender      string 		`bson:"Gender"`
+	BirthDate	string		`bson:"BirthDate"`
+	Height      int    		`bson:"Height"`
+	SuperPower  []string 	`bson:"SuperPower"`
+	Alive		bool		`bson:"Alive"`
 }
 
 func MaxId() int {
@@ -30,31 +32,16 @@ func MaxId() int {
 	return currID.ID
 }
 
-func udOne(id int, key string, valInt int, valStr string) {
-	if valInt == -1 {
-		_, err := Coll.UpdateOne(
-			Ctx,
-			bson.M{"ID": id},
-			bson.D{
-				{"$set", bson.D{{key, valStr}}},
-			},
-		)
-		if err != nil {
-			log.Fatal(err)
-		}
-	}
-
-	if valStr == "" {
-		_, err := Coll.UpdateOne(
-			Ctx,
-			bson.M{"ID": id},
-			bson.D{
-				{"$set", bson.D{{key, valInt}}},
-			},
-		)
-		if err != nil {
-			log.Fatal(err)
-		}
+func udstr(id int, key string, valStr string) {
+	_, err := Coll.UpdateOne(
+		Ctx,
+		bson.M{"ID": id},
+		bson.D{
+			{"$set", bson.D{{key, valStr}}},
+		},
+	)
+	if err != nil {
+		log.Fatal(err)
 	}
 }
 
@@ -81,12 +68,14 @@ func CheckExistName(name string) bool {
 }
 
 func Insert(figure SuperheroQ) {
-	_, err := Coll.InsertOne(Ctx, bson.D{
-		{"ID", MaxId() + 1},
+	bd , err := time.Parse("2006-01-02", figure.BirthDate)
+	_, err = Coll.InsertOne(Ctx, bson.D{
+		{"$inc", bson.D{{"ID", 1}}},
 		{"Name", figure.Name},
 		{"Actual_name", figure.ActualName},
 		{"Gender", figure.Gender},
-		{"Age", figure.Age},
+		{"BirthDate", bd},
+		{"Height", figure.Height},
 		{"Super_power", figure.SuperPower},
 	})
 	if err != nil {
@@ -104,19 +93,50 @@ func Delete(id int) {
 func Update(figure SuperheroQ, id int) {
 	//id := figure.ID
 	if figure.Name != "" {
-		udOne(id, "Name", -1, figure.Name)
+		udstr(id, "Name", figure.Name)
 	}
 	if figure.ActualName != "" {
-		udOne(id, "Actual_name", -1, figure.ActualName)
+		udstr(id, "Actual_name", figure.ActualName)
 	}
 	if figure.Gender != "" {
-		udOne(id, "Gender", -1, figure.Gender)
+		udstr(id, "Gender",  figure.Gender)
 	}
-	if figure.Age != -1 {
-		udOne(id, "Age", figure.Age, "")
+	if figure.Height != -1 {
+		_, err := Coll.UpdateOne(
+			Ctx,
+			bson.M{"ID": id},
+			bson.D{
+				{"$set", bson.D{{"Height", figure.Height}}},
+			},
+		)
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
-	if figure.SuperPower != "" {
-		udOne(id, "Super_power", -1, figure.SuperPower)
+	if figure.SuperPower != nil {
+		_, err := Coll.UpdateOne(
+			Ctx,
+			bson.M{"ID": id},
+			bson.D{
+				{"$set", bson.D{{"SuperPower", figure.SuperPower}}},
+			},
+		)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+	if figure.BirthDate != "" {
+		bd , err := time.Parse("2006-01-02", figure.BirthDate)
+		_, err = Coll.UpdateOne(
+			Ctx,
+			bson.M{"ID": id},
+			bson.D{
+				{"$set", bson.D{{"BirthDate",bd }}},
+			},
+		)
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 }
 

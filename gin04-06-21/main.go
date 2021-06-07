@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
-	"time"
 	"touch/Database"
 
 	"github.com/gin-gonic/gin"
@@ -21,27 +20,9 @@ type Person struct {
 }
 
 func main() {
-	myDateString := "2018-01-10"
-	fmt.Println("My Starting Date:\t", myDateString)
-	fmt.Printf("%T\n", myDateString)
-
-	// Parse the date string into Go's time object
-	// The 1st param specifies the format, 2nd is our date string
-	myDate, err := time.Parse("2006-01-02", myDateString)
-	fmt.Printf("%T\n", myDateString)
-	if err != nil {
-		panic(err)
-	}
-
-	// Format uses the same formatting style as parse, or we can use a pre-made constant
-	fmt.Println("My Date Reformatted:\t", myDate.Format(time.RFC822))
-	fmt.Printf("%T\n", myDateString)
-	// In Y-m-d
-	fmt.Println("Just The Date:\t\t", myDate.Format("2006-01-02"))
-	fmt.Printf("%T\n", myDateString)
-	// r := setupRouter()
-	// Database.InitDB()
-	// r.Run()
+	r := setupRouter()
+	Database.InitDB()
+	r.Run()
 
 }
 
@@ -77,8 +58,8 @@ func insert(c *gin.Context) {
 		c.JSON(http.StatusUnprocessableEntity, "Need name to insert")
 		return
 	}
-	if t.Age < 0 {
-		fmt.Println("age is less than 0:", t.Age)
+	if t.Height < 0 {
+		fmt.Println("age is less than 0:", t.Height)
 		c.JSON(http.StatusNotFound, "age is less than 0")
 		return
 	}
@@ -107,7 +88,7 @@ func updateId(c *gin.Context) {
 	}
 	t.ID = i
 
-	if t.Age < 0 {
+	if t.Height < 0 {
 		c.JSON(http.StatusNotFound, "age is less than 0")
 		return
 	}
