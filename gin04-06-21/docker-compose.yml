@@ -20,8 +20,8 @@ services: # each service run simultaneously (parallel)
       MONGO_INITDB_DATABASE: gin
       MONGO_INITDB_ROOT_USERNAME: touch
       MONGO_INITDB_ROOT_PASSWORD: touchja
-    volumes: # need to know where the specific file of that service locate at. Search "data path {service name}"
-      - "$PWD/data:/data/db"
+#    volumes: # need to know where the specific file of that service locate at. Search "data path {service name}"
+#      - "$PWD/data:/data/db"
     ports:
       - 27017:27017
     networks:
