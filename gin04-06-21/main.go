@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"go.mongodb.org/mongo-driver/mongo"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -27,7 +26,7 @@ type Sp struct {
 
 
 func main(){
-	Database.Db_init()
+	Database.InitDB()
 	http.HandleFunc("/", test)
 	log.Fatal(http.ListenAndServe(":8080", nil))
 
@@ -50,7 +49,7 @@ func test(rw http.ResponseWriter, req *http.Request ){
 
 func db(name Person) {
 	fmt.Println("name", name.Name)
-	insertResult, err := collection.InsertOne(context.TODO(), name)
+	insertResult, err := Database.Coll.InsertOne(context.TODO(), name)
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -12,7 +12,7 @@ var Coll *mongo.Collection
 var Ctx context.Context
 
 
-func initDB(){
+func InitDB(){
 	uri := os.Getenv("MONGODB_URI")
 	client, err := mongo.NewClient(options.Client().ApplyURI(uri))
 	if err != nil {

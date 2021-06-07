@@ -24,14 +24,144 @@ func max_id() int {
 	if err != nil {
 		log.Fatal(err)
 	}
-	bsonBytes, _ := bson.Marshal(result)
-	bson.Unmarshal(bsonBytes, &curr_id)
-	//fmt.Println("Current ID", curr_id.ID)
-	//defer client.Disconnect(ctx)
+	unmar(result, curr_id)
 	return curr_id.ID
 }
 
-//insert() receive all or not all at least have to be name receive all as a struct
-//update by name and update by id
-//delete by ID// Delete by name // view by ID
+func unmar(result_bson bson.M, result_struct Superhero_q){
+	bsonBytes, _ := bson.Marshal(result_bson)
+	bson.Unmarshal(bsonBytes, &result_struct)
+}
+
+func ud_one(id int, key string, val_int int, val_str string){
+	if val_int == -1 {
+		_, err := Coll.UpdateOne(
+			Ctx,
+			bson.M{"ID": id},
+			bson.D{
+				{"$set", bson.D{{key, val_str}}},
+			},
+		)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	if val_str == "" {
+		_, err := Coll.UpdateOne(
+			Ctx,
+			bson.M{"ID": id},
+			bson.D{
+				{"$set", bson.D{{key, val_int}}},
+			},
+		)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+}
+
+func Check_exist_ID(id int) bool{
+	count, err := Coll.CountDocuments(Ctx, bson.D{{"ID", id}})
+	if err != nil {
+		panic(err)
+	}
+	if count >= 1 {
+		return true
+	}
+	return false
+}
+
+func Check_exist_Name(name string) bool{
+	count, err := Coll.CountDocuments(Ctx, bson.D{{"Name", name}})
+	if err != nil {
+		panic(err)
+	}
+	if count >= 1 {
+		return true
+	}
+	return false
+}
+
+
+func Insert(figure Superhero_q){
+	_, err := Coll.InsertOne(Ctx, bson.D{
+		{"ID", max_id()+1},
+		{"Name", figure.Name},
+		{"Actual_name", figure.Actual_name},
+		{"Gender", figure.Gender},
+		{"Age", figure.Age},
+		{"Super_power", figure.Super_power},
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func Delete(id int){
+	_, err := Coll.DeleteOne(Ctx, bson.M{"ID": id})
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func Update(figure Superhero_q){
+	id := figure.ID
+	if figure.Name != ""{
+		ud_one(id, "Name", -1, figure.Name)
+	}
+	if figure.Actual_name != ""{
+		ud_one(id, "Actual_name", -1, figure.Actual_name)
+	}
+	if figure.Gender != ""{
+		ud_one(id, "Gender", -1, figure.Gender)
+	}
+	if figure.Age != -1{
+		ud_one(id, "Age",  figure.Age, "")
+	}
+	if figure.Super_power != ""{
+		ud_one(id, "Super_power", -1, figure.Super_power)
+	}
+}
+
+func View(id int) Superhero_q{
+	var result_bson bson.M
+	var result_struct Superhero_q
+	err := Coll.FindOne(Ctx, bson.D{{"ID", id}}).Decode(&result_bson)
+	if err != nil {
+		log.Fatal(err)
+	}
+	unmar(result_bson, result_struct)
+	return result_struct
+}
+
+func Viewall(limit int, offset int) []Superhero_q{
+	var display []Superhero_q
+	cursor, err := Coll.Find(Ctx, bson.M{})
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer cursor.Close(Ctx)
+	count := 1
+	start := (offset)*limit
+	stop := (offset+1)*limit
+	for cursor.Next(Ctx) {
+		if count > start && count <= stop{
+			var result_bson bson.M
+			var result_struct Superhero_q
+			if err = cursor.Decode(&result_bson); err != nil {
+				log.Fatal(err)
+			}
+			unmar(result_bson, result_struct)
+			display = append(display, result_struct)
+
+			if count == stop{
+				return display
+			}
+		}
+		count += 1
+	}
+	return display
+}
+
 
