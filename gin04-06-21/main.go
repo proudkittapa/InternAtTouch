@@ -30,7 +30,7 @@ func main() {
 func setupRouter() *gin.Engine {
 	r := gin.Default()
 	r.POST("/insert", insert)
-	r.POST("/update/:id", updateId)
+	r.PUT("/update/:id", updateId)
 	r.DELETE("/delete/:id", deleteId)
 	r.GET("/view/:id", viewId)
 	r.GET("/viewall", viewall)
@@ -83,11 +83,8 @@ func updateId(c *gin.Context) {
 		panic(err)
 	}
 	t.ID = i
-	// fmt.Println("Name:", t.Name == "")
-	// fmt.Println("Age:", t.Age == 0)
-	// fmt.Println("Gender:", t.Gender == "")
+
 	if t.Age < 0 {
-		// fmt.Println("age is less than 0:", t.Age)
 		c.JSON(http.StatusNotFound, "age is less than 0")
 		return
 	}
