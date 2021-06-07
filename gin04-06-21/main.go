@@ -19,8 +19,6 @@ type Person struct {
 	Name string
 }
 
-var name string
-
 func main() {
 
 	r := setupRouter()
@@ -32,18 +30,10 @@ func main() {
 func setupRouter() *gin.Engine {
 	r := gin.Default()
 	r.POST("/insert", insert)
-	r.POST("/updateById/:id", updateId)
-	r.POST("/deleteById/:id", deleteId)
+	r.POST("/update/:id", updateId)
+	r.POST("/delete/:id", deleteId)
 	r.GET("/view/:id", viewId)
 	r.GET("/viewall", viewall)
-	// h := CustomerHandler{}
-	// h.Initialize()
-
-	// r.GET("/customers", h.GetAllCustomer)
-	// r.GET("/customers/:id", h.GetCustomer)
-	// r.POST("/customers", h.SaveCustomer)
-	// r.PUT("/customers/:id", h.UpdateCustomer)
-	// r.DELETE("/customers/:id", h.DeleteCustomer)
 	return r
 }
 
@@ -56,6 +46,16 @@ func insert(c *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
+	if t.Name == "" {
+		fmt.Println("Need name to insert")
+		c.Status(http.StatusNotFound)
+		return
+	}
+	if t.Age < 0 {
+		fmt.Println("age is less than 0:", t.Age)
+		c.Status(http.StatusNotFound)
+		return
+	}
 	Database.Insert(t)
 	c.JSON(http.StatusOK, reqBody)
 }
@@ -64,6 +64,12 @@ func updateId(c *gin.Context) {
 	id := c.Param("id")
 	i, err := strconv.Atoi(id)
 	if err != nil {
+		c.Status(http.StatusNotFound)
+		return
+	}
+	//check if id exist
+	if !Database.Check_exist_ID(i) {
+		fmt.Println("this id doesn't exist")
 		c.Status(http.StatusNotFound)
 		return
 	}
@@ -81,6 +87,8 @@ func updateId(c *gin.Context) {
 	fmt.Println("Gender:", t.Gender == "")
 	if t.Age < 0 {
 		fmt.Println("age is less than 0:", t.Age)
+		c.Status(http.StatusNotFound)
+		return
 	}
 	Database.Update(t, i)
 	c.JSON(http.StatusOK, reqBody)
