@@ -133,6 +133,29 @@ func View(id int) Superhero_q {
 	return result_struct
 }
 
+func View_byPage (perPage int, page int) []Superhero_q{
+	skip := int64(page*perPage)
+	limit := int64(perPage)
+	opts := options.FindOptions{
+		Skip: &skip,
+		Limit: &limit,
+	}
+
+	cursor , err := Coll.Find(nil, bson.M{}, &opts)
+	var display []Superhero_q
+	for cursor.Next(Ctx) {
+		var result_bson bson.M
+		var result_struct Superhero_q
+		if err = cursor.Decode(&result_bson); err != nil {
+			log.Fatal(err)
+		}
+		bsonBytes, _ := bson.Marshal(result_bson)
+		bson.Unmarshal(bsonBytes, &result_struct)
+		display = append(display, result_struct)
+	}
+	return display
+}
+
 func Viewall(limit int, offset int) []Superhero_q {
 	var display []Superhero_q
 	cursor, err := Coll.Find(Ctx, bson.M{})
