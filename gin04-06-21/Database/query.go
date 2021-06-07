@@ -1,6 +1,7 @@
 package Database
 
 import (
+	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
@@ -24,13 +25,9 @@ func max_id() int {
 	if err != nil {
 		log.Fatal(err)
 	}
-	unmar(result, curr_id)
+	bsonBytes, _ := bson.Marshal(result)
+	bson.Unmarshal(bsonBytes, &curr_id)
 	return curr_id.ID
-}
-
-func unmar(result_bson bson.M, result_struct Superhero_q){
-	bsonBytes, _ := bson.Marshal(result_bson)
-	bson.Unmarshal(bsonBytes, &result_struct)
 }
 
 func ud_one(id int, key string, val_int int, val_str string){
@@ -105,8 +102,8 @@ func Delete(id int){
 	}
 }
 
-func Update(figure Superhero_q){
-	id := figure.ID
+func Update(figure Superhero_q, id int){
+	//id := figure.ID
 	if figure.Name != ""{
 		ud_one(id, "Name", -1, figure.Name)
 	}
@@ -131,7 +128,9 @@ func View(id int) Superhero_q{
 	if err != nil {
 		log.Fatal(err)
 	}
-	unmar(result_bson, result_struct)
+	bsonBytes, _ := bson.Marshal(result_bson)
+	bson.Unmarshal(bsonBytes, &result_struct)
+	fmt.Println(result_struct)
 	return result_struct
 }
 
@@ -152,15 +151,18 @@ func Viewall(limit int, offset int) []Superhero_q{
 			if err = cursor.Decode(&result_bson); err != nil {
 				log.Fatal(err)
 			}
-			unmar(result_bson, result_struct)
+			bsonBytes, _ := bson.Marshal(result_bson)
+			bson.Unmarshal(bsonBytes, &result_struct)
 			display = append(display, result_struct)
 
 			if count == stop{
+				fmt.Println(display)
 				return display
 			}
 		}
 		count += 1
 	}
+	fmt.Println(display)
 	return display
 }
 
