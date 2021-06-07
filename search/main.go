@@ -59,13 +59,6 @@ func GetMongoDB() (*mgo.Collection, error) {
 		return nil, err
 	}
 	db := session.DB(dbName).C(collection)
-	//var ans superhero
-	////var result_struct superhero
-	//temp := db.Find(bson.M{"Name": "Superman"}).One(&ans)
-	//fmt.Println(temp)
-	////bsonBytes, _ := bson.Marshal(ans)
-	////bson.Unmarshal(bsonBytes, &result_struct)
-	//fmt.Println(ans.ToString())
 	return db, nil
 }
 
