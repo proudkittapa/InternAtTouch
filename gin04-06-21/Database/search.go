@@ -14,16 +14,16 @@ type SearchValue struct {
 	Value string `bson:"value"`
 }
 
-func Search(keyword string) []Superhero_q {
+func Search(keyword string) []SuperheroQ {
 	fmt.Println("Searching", keyword)
-	var result []Superhero_q
+	var result []SuperheroQ
 	cursor, err := Coll.Find(Ctx, bson.M{"Name": primitive.Regex{Pattern: "^" + keyword + ".*", Options: "i"}})
 	if err != nil {
 		log.Fatal(err)
 	}
 	for cursor.Next(Ctx) {
 		var result_bson bson.M
-		var result_struct Superhero_q
+		var result_struct SuperheroQ
 		if err = cursor.Decode(&result_bson); err != nil {
 			log.Fatal(err)
 		}

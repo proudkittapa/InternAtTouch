@@ -42,14 +42,14 @@ func insert(c *gin.Context) {
 	buf := make([]byte, 1024)
 	num, _ := c.Request.Body.Read(buf)
 	reqBody := string(buf[0:num])
-	var t Database.Superhero_q
+	var t Database.SuperheroQ
 	err := json.Unmarshal(buf[0:num], &t)
 	if err != nil {
 		panic(err)
 	}
 	if t.Name == "" {
 		// fmt.Println("Need name to insert")
-		c.JSON(http.StatusNotFound, "Need name to insert")
+		c.JSON(http.StatusUnprocessableEntity, "Need name to insert")
 		return
 	}
 	if t.Age < 0 {
@@ -68,14 +68,14 @@ func updateId(c *gin.Context) {
 		c.JSON(http.StatusNotFound, "wrong format should be int not string")
 		return
 	}
-	if !Database.Check_exist_ID(i) {
+	if !Database.CheckExistID(i) {
 		c.JSON(http.StatusNotFound, "this id doens't exist")
 		return
 	}
 	buf := make([]byte, 1024)
 	num, _ := c.Request.Body.Read(buf)
 	reqBody := string(buf[0:num])
-	var t Database.Superhero_q
+	var t Database.SuperheroQ
 	err = json.Unmarshal(buf[0:num], &t)
 	if err != nil {
 		panic(err)
@@ -97,7 +97,7 @@ func deleteId(c *gin.Context) {
 		c.JSON(http.StatusNotFound, "wrong format should be int not string")
 		return
 	}
-	if !Database.Check_exist_ID(i) {
+	if !Database.CheckExistID(i) {
 		// fmt.Println("this id doesn't exist")
 		c.JSON(http.StatusNotFound, "this id doens't exist")
 		return
@@ -113,19 +113,19 @@ func viewId(c *gin.Context) {
 		c.JSON(http.StatusNotFound, "wrong format should be int not string")
 		return
 	}
-	if !Database.Check_exist_ID(i) {
+	if !Database.CheckExistID(i) {
 		// fmt.Println("this id doesn't exist")
 		c.JSON(http.StatusNotFound, "this id doens't exist")
 		return
 	}
 
-	var a Database.Superhero_q = Database.View(i) //return struct
+	var a Database.SuperheroQ = Database.View(i) //return struct
 	c.JSON(http.StatusOK, a)
 }
 
 func viewall(c *gin.Context) {
 	p := pagination(c)
-	a := Database.View_byPage(p.Limit, p.Page)
+	a := Database.Viewall(p.Limit, p.Page)
 	if a == nil {
 		c.JSON(http.StatusNotFound, "this page is not available")
 		return

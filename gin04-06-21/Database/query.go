@@ -8,7 +8,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-type Superhero_q struct {
+type SuperheroQ struct {
 	ID          int    `bson:"ID"`
 	Name        string `bson:"Name"`
 	Actual_name string `bson:"Actual_name"`
@@ -17,9 +17,9 @@ type Superhero_q struct {
 	Super_power string `bson:"Super_power"`
 }
 
-func Max_id() int {
+func MaxId() int {
 	var result bson.M
-	var curr_id Superhero_q
+	var curr_id SuperheroQ
 	opts := options.FindOne().SetSort(bson.D{{"ID", -1}})
 	err := Coll.FindOne(Ctx, bson.D{{}}, opts).Decode(&result)
 	if err != nil {
@@ -30,7 +30,7 @@ func Max_id() int {
 	return curr_id.ID
 }
 
-func ud_one(id int, key string, val_int int, val_str string) {
+func udOne(id int, key string, val_int int, val_str string) {
 	if val_int == -1 {
 		_, err := Coll.UpdateOne(
 			Ctx,
@@ -58,7 +58,7 @@ func ud_one(id int, key string, val_int int, val_str string) {
 	}
 }
 
-func Check_exist_ID(id int) bool {
+func CheckExistID(id int) bool {
 	count, err := Coll.CountDocuments(Ctx, bson.D{{"ID", id}})
 	if err != nil {
 		panic(err)
@@ -69,7 +69,7 @@ func Check_exist_ID(id int) bool {
 	return false
 }
 
-func Check_exist_Name(name string) bool {
+func CheckExistName(name string) bool {
 	count, err := Coll.CountDocuments(Ctx, bson.D{{"Name", name}})
 	if err != nil {
 		panic(err)
@@ -80,9 +80,9 @@ func Check_exist_Name(name string) bool {
 	return false
 }
 
-func Insert(figure Superhero_q) {
+func Insert(figure SuperheroQ) {
 	_, err := Coll.InsertOne(Ctx, bson.D{
-		{"ID", Max_id() + 1},
+		{"ID", MaxId() + 1},
 		{"Name", figure.Name},
 		{"Actual_name", figure.Actual_name},
 		{"Gender", figure.Gender},
@@ -101,28 +101,28 @@ func Delete(id int) {
 	}
 }
 
-func Update(figure Superhero_q, id int) {
+func Update(figure SuperheroQ, id int) {
 	//id := figure.ID
 	if figure.Name != "" {
-		ud_one(id, "Name", -1, figure.Name)
+		udOne(id, "Name", -1, figure.Name)
 	}
 	if figure.Actual_name != "" {
-		ud_one(id, "Actual_name", -1, figure.Actual_name)
+		udOne(id, "Actual_name", -1, figure.Actual_name)
 	}
 	if figure.Gender != "" {
-		ud_one(id, "Gender", -1, figure.Gender)
+		udOne(id, "Gender", -1, figure.Gender)
 	}
 	if figure.Age != -1 {
-		ud_one(id, "Age", figure.Age, "")
+		udOne(id, "Age", figure.Age, "")
 	}
 	if figure.Super_power != "" {
-		ud_one(id, "Super_power", -1, figure.Super_power)
+		udOne(id, "Super_power", -1, figure.Super_power)
 	}
 }
 
-func View(id int) Superhero_q {
+func View(id int) SuperheroQ {
 	var result_bson bson.M
-	var result_struct Superhero_q
+	var result_struct SuperheroQ
 	err := Coll.FindOne(Ctx, bson.D{{"ID", id}}).Decode(&result_bson)
 	if err != nil {
 		log.Fatal(err)
@@ -133,19 +133,19 @@ func View(id int) Superhero_q {
 	return result_struct
 }
 
-func View_byPage (perPage int, page int) []Superhero_q{
-	skip := int64(page*perPage)
+func View_byPage(perPage int, page int) []SuperheroQ {
+	skip := int64(page * perPage)
 	limit := int64(perPage)
 	opts := options.FindOptions{
-		Skip: &skip,
+		Skip:  &skip,
 		Limit: &limit,
 	}
 
-	cursor , err := Coll.Find(nil, bson.M{}, &opts)
-	var display []Superhero_q
+	cursor, err := Coll.Find(nil, bson.M{}, &opts)
+	var display []SuperheroQ
 	for cursor.Next(Ctx) {
 		var result_bson bson.M
-		var result_struct Superhero_q
+		var result_struct SuperheroQ
 		if err = cursor.Decode(&result_bson); err != nil {
 			log.Fatal(err)
 		}
@@ -156,8 +156,8 @@ func View_byPage (perPage int, page int) []Superhero_q{
 	return display
 }
 
-func Viewall(limit int, offset int) []Superhero_q {
-	var display []Superhero_q
+func Viewall(limit int, offset int) []SuperheroQ {
+	var display []SuperheroQ
 	cursor, err := Coll.Find(Ctx, bson.M{})
 	if err != nil {
 		log.Fatal(err)
@@ -169,7 +169,7 @@ func Viewall(limit int, offset int) []Superhero_q {
 	for cursor.Next(Ctx) {
 		if count > start && count <= stop {
 			var result_bson bson.M
-			var result_struct Superhero_q
+			var result_struct SuperheroQ
 			if err = cursor.Decode(&result_bson); err != nil {
 				log.Fatal(err)
 			}
