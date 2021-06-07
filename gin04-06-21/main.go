@@ -133,7 +133,7 @@ func viewId(c *gin.Context) {
 func viewAll(c *gin.Context) {
 	p := pagination(c)
 	fmt.Println(p)
-	a := Database.ViewAll(p.Limit, p.Page)
+	a := Database.ViewByPage(p.Limit, p.Page)
 	if a == nil {
 		c.JSON(http.StatusNotFound, "this page is not available")
 		return
