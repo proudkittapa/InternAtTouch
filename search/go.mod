@@ -1,4 +1,4 @@
-module configmod
+module searchmod
 
 go 1.16
 

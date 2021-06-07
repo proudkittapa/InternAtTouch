@@ -1,9 +1,11 @@
-package hero
+package main
 
 import (
 	"fmt"
-	"models"
+	"heromod/models"
 )
+
+
 
 func main() {
 	var productModel models.ProductModel

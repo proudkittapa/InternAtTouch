@@ -1,9 +1,9 @@
 package models
 
 import (
-	"config"
-	"entities"
 	"gopkg.in/mgo.v2/bson"
+	"heromod/config"
+	"heromod/entities"
 )
 
 type ProductModel struct {
