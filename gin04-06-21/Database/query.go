@@ -9,18 +9,18 @@ import (
 )
 
 
-func MaxId() string {
-	var result bson.M
-	var currID SuperheroQ
-	opts := options.FindOne().SetSort(bson.D{{"_id", -1}})
-	err := Coll.FindOne(Ctx, bson.D{{}}, opts).Decode(&result)
-	if err != nil {
-		log.Fatal(err)
-	}
-	bsonBytes, _ := bson.Marshal(result)
-	bson.Unmarshal(bsonBytes, &currID)
-	return currID.ID
-}
+//func MaxId() string {
+//	var result bson.M
+//	var currID SuperheroQ
+//	opts := options.FindOne().SetSort(bson.D{{"_id", -1}})
+//	err := Coll.FindOne(Ctx, bson.D{{}}, opts).Decode(&result)
+//	if err != nil {
+//		log.Fatal(err)
+//	}
+//	bsonBytes, _ := bson.Marshal(result)
+//	bson.Unmarshal(bsonBytes, &currID)
+//	return currID.ID
+//}
 
 func udstr(id int, key string, valStr string) {
 	_, err := Coll.UpdateOne(
@@ -115,7 +115,7 @@ func Update(figure SuperheroQ, id int) {
 			log.Fatal(err)
 		}
 	}
-	if figure.BirthDate != "" {
+	if figure.BirthDate != 0 {
 		_, err := Coll.UpdateOne(
 			Ctx,
 			bson.M{"_id": id},
