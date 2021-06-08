@@ -149,7 +149,7 @@ func search(c *gin.Context) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	data := Database.SearchName(v.Value)
+	data := Database.SearchContainName(v.Value)
 	if data == nil {
 		c.JSON(http.StatusOK, "No result")
 		return
