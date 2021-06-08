@@ -24,8 +24,14 @@ var validate *validator.Validate
 
 func main() {
 	validate = validator.New()
+
 	validate.RegisterValidation("uniqueActualName", existanceActualName)
 	validate.RegisterValidation("uniqueName", existanceName)
+	// validate.RegisterValidation("updateName", updateName)
+	// validate.RegisterValidation("updateActualName", updateActualName)
+	validate.RegisterStructValidation(updateActualName, Database.UpdateSuperhero{})
+
+	validate.RegisterValidation("updateID", updateID)
 	r := setupRouter()
 	Database.InitDB()
 	r.Run()
@@ -48,7 +54,7 @@ func setupRouter() *gin.Engine {
 func insert(c *gin.Context) {
 	var hero Database.SuperheroQ
 	if err := c.ShouldBindJSON(&hero); err != nil {
-		c.JSON(http.StatusBadRequest, "can't bind")
+		c.JSON(http.StatusBadRequest, "can't bind, check the format")
 		return
 	}
 	// if Database.CheckExistName(hero.Name) { //if jer
@@ -71,19 +77,21 @@ func updateId(c *gin.Context) {
 	// 	c.JSON(http.StatusNotFound, "this id doesn't exist")
 	// 	return
 	// }
-	var hero Database.SuperheroQ
+	var hero Database.UpdateSuperhero
 	if err := c.ShouldBindJSON(&hero); err != nil {
 		c.JSON(http.StatusBadRequest, "can't bind")
 		return
 	}
 
-	val, message := validateHero(hero)
+	hero.ID = id
+
+	val, message := validateUpdate(hero, id)
 	if !val {
 		c.JSON(http.StatusBadRequest, message)
 		return
 	}
 
-	Database.Update(hero, id)
+	// Database.Update(hero, id)
 	c.JSON(http.StatusOK, "updated")
 }
 
@@ -151,7 +159,7 @@ func search(c *gin.Context) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	data := Database.SearchContainName(v.Value)
+	data := Database.Search(v.Value)
 	if data == nil {
 		c.JSON(http.StatusOK, "No result")
 		return
@@ -187,9 +195,54 @@ func validateHero(hero Database.SuperheroQ) (bool, string) {
 	return true, "no error"
 }
 
+func validateUpdate(hero Database.UpdateSuperhero, id string) (bool, string) {
+	err := validate.Struct(hero)
+	message := ""
+	if err != nil {
+		for _, err := range err.(validator.ValidationErrors) {
+
+			fmt.Println("Namespace:", err.Namespace())
+			fmt.Println("Field:", err.Field())
+			fmt.Println("StructNameSpace:", err.StructNamespace())
+			fmt.Println("StructField:", err.StructField())
+			fmt.Println("Tag:", err.Tag())
+			fmt.Println("Actual Tag:", err.ActualTag())
+			fmt.Println("Kind:", err.Kind())
+			fmt.Println("Type:", err.Type())
+			fmt.Println("Value:", err.Value())
+			fmt.Println("Param:", err.Param())
+			// fmt.Println("Param:", err.uniqueActualName())
+			// message = message + string(err.Namespace()) + string(err.Field()) + string(err.StructNamespace()) + string(err.StructField()) + string(err.Tag()) + string(err.ActualTag()) + string(err.Kind()) + string(err.Param())
+			fmt.Println()
+			message = message + string(err.StructField()) + " " + string(err.ActualTag()) + "\n"
+			// message = message + string(err.Namespace())
+			// message = "there is error is validateHero()"
+		}
+		return false, message
+	}
+	return true, "no error"
+}
+
 func existanceActualName(fl validator.FieldLevel) bool {
 	return Database.CheckExistActualName(fl.Field().String())
 }
 func existanceName(fl validator.FieldLevel) bool {
 	return Database.CheckExistName(fl.Field().String())
+}
+
+// func updateName(fl validator.FieldLevel, id int) bool {
+// 	return Database.CheckUpdateName(fl.Field().String())
+// }
+
+// func updateActualName(fl validator.FieldLevel) bool {
+// 	return Database.CheckUpdateActualName(fl.Field().String())
+// }
+
+func updateActualName(structLV validator.StructLevel) {
+	input := structLV.Current().Interface().(Database.UpdateSuperhero)
+	Database.CheckUpdateActualName2(structLV, input)
+}
+
+func updateID(fl validator.FieldLevel) bool {
+	return Database.CheckExistID(fl.Field().String())
 }
