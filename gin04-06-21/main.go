@@ -20,8 +20,10 @@ type Person struct {
 	Name string
 }
 
-func main() {
+var validate *validator.Validate
 
+func main() {
+	validate = validator.New()
 	r := setupRouter()
 	Database.InitDB()
 	r.Run()
@@ -173,9 +175,11 @@ func validateHero(hero Database.SuperheroQ) (bool, string) {
 			fmt.Println("Type:", err.Type())
 			fmt.Println("Value:", err.Value())
 			fmt.Println("Param:", err.Param())
-			message = message + err.Namespace() + err.Field() + err.StructNamespace() + err.StructField() + err.Tag() + err.ActualTag() + err.Kind() + err.Type() + err.Value() + err.Param()
+			// message = message + string(err.Namespace()) + string(err.Field()) + string(err.StructNamespace()) + string(err.StructField()) + string(err.Tag()) + string(err.ActualTag()) + string(err.Kind()) + string(err.Param())
 			fmt.Println()
-
+			message = message + string(err.StructField()) + " " + string(err.ActualTag()) + "\n"
+			// message = message + string(err.Namespace())
+			// message = "there is error is validateHero()"
 		}
 		return false, message
 	}
