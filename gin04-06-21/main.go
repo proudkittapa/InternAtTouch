@@ -51,10 +51,10 @@ func insert(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, "can't bind")
 		return
 	}
-	if Database.CheckExistName(hero.Name) { //if jer
-		c.JSON(http.StatusBadRequest, "name already exist")
-		return
-	}
+	// if Database.CheckExistName(hero.Name) { //if jer
+	// 	c.JSON(http.StatusBadRequest, "name already exist")
+	// 	return
+	// }
 	val, message := validateHero(hero)
 	if !val {
 		c.JSON(http.StatusBadRequest, message)
@@ -175,6 +175,7 @@ func validateHero(hero Database.SuperheroQ) (bool, string) {
 			fmt.Println("Type:", err.Type())
 			fmt.Println("Value:", err.Value())
 			fmt.Println("Param:", err.Param())
+			// fmt.Println("Param:", err.uniqueActualName())
 			// message = message + string(err.Namespace()) + string(err.Field()) + string(err.StructNamespace()) + string(err.StructField()) + string(err.Tag()) + string(err.ActualTag()) + string(err.Kind()) + string(err.Param())
 			fmt.Println()
 			message = message + string(err.StructField()) + " " + string(err.ActualTag()) + "\n"
