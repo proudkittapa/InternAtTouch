@@ -108,3 +108,53 @@ func SearchContainActualName(keyword string) []SuperheroQ {
 	}
 	return result
 }
+
+func Search(keyword string) []SuperheroQ {
+	fmt.Println("Searching", keyword)
+	var result []SuperheroQ
+	cursor, err := Coll.Find(Ctx, bson.M{"name": primitive.Regex{Pattern: keyword, Options: "i"}})
+	if err != nil {
+		log.Fatal(err)
+	}
+	for cursor.Next(Ctx) {
+		var resultBson bson.M
+		var resultStruct SuperheroQ
+		if err = cursor.Decode(&resultBson); err != nil {
+			log.Fatal(err)
+		}
+		bsonBytes, _ := bson.Marshal(resultBson)
+		bson.Unmarshal(bsonBytes, &resultStruct)
+		fmt.Println(resultStruct)
+		result = append(result, resultStruct)
+	}
+	cursor, err = Coll.Find(Ctx, bson.M{"actual_name": primitive.Regex{Pattern: keyword, Options: "i"}})
+	if err != nil {
+		log.Fatal(err)
+	}
+	for cursor.Next(Ctx) {
+		var resultBson bson.M
+		var resultStruct SuperheroQ
+		if err = cursor.Decode(&resultBson); err != nil {
+			log.Fatal(err)
+		}
+		bsonBytes, _ := bson.Marshal(resultBson)
+		bson.Unmarshal(bsonBytes, &resultStruct)
+		fmt.Println(resultStruct)
+		if contains(result, resultStruct.Name) == true{
+			continue
+		} else {
+			result = append(result, resultStruct)
+		}
+	}
+	return result
+
+}
+
+func contains(s []SuperheroQ, str string) bool {
+	for _, v := range s {
+		if v.Name == str {
+			return true
+		}
+	}
+	return false
+}
