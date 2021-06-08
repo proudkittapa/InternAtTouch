@@ -11,14 +11,14 @@ import (
 )
 
 type SuperheroQ struct {
-	ID         string   `bson:"_id"`
-	Name       string   `bson:"Name"`
-	ActualName string   `bson:"ActualName"`
-	Gender     string   `bson:"Gender"`
-	BirthDate  string   `bson:"BirthDate"`
-	Height     int      `bson:"Height"`
-	SuperPower []string `bson:"SuperPower"`
-	Alive      bool     `bson:"Alive"`
+	ID         int      `bson:"_id" json:"id"`
+	Name       string   `bson:"name" json:"name" binding:"required"`
+	ActualName string   `bson:"actual_name" json:"actual_name"`
+	Gender     string   `bson:"gender" json:"gender" binding:"required"`
+	BirthDate  int64    `bson:"birth_date" json:"birth_date"`
+	Height     int      `bson:"height" json:"height"`
+	SuperPower []string `bson:"super_power" json:"super_power"`
+	Alive      bool     `bson:"alive" json:"alive"`
 }
 
 type SearchValue struct {
