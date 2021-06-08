@@ -68,7 +68,7 @@ func main(){
 		}
 
 	}
-	indexName, err := Coll.Indexes().CreateOne(
+	indexName, err := collection.Indexes().CreateOne(
 		context.Background(),
 		mongo.IndexModel{
 			Keys: bson.M{
