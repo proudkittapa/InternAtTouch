@@ -53,13 +53,13 @@ func main(){
 		idGen := initID.Gen()
 		_, err = collection.InsertOne(ctx, bson.D{
 			{"_id", idGen},
-			{"Name", v.Name},
-			{"ActualName", v.ActualName},
-			{"Gender", v.Gender},
-			{"BirthDate", v.BirthDate},
-			{"Height", v.Height},
-			{"SuperPower", v.SuperPower},
-			{"Alive", v.Alive},
+			{"name", v.Name},
+			{"actual_name", v.ActualName},
+			{"gender", v.Gender},
+			{"birth_date", v.BirthDate},
+			{"height", v.Height},
+			{"super_power", v.SuperPower},
+			{"alive", v.Alive},
 		})
 
 		if err != nil {
@@ -71,7 +71,7 @@ func main(){
 		context.Background(),
 		mongo.IndexModel{
 			Keys: bson.M{
-				"Name": 1,
+				"name": 1,
 			},
 			Options: options.Index().SetUnique(true),
 		},
@@ -84,7 +84,7 @@ func main(){
 		context.Background(),
 		mongo.IndexModel{
 			Keys: bson.M{
-				"ActualName": 1,
+				"actual_name": 1,
 			},
 			Options: options.Index().SetUnique(true),
 		},
