@@ -28,7 +28,7 @@ type SearchValue struct {
 func SearchName(keyword string) []SuperheroQ {
 	fmt.Println("Searching", keyword)
 	var result []SuperheroQ
-	cursor, err := Coll.Find(Ctx, bson.M{"Name": primitive.Regex{Pattern: "^" + keyword + ".*", Options: "i"}})
+	cursor, err := Coll.Find(Ctx, bson.M{"name": primitive.Regex{Pattern: "^" + keyword + ".*", Options: "i"}})
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -49,7 +49,7 @@ func SearchName(keyword string) []SuperheroQ {
 func SearchActualName(keyword string) []SuperheroQ {
 	fmt.Println("Searching", keyword)
 	var result []SuperheroQ
-	cursor, err := Coll.Find(Ctx, bson.M{"ActualName": primitive.Regex{Pattern: "^" + keyword + ".*", Options: "i"}})
+	cursor, err := Coll.Find(Ctx, bson.M{"actual_name": primitive.Regex{Pattern: "^" + keyword + ".*", Options: "i"}})
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -70,7 +70,7 @@ func SearchActualName(keyword string) []SuperheroQ {
 func SearchContainName(keyword string) []SuperheroQ {
 	fmt.Println("Searching", keyword)
 	var result []SuperheroQ
-	cursor, err := Coll.Find(Ctx, bson.M{"Name": primitive.Regex{Pattern: keyword, Options: "i"}})
+	cursor, err := Coll.Find(Ctx, bson.M{"name": primitive.Regex{Pattern: keyword, Options: "i"}})
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -91,7 +91,7 @@ func SearchContainName(keyword string) []SuperheroQ {
 func SearchContainActualName(keyword string) []SuperheroQ {
 	fmt.Println("Searching", keyword)
 	var result []SuperheroQ
-	cursor, err := Coll.Find(Ctx, bson.M{"ActualName": primitive.Regex{Pattern: keyword, Options: "i"}})
+	cursor, err := Coll.Find(Ctx, bson.M{"actual_name": primitive.Regex{Pattern: keyword, Options: "i"}})
 	if err != nil {
 		log.Fatal(err)
 	}
