@@ -38,7 +38,8 @@ func udstr(id string, key string, valStr string) {
 func CheckExistID(id string) bool {
 	count, err := Coll.CountDocuments(Ctx, bson.D{{"_id", id}})
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
+		return true
 	}
 	if count >= 1 {
 		return true
@@ -49,7 +50,8 @@ func CheckExistID(id string) bool {
 func CheckExistName(name string) bool {
 	count, err := Coll.CountDocuments(Ctx, bson.D{{"Name", name}})
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
+		return true
 	}
 	if count >= 1 {
 		return true
@@ -154,9 +156,7 @@ func View(id string) SuperheroQ {
 		log.Fatal(err)
 	}
 	bsonBytes, _ := bson.Marshal(resultBson)
-	fmt.Println(resultBson)
 	bson.Unmarshal(bsonBytes, &resultStruct)
-	fmt.Println(resultStruct)
 	return resultStruct
 }
 
