@@ -11,12 +11,12 @@ import (
 )
 
 type SuperheroQ struct {
-	ID         string      `bson:"_id" json:"id"`
-	Name       string   `bson:"name" json:"name" binding:"required"`
+	ID         string   `bson:"_id" json:"id"`
+	Name       string   `bson:"name" json:"name" validate:"required"`
 	ActualName string   `bson:"actual_name" json:"actual_name"`
-	Gender     string   `bson:"gender" json:"gender" binding:"required"`
+	Gender     string   `bson:"gender" json:"gender"`
 	BirthDate  int64    `bson:"birth_date" json:"birth_date"`
-	Height     int      `bson:"height" json:"height"`
+	Height     int      `bson:"height" json:"height" validate:"gte=0"`
 	SuperPower []string `bson:"super_power" json:"super_power"`
 	Alive      bool     `bson:"alive" json:"alive"`
 }
@@ -70,7 +70,7 @@ func SearchActualName(keyword string) []SuperheroQ {
 func SearchContainName(keyword string) []SuperheroQ {
 	fmt.Println("Searching", keyword)
 	var result []SuperheroQ
-	cursor, err := Coll.Find(Ctx, bson.M{"Name": primitive.Regex{Pattern:keyword, Options: "i"}})
+	cursor, err := Coll.Find(Ctx, bson.M{"Name": primitive.Regex{Pattern: keyword, Options: "i"}})
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -91,7 +91,7 @@ func SearchContainName(keyword string) []SuperheroQ {
 func SearchContainActualName(keyword string) []SuperheroQ {
 	fmt.Println("Searching", keyword)
 	var result []SuperheroQ
-	cursor, err := Coll.Find(Ctx, bson.M{"ActualName": primitive.Regex{Pattern:keyword, Options: "i"}})
+	cursor, err := Coll.Find(Ctx, bson.M{"ActualName": primitive.Regex{Pattern: keyword, Options: "i"}})
 	if err != nil {
 		log.Fatal(err)
 	}
