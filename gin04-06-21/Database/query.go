@@ -3,11 +3,9 @@ package Database
 import (
 	"fmt"
 	goxid "github.com/touchtechnologies-product/xid"
-	"log"
-	"time"
-
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"log"
 )
 
 
@@ -60,18 +58,14 @@ func CheckExistName(name string) bool {
 }
 
 func Insert(figure SuperheroQ) {
-	birthdate, err := time.Parse("2006-01-02", figure.BirthDate)
-	if err != nil {
-		log.Fatal(err)
-	}
 	initID := goxid.New()
 	idGen := initID.Gen()
-	_, err = Coll.InsertOne(Ctx, bson.D{
+	_, err := Coll.InsertOne(Ctx, bson.D{
 		{"_id", idGen},
 		{"Name", figure.Name},
 		{"ActualName", figure.ActualName},
 		{"Gender", figure.Gender},
-		{"BirthDate", birthdate},
+		{"BirthDate", figure.BirthDate},
 		{"Height", figure.Height},
 		{"SuperPower", figure.SuperPower},
 	})
@@ -122,12 +116,11 @@ func Update(figure SuperheroQ, id int) {
 		}
 	}
 	if figure.BirthDate != "" {
-		birthdate, err := time.Parse("2006-01-02", figure.BirthDate)
-		_, err = Coll.UpdateOne(
+		_, err := Coll.UpdateOne(
 			Ctx,
 			bson.M{"_id": id},
 			bson.D{
-				{"$set", bson.D{{"BirthDate", birthdate}}},
+				{"$set", bson.D{{"BirthDate", figure.BirthDate}}},
 			},
 		)
 		if err != nil {

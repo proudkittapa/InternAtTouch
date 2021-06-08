@@ -14,23 +14,23 @@ type Sp struct {
 	Name        string 		`bson:"Name"`
 	ActualName 	string 		`bson:"ActualName"`
 	Gender      string 		`bson:"Gender"`
-	BirthDate	string		`bson:"BirthDate"`
+	BirthDate	int64		`bson:"BirthDate"`
 	Height      int    		`bson:"Height"`
 	SuperPower  []string 	`bson:"SuperPower"`
 	Alive		bool		`bson:"Alive"`
 }
 
 var Sp_list =  []Sp{
-	{"Spider-Man", "Peter Parker", "Male", "2001-08-10", 178, []string{"Web-shooting"}, true},
-	{"Batman", "Bruce Wayne", "Male", "1978-04-17", 188, []string{"Rich"}, true},
-	{"Superman", "Clark Kent", "Male", "1977-04-18", 191, []string{"Flight", "Strength"}, true},
-	{"Wonder woman", "Diana Prince", "Female", "1941-03-22", 178, []string{"Agility" , "Strength"}, true},
-	{"Doctor Strange", "Stephen Vincent Strange", "Male", "1930-11-18", 183, []string{"Magic"}, true},
-	{"Iron man", "Tony Stark", "Male", "1970-05-29", 185, []string{"Genius", "super-suit"}, false},
-	{"Black Widow", "Natasha Romanoff", "Female", "1984-11-22", 170, []string{"Expert spy"}, false},
-	{"Scarlet Witch", "Wanda Maximoff", "Female", "1976-02-10", 170, []string{"Energy manipulation"}, true},
-	{"Harley Quinn", "Dr. Harleen Quinzel", "Female", "1999-06-26", 168, []string{"Immunity and Strength"}, true},
-	{"Captain America", "Steve Rogers", "Male", "1918-07-04", 188, []string{"Immunity", "Strength"}, true},
+	{"Spider-Man", "Peter Parker", "Male", 997401600, 178, []string{"Web-shooting"}, true},
+	{"Batman", "Bruce Wayne", "Male", 261619200, 188, []string{"Rich"}, true},
+	{"Superman", "Clark Kent", "Male", 230169600, 191, []string{"Flight", "Strength"}, true},
+	{"Wonder woman", "Diana Prince", "Female", -908236800, 178, []string{"Agility" , "Strength"}, true},
+	{"Doctor Strange", "Stephen Vincent Strange", "Male", -1234569600, 183, []string{"Magic"}, true},
+	{"Iron man", "Tony Stark", "Male", 12787200, 185, []string{"Genius", "super-suit"}, false},
+	{"Black Widow", "Natasha Romanoff", "Female", 469929600, 170, []string{"Expert spy"}, false},
+	{"Scarlet Witch", "Wanda Maximoff", "Female", 192758400, 170, []string{"Energy manipulation"}, true},
+	{"Harley Quinn", "Dr. Harleen Quinzel", "Female",  929836800, 168, []string{"Immunity and Strength"}, true},
+	{"Captain America", "Steve Rogers", "Male", -1625097600, 188, []string{"Immunity", "Strength"}, true},
 }
 
 func main(){
@@ -46,7 +46,6 @@ func main(){
 
 	defer client.Disconnect(ctx)
 	for _ ,v := range Sp_list{
-		birthdate , err := time.Parse("2006-01-02", v.BirthDate)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -57,7 +56,7 @@ func main(){
 			{"Name", v.Name},
 			{"ActualName", v.ActualName},
 			{"Gender", v.Gender},
-			{"BirthDate", birthdate},
+			{"BirthDate", v.BirthDate},
 			{"Height", v.Height},
 			{"SuperPower", v.SuperPower},
 			{"Alive", v.Alive},
