@@ -145,30 +145,6 @@ func ViewByPage(perPage int, page int) []SuperheroQ {
 	return display
 }
 
-func ViewByGt(perPage int, page int) []SuperheroQ {
-	// TODO make the paging by using $gt
-	skip := int64(page * perPage)
-	limit := int64(perPage)
-	opts := options.FindOptions{
-		Skip:  &skip,
-		Limit: &limit,
-	}
-
-	cursor, err := Coll.Find(nil, bson.M{}, &opts)
-	var display []SuperheroQ
-	for cursor.Next(Ctx) {
-		var resultBson bson.D
-		var resultStruct SuperheroQ
-		if err = cursor.Decode(&resultBson); err != nil {
-			log.Fatal(err)
-		}
-		bsonBytes, _ := bson.Marshal(resultBson)
-		bson.Unmarshal(bsonBytes, &resultStruct)
-		display = append(display, resultStruct)
-	}
-	return display
-}
-
 func ViewAll(limit int, offset int) []SuperheroQ {
 	//Manual version of paging
 	var display []SuperheroQ
