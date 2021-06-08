@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 	"touch/Database"
@@ -26,13 +27,14 @@ var validate *validator.Validate
 func main() {
 	validate = validator.New()
 
-	validate.RegisterValidation("uniqueActualName", existanceActualName)
-	validate.RegisterValidation("uniqueName", existanceName)
 	// validate.RegisterValidation("updateName", updateName)
 	// validate.RegisterValidation("updateActualName", updateActualName)
+	validate.RegisterStructValidation(existanceActualName, Database.SuperheroQ{})
+	validate.RegisterStructValidation(existanceName, Database.SuperheroQ{})
+	validate.RegisterStructValidation(updateName, Database.UpdateSuperhero{})
 	validate.RegisterStructValidation(updateActualName, Database.UpdateSuperhero{})
+	validate.RegisterStructValidation(updateID, Database.UpdateSuperhero{})
 
-	validate.RegisterValidation("updateID", updateID)
 	r := setupRouter()
 	Database.InitDB()
 	r.Run()
@@ -62,7 +64,7 @@ func insert(c *gin.Context) {
 	// 	c.JSON(http.StatusBadRequest, "name already exist")
 	// 	return
 	// }
-	val, message := validateHero(hero)
+	val, message := validateInsert(hero)
 	if !val {
 		c.JSON(http.StatusBadRequest, message)
 		return
@@ -86,7 +88,8 @@ func updateId(c *gin.Context) {
 
 	hero.ID = id
 
-	val, message := validateUpdate(hero, id)
+	val, message := validateUpdate(hero)
+	log.Println(message)
 	if !val {
 		c.JSON(http.StatusBadRequest, message)
 		return
@@ -98,11 +101,11 @@ func updateId(c *gin.Context) {
 
 func deleteId(c *gin.Context) {
 	id := c.Param("id")
-	if !validatePack.CheckExistID(id) {
-		// fmt.Println("this id doesn't exist")
-		c.JSON(http.StatusNotFound, "this id doesn't exist")
-		return
-	}
+	// if !validatePack.CheckExistID(id) {
+	// 	// fmt.Println("this id doesn't exist")
+	// 	c.JSON(http.StatusNotFound, "this id doesn't exist")
+	// 	return
+	// }
 	Database.Delete(id)
 	c.JSON(http.StatusOK, "deleted")
 }
@@ -110,11 +113,11 @@ func deleteId(c *gin.Context) {
 func viewId(c *gin.Context) {
 	id := c.Param("id")
 
-	if !validatePack.CheckExistID(id) {
-		// fmt.Println("this id doesn't exist")
-		c.JSON(http.StatusNotFound, "this id doesn't exist")
-		return
-	}
+	// if !validatePack.CheckExistID(id) {
+	// 	// fmt.Println("this id doesn't exist")
+	// 	c.JSON(http.StatusNotFound, "this id doesn't exist")
+	// 	return
+	// }
 
 	var data Database.SuperheroQ = Database.View(id)
 	c.JSON(http.StatusOK, data)
@@ -168,82 +171,81 @@ func search(c *gin.Context) {
 	c.JSON(http.StatusOK, data)
 }
 
-func validateHero(hero Database.SuperheroQ) (bool, string) {
+type Err struct {
+	Code  int
+	Cause []string
+}
+
+type Name struct {
+	n string
+}
+
+func validateInsert(hero Database.SuperheroQ) (b bool, out Err) {
 	err := validate.Struct(hero)
-	message := ""
+	var arr []string
 	if err != nil {
 		for _, err := range err.(validator.ValidationErrors) {
-
-			fmt.Println("Namespace:", err.Namespace())
-			fmt.Println("Field:", err.Field())
-			fmt.Println("StructNameSpace:", err.StructNamespace())
-			fmt.Println("StructField:", err.StructField())
-			fmt.Println("Tag:", err.Tag())
-			fmt.Println("Actual Tag:", err.ActualTag())
-			fmt.Println("Kind:", err.Kind())
-			fmt.Println("Type:", err.Type())
-			fmt.Println("Value:", err.Value())
-			fmt.Println("Param:", err.Param())
-			// fmt.Println("Param:", err.uniqueActualName())
-			// message = message + string(err.Namespace()) + string(err.Field()) + string(err.StructNamespace()) + string(err.StructField()) + string(err.Tag()) + string(err.ActualTag()) + string(err.Kind()) + string(err.Param())
-			fmt.Println()
-			message = message + string(err.StructField()) + " " + string(err.ActualTag()) + "\n"
-			// message = message + string(err.Namespace())
-			// message = "there is error is validateHero()"
+			// name := Name{
+			// 	n: string(err.StructField()) + " " + string(err.ActualTag()),
+			// }
+			name := string(err.StructField()) + " " + string(err.ActualTag())
+			arr = append(arr, name)
+			out = Err{
+				Code:  400,
+				Cause: arr,
+			}
 		}
-		return false, message
-	}
-	return true, "no error"
-}
+		log.Println(out)
 
-func validateUpdate(hero Database.UpdateSuperhero, id string) (bool, string) {
+		b = false
+		return b, out
+	}
+	b = true
+	return b, out
+}
+func validateUpdate(hero Database.UpdateSuperhero) (b bool, out Err) {
 	err := validate.Struct(hero)
-	message := ""
+	var arr []string
 	if err != nil {
 		for _, err := range err.(validator.ValidationErrors) {
-
-			fmt.Println("Namespace:", err.Namespace())
-			fmt.Println("Field:", err.Field())
-			fmt.Println("StructNameSpace:", err.StructNamespace())
-			fmt.Println("StructField:", err.StructField())
-			fmt.Println("Tag:", err.Tag())
-			fmt.Println("Actual Tag:", err.ActualTag())
-			fmt.Println("Kind:", err.Kind())
-			fmt.Println("Type:", err.Type())
-			fmt.Println("Value:", err.Value())
-			fmt.Println("Param:", err.Param())
-			// fmt.Println("Param:", err.uniqueActualName())
-			// message = message + string(err.Namespace()) + string(err.Field()) + string(err.StructNamespace()) + string(err.StructField()) + string(err.Tag()) + string(err.ActualTag()) + string(err.Kind()) + string(err.Param())
-			fmt.Println()
-			message = message + string(err.StructField()) + " " + string(err.ActualTag()) + "\n"
-			// message = message + string(err.Namespace())
-			// message = "there is error is validateHero()"
+			// name := Name{
+			// 	n: string(err.StructField()) + " " + string(err.ActualTag()),
+			// }
+			name := string(err.StructField()) + " " + string(err.ActualTag())
+			arr = append(arr, name)
+			out = Err{
+				Code:  400,
+				Cause: arr,
+			}
 		}
-		return false, message
+		log.Println(out)
+
+		b = false
+		return b, out
 	}
-	return true, "no error"
+	b = true
+	return b, out
 }
 
-func existanceActualName(fl validator.FieldLevel) bool {
-	return validatePack.CheckExistActualName(fl.Field().String())
+func existanceActualName(structLV validator.StructLevel) {
+	input := structLV.Current().Interface().(Database.SuperheroQ)
+	validatePack.CheckExistActualName(structLV, input)
 }
-func existanceName(fl validator.FieldLevel) bool {
-	return validatePack.CheckExistName(fl.Field().String())
+func existanceName(structLV validator.StructLevel) {
+	input := structLV.Current().Interface().(Database.SuperheroQ)
+	validatePack.CheckExistName(structLV, input)
 }
-
-// func updateName(fl validator.FieldLevel, id int) bool {
-// 	return Database.CheckUpdateName(fl.Field().String())
-// }
-
-// func updateActualName(fl validator.FieldLevel) bool {
-// 	return Database.CheckUpdateActualName(fl.Field().String())
-// }
 
 func updateActualName(structLV validator.StructLevel) {
 	input := structLV.Current().Interface().(Database.UpdateSuperhero)
-	validatePack.CheckUpdateActualName2(structLV, input)
+	validatePack.CheckUpdateActualName(structLV, input)
 }
 
-func updateID(fl validator.FieldLevel) bool {
-	return validatePack.CheckExistID(fl.Field().String())
+func updateName(structLV validator.StructLevel) {
+	input := structLV.Current().Interface().(Database.UpdateSuperhero)
+	validatePack.CheckUpdateName(structLV, input)
+}
+func updateID(structLV validator.StructLevel) {
+	input := structLV.Current().Interface().(Database.UpdateSuperhero)
+	validatePack.CheckExistID(structLV, input)
 }

@@ -9,19 +9,17 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-func CheckExistID(id string) bool {
-	count, err := Database.Coll.CountDocuments(Database.Ctx, bson.D{{"_id", id}})
+func CheckExistID(structLV validator.StructLevel, input Database.UpdateSuperhero) {
+	count, err := Database.Coll.CountDocuments(Database.Ctx, bson.D{{"_id", input.ID}})
 	if err != nil {
 		log.Fatal("err1: ", err)
-		return true
 	}
-	if count >= 1 {
-		return true
+	if count < 1 {
+		structLV.ReportError("ID is not in the database", "id", "id", "unique", "")
 	}
-	return false
 }
 
-func CheckExistName(name string) bool {
+func checkExistName(name string) bool {
 	count, err := Database.Coll.CountDocuments(Database.Ctx, bson.D{{"name", name}})
 	if err != nil {
 		log.Fatal("err2: ", err)
@@ -33,7 +31,7 @@ func CheckExistName(name string) bool {
 	return true
 }
 
-func CheckExistActualName(actualName string) bool {
+func checkExistActualName(actualName string) bool {
 	count, err := Database.Coll.CountDocuments(Database.Ctx, bson.D{{"actual_name", actualName}})
 	if err != nil {
 		log.Fatal("err2: ", err)
@@ -45,38 +43,45 @@ func CheckExistActualName(actualName string) bool {
 	return true
 }
 
-func CheckUpdateActualName2(structLV validator.StructLevel, input Database.UpdateSuperhero) {
-	if !CheckExistActualName(input.ActualName) {
+func CheckUpdateActualName(structLV validator.StructLevel, input Database.UpdateSuperhero) {
+	if !checkExistActualName(input.ActualName) {
 		checkActName := Database.View(input.ID)
 		fmt.Println(checkActName, input)
 		if checkActName.ActualName != input.ActualName {
-			fmt.Println("erororororororo")
-			structLV.ReportError("same actual name, but not same id", "license", "license", "unique", "")
+			// log.Println("update:")
+			structLV.ReportError("same actual name, but not same id", "actual_name", "actual_name", "unique", "")
+		}
+	}
+	// return true
+}
+func CheckUpdateName(structLV validator.StructLevel, input Database.UpdateSuperhero) {
+	if !checkExistName(input.Name) {
+		checkName := Database.View(input.ID)
+		fmt.Println(checkName, input)
+		if checkName.Name != input.Name {
+			// log.Println("update:")
+			structLV.ReportError("same name, but not same id", "actual_name", "actual_name", "unique", "")
 		}
 	}
 	// return true
 }
 
-func CheckUpdateName(name string, id string) bool {
-	if !CheckExistName(name) {
-		checkName := Database.View(id)
-		if checkName.Name == name {
-			return true
-		}
-		return false
-	} else {
-		return true
+func CheckExistName(structLV validator.StructLevel, input Database.SuperheroQ) {
+	count, err := Database.Coll.CountDocuments(Database.Ctx, bson.D{{"name", input.Name}})
+	if err != nil {
+		log.Fatal("err2: ", err)
+	}
+	if count >= 1 {
+		structLV.ReportError("name already existed", "name", "name", "unique", "")
 	}
 }
 
-// func CheckUpdateActualName(actualName string, id string) bool {
-// 	if !CheckExistActualName(actualName) {
-// 		checkActName := View(id)
-// 		if checkActName.ActualName == actualName {
-// 			return true
-// 		}
-// 		return false
-// 	} else {
-// 		return true
-// 	}
-// }
+func CheckExistActualName(structLV validator.StructLevel, input Database.SuperheroQ) {
+	count, err := Database.Coll.CountDocuments(Database.Ctx, bson.D{{"actual_name", input.ActualName}})
+	if err != nil {
+		log.Fatal("err2: ", err)
+	}
+	if count >= 1 {
+		structLV.ReportError("actual name already existed", "actual_name", "actual_name", "unique", "")
+	}
+}
