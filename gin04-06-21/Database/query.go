@@ -2,22 +2,12 @@ package Database
 
 import (
 	"fmt"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
 	"time"
-)
 
-type SuperheroQ struct {
-	ID          int    		`bson:"ID"`
-	Name        string 		`bson:"Name"`
-	ActualName 	string 		`bson:"ActualName"`
-	Gender      string 		`bson:"Gender"`
-	BirthDate	string		`bson:"BirthDate"`
-	Height      int    		`bson:"Height"`
-	SuperPower  []string 	`bson:"SuperPower"`
-	Alive		bool		`bson:"Alive"`
-}
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo/options"
+)
 
 func MaxId() int {
 	var result bson.M
@@ -68,7 +58,7 @@ func CheckExistName(name string) bool {
 }
 
 func Insert(figure SuperheroQ) {
-	bd , err := time.Parse("2006-01-02", figure.BirthDate)
+	bd, err := time.Parse("2006-01-02", figure.BirthDate)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -102,7 +92,7 @@ func Update(figure SuperheroQ, id int) {
 		udstr(id, "Actual_name", figure.ActualName)
 	}
 	if figure.Gender != "" {
-		udstr(id, "Gender",  figure.Gender)
+		udstr(id, "Gender", figure.Gender)
 	}
 	if figure.Height != -1 {
 		_, err := Coll.UpdateOne(
@@ -129,12 +119,12 @@ func Update(figure SuperheroQ, id int) {
 		}
 	}
 	if figure.BirthDate != "" {
-		bd , err := time.Parse("2006-01-02", figure.BirthDate)
+		bd, err := time.Parse("2006-01-02", figure.BirthDate)
 		_, err = Coll.UpdateOne(
 			Ctx,
 			bson.M{"ID": id},
 			bson.D{
-				{"$set", bson.D{{"BirthDate",bd }}},
+				{"$set", bson.D{{"BirthDate", bd}}},
 			},
 		)
 		if err != nil {
