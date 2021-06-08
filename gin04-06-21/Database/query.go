@@ -5,7 +5,6 @@ import (
 	"log"
 	"reflect"
 
-	"github.com/go-playground/validator/v10"
 	goxid "github.com/touchtechnologies-product/xid"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -45,78 +44,6 @@ func udstr(id string, key string, valStr string) {
 	)
 	if err != nil {
 		log.Fatal(err)
-	}
-}
-
-func CheckExistID(id string) bool {
-	count, err := Coll.CountDocuments(Ctx, bson.D{{"_id", id}})
-	if err != nil {
-		log.Fatal("err1: ", err)
-		return true
-	}
-	if count >= 1 {
-		return true
-	}
-	return false
-}
-
-func CheckExistName(name string) bool {
-	count, err := Coll.CountDocuments(Ctx, bson.D{{"name", name}})
-	if err != nil {
-		log.Fatal("err2: ", err)
-		return false
-	}
-	if count >= 1 {
-		return false
-	}
-	return true
-}
-
-// func CheckExistActualName(actualName string) bool {
-// 	count, err := Coll.CountDocuments(Ctx, bson.D{{"actual_name", actualName}})
-// 	if err != nil {
-// 		log.Fatal("err2: ", err)
-// 		return false
-// 	}
-// 	if count >= 1 {
-// 		return false
-// 	}
-// 	return true
-// }
-
-func CheckUpdateActualName2(structLV validator.StructLevel, input UpdateSuperhero) {
-	if !CheckExistActualName(input.ActualName) {
-		checkActName := View(input.ID)
-		fmt.Println(checkActName, input)
-		if checkActName.ActualName != input.ActualName {
-			fmt.Println("erororororororo")
-			structLV.ReportError("same actual name, but not same id", "license", "license", "unique", "")
-		}
-	}
-	// return true
-}
-
-func CheckUpdateName(name string, id string) bool {
-	if !CheckExistName(name) {
-		checkName := View(id)
-		if checkName.Name == name {
-			return true
-		}
-		return false
-	} else {
-		return true
-	}
-}
-
-func CheckUpdateActualName(actualName string, id string) bool {
-	if !CheckExistActualName(actualName) {
-		checkActName := View(id)
-		if checkActName.ActualName == actualName {
-			return true
-		}
-		return false
-	} else {
-		return true
 	}
 }
 

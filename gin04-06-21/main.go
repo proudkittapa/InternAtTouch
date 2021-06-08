@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"strconv"
 	"touch/Database"
+	"touch/validatePack"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -97,7 +98,7 @@ func updateId(c *gin.Context) {
 
 func deleteId(c *gin.Context) {
 	id := c.Param("id")
-	if !Database.CheckExistID(id) {
+	if !validatePack.CheckExistID(id) {
 		// fmt.Println("this id doesn't exist")
 		c.JSON(http.StatusNotFound, "this id doesn't exist")
 		return
@@ -109,7 +110,7 @@ func deleteId(c *gin.Context) {
 func viewId(c *gin.Context) {
 	id := c.Param("id")
 
-	if !Database.CheckExistID(id) {
+	if !validatePack.CheckExistID(id) {
 		// fmt.Println("this id doesn't exist")
 		c.JSON(http.StatusNotFound, "this id doesn't exist")
 		return
@@ -224,10 +225,10 @@ func validateUpdate(hero Database.UpdateSuperhero, id string) (bool, string) {
 }
 
 func existanceActualName(fl validator.FieldLevel) bool {
-	return Database.CheckExistActualName(fl.Field().String())
+	return validatePack.CheckExistActualName(fl.Field().String())
 }
 func existanceName(fl validator.FieldLevel) bool {
-	return Database.CheckExistName(fl.Field().String())
+	return validatePack.CheckExistName(fl.Field().String())
 }
 
 // func updateName(fl validator.FieldLevel, id int) bool {
@@ -240,9 +241,9 @@ func existanceName(fl validator.FieldLevel) bool {
 
 func updateActualName(structLV validator.StructLevel) {
 	input := structLV.Current().Interface().(Database.UpdateSuperhero)
-	Database.CheckUpdateActualName2(structLV, input)
+	validatePack.CheckUpdateActualName2(structLV, input)
 }
 
 func updateID(fl validator.FieldLevel) bool {
-	return Database.CheckExistID(fl.Field().String())
+	return validatePack.CheckExistID(fl.Field().String())
 }
