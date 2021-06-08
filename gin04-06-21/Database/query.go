@@ -3,6 +3,7 @@ package Database
 import (
 	"fmt"
 	"log"
+	"reflect"
 
 	goxid "github.com/touchtechnologies-product/xid"
 	"go.mongodb.org/mongo-driver/bson"
@@ -121,17 +122,17 @@ func Delete(id string) {
 }
 
 func Update(figure SuperheroQ, id string) {
-	//origin := View(id)
-	if figure.Name != "" {
+	origin := View(id)
+	if figure.Name != origin.Name {
 		udstr(id, "name", figure.Name)
 	}
-	if figure.ActualName != "" {
+	if figure.ActualName != origin.ActualName {
 		udstr(id, "actual_name", figure.ActualName)
 	}
 	if figure.Gender != "" {
 		udstr(id, "gender", figure.Gender)
 	}
-	if figure.Height != -1 {
+	if figure.Height != origin.Height {
 		_, err := Coll.UpdateOne(
 			Ctx,
 			bson.M{"_id": id},
@@ -143,7 +144,7 @@ func Update(figure SuperheroQ, id string) {
 			log.Fatal(err)
 		}
 	}
-	if figure.SuperPower != nil {
+	if !reflect.DeepEqual(figure.SuperPower, origin.SuperPower){
 		_, err := Coll.UpdateOne(
 			Ctx,
 			bson.M{"_id": id},
@@ -155,7 +156,7 @@ func Update(figure SuperheroQ, id string) {
 			log.Fatal(err)
 		}
 	}
-	if figure.BirthDate != 0 {
+	if figure.BirthDate != origin.BirthDate {
 		_, err := Coll.UpdateOne(
 			Ctx,
 			bson.M{"_id": id},
