@@ -59,6 +59,18 @@ func CheckExistName(name string) bool {
 	return false
 }
 
+func CheckExistActualName(actualName string) bool {
+	count, err := Coll.CountDocuments(Ctx, bson.D{{"actual_name", actualName}})
+	if err != nil {
+		log.Fatal("err2: ", err)
+		return true
+	}
+	if count >= 1 {
+		return true
+	}
+	return false
+}
+
 func Insert(figure SuperheroQ) {
 	initID := goxid.New()
 	idGen := initID.Gen()
