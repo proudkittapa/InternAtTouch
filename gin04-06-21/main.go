@@ -20,12 +20,24 @@ type Person struct {
 	Name string
 }
 
+type updateSuperhero struct {
+	Name       string   `bson:"name" json:"name" validate:"updateName"`
+	ActualName string   `bson:"actual_name" json:"actual_name" validate:"updateActualName"`
+	Gender     string   `bson:"gender" json:"gender"`
+	BirthDate  int64    `bson:"birth_date" json:"birth_date"`
+	Height     int      `bson:"height" json:"height" validate:"gte=0"`
+	SuperPower []string `bson:"super_power" json:"super_power"`
+	Alive      bool     `bson:"alive" json:"alive"`
+}
+
 var validate *validator.Validate
 
 func main() {
 	validate = validator.New()
 	validate.RegisterValidation("uniqueActualName", existanceActualName)
 	validate.RegisterValidation("uniqueName", existanceName)
+	validate.RegisterValidation("updateName", updateName)
+	validate.RegisterValidation("updateActualName", updateActualName)
 	r := setupRouter()
 	Database.InitDB()
 	r.Run()
@@ -48,7 +60,7 @@ func setupRouter() *gin.Engine {
 func insert(c *gin.Context) {
 	var hero Database.SuperheroQ
 	if err := c.ShouldBindJSON(&hero); err != nil {
-		c.JSON(http.StatusBadRequest, "can't bind")
+		c.JSON(http.StatusBadRequest, "can't bind, check the format")
 		return
 	}
 	// if Database.CheckExistName(hero.Name) { //if jer
@@ -151,7 +163,7 @@ func search(c *gin.Context) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	data := Database.SearchContainName(v.Value)
+	data := Database.Search(v.Value)
 	if data == nil {
 		c.JSON(http.StatusOK, "No result")
 		return
@@ -192,4 +204,7 @@ func existanceActualName(fl validator.FieldLevel) bool {
 }
 func existanceName(fl validator.FieldLevel) bool {
 	return Database.CheckExistName(fl.Field().String())
+}
+func existanceID(fl validator.FieldLevel) bool {
+	return Database.(fl.Field().String())
 }
