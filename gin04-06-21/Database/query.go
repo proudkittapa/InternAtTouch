@@ -22,7 +22,7 @@ import (
 //	return currID.ID
 //}
 
-func udstr(id int, key string, valStr string) {
+func udstr(id string, key string, valStr string) {
 	_, err := Coll.UpdateOne(
 		Ctx,
 		bson.M{"_id": id},
@@ -35,7 +35,7 @@ func udstr(id int, key string, valStr string) {
 	}
 }
 
-func CheckExistID(id int) bool {
+func CheckExistID(id string) bool {
 	count, err := Coll.CountDocuments(Ctx, bson.D{{"_id", id}})
 	if err != nil {
 		panic(err)
@@ -74,14 +74,14 @@ func Insert(figure SuperheroQ) {
 	}
 }
 
-func Delete(id int) {
+func Delete(id string) {
 	_, err := Coll.DeleteOne(Ctx, bson.M{"_id": id})
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
-func Update(figure SuperheroQ, id int) {
+func Update(figure SuperheroQ, id string) {
 	if figure.Name != "" {
 		udstr(id, "Name", figure.Name)
 	}
