@@ -65,11 +65,12 @@ func insert(c *gin.Context) {
 	// 	return
 	// }
 	val, message := validateInsert(hero)
+	fmt.Println("hrerhere", message)
 	if !val {
 		c.JSON(http.StatusBadRequest, message)
 		return
 	}
-	Database.Insert(hero)
+	// Database.Insert(hero)
 	c.JSON(http.StatusOK, "inserted")
 }
 
@@ -195,7 +196,7 @@ func validateInsert(hero Database.SuperheroQ) (b bool, out Err) {
 				Cause: arr,
 			}
 		}
-		log.Println(out)
+		log.Println("out:", out)
 
 		b = false
 		return b, out
@@ -204,7 +205,9 @@ func validateInsert(hero Database.SuperheroQ) (b bool, out Err) {
 	return b, out
 }
 func validateUpdate(hero Database.UpdateSuperhero) (b bool, out Err) {
+	fmt.Println("hero:", hero)
 	err := validate.Struct(hero)
+	fmt.Println(err)
 	var arr []string
 	if err != nil {
 		for _, err := range err.(validator.ValidationErrors) {
@@ -218,7 +221,7 @@ func validateUpdate(hero Database.UpdateSuperhero) (b bool, out Err) {
 				Cause: arr,
 			}
 		}
-		log.Println(out)
+		log.Println("update out", out)
 
 		b = false
 		return b, out
@@ -237,6 +240,7 @@ func existanceName(structLV validator.StructLevel) {
 }
 
 func updateActualName(structLV validator.StructLevel) {
+	fmt.Println("herejrhe")
 	input := structLV.Current().Interface().(Database.UpdateSuperhero)
 	validatePack.CheckUpdateActualName(structLV, input)
 }

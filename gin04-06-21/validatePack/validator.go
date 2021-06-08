@@ -26,8 +26,10 @@ func checkExistName(name string) bool {
 		return false
 	}
 	if count >= 1 {
+		fmt.Println("name: false")
 		return false
 	}
+	fmt.Println("name: true")
 	return true
 }
 
@@ -38,8 +40,10 @@ func checkExistActualName(actualName string) bool {
 		return false
 	}
 	if count >= 1 {
+		fmt.Println("actual_name: false")
 		return false
 	}
+	fmt.Println("actual_name: true")
 	return true
 }
 
@@ -48,7 +52,7 @@ func CheckUpdateActualName(structLV validator.StructLevel, input Database.Update
 		checkActName := Database.View(input.ID)
 		fmt.Println(checkActName, input)
 		if checkActName.ActualName != input.ActualName {
-			// log.Println("update:")
+			fmt.Println("CheckUpdateActualName")
 			structLV.ReportError("same actual name, but not same id", "actual_name", "actual_name", "unique", "")
 		}
 	}
@@ -59,7 +63,7 @@ func CheckUpdateName(structLV validator.StructLevel, input Database.UpdateSuperh
 		checkName := Database.View(input.ID)
 		fmt.Println(checkName, input)
 		if checkName.Name != input.Name {
-			// log.Println("update:")
+			fmt.Println("CheckUpdateName")
 			structLV.ReportError("same name, but not same id", "actual_name", "actual_name", "unique", "")
 		}
 	}

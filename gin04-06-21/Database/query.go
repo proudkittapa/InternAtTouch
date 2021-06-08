@@ -61,7 +61,7 @@ func Delete(id string) {
 	}
 }
 
-func Update(figure SuperheroQ, id string) {
+func Update(figure UpdateSuperhero, id string) {
 	origin := View(id)
 	if figure.Name != origin.Name {
 		udstr(id, "name", figure.Name)
