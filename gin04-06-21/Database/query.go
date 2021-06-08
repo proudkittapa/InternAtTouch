@@ -129,7 +129,7 @@ func Update(figure SuperheroQ, id string) {
 	}
 }
 
-func View(id int) SuperheroQ {
+func View(id string) SuperheroQ {
 	// TODO : fix the bug of returning the incorrect output
 	var resultBson bson.M
 	var resultStruct SuperheroQ
