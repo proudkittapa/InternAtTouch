@@ -65,4 +65,17 @@ func main(){
 		}
 
 	}
+	indexName, err := Coll.Indexes().CreateOne(
+		context.Background(),
+		mongo.IndexModel{
+			Keys: bson.M{
+				"Name": 1,
+			},
+			Options: options.Index().SetUnique(true),
+		},
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(indexName)
 }
