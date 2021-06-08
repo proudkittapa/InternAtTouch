@@ -5,11 +5,7 @@ import
 )
 
 func init(){
-	//connect http tp application
-}
-
-func main(){
-	//call other test function and print out the result
+	//connect http to application
 }
 
 func Search(searchInput string) string{
@@ -21,16 +17,15 @@ func TestSearchWithNoCommon(t *testing.T){
 	searchOutput := Search(searchInput)
 	ExpectedResult := "No result"
 	if searchIOutput != ExpectedResult{
-		t.Error("Searching for ",searchInput," for no common didn't get the result of ",searchOutput)
+		t.Error("Searching for ",searchInput," for no common alphabet/phrase didn't get the result of ",searchOutput)
 	}
 }
 
-func TestSearchWithNoCommon(t *testing.T){
+func TestSearchWithCommon(t *testing.T){//
 	searchInput := "su"
 	searchOutput := Search(searchInput)
 	ExpectedResult := ""
 	if searchIOutput != ExpectedResult{
-		t.Error("Searching for ",searchInput," for common didn't get the result of ",searchOutput)
+		t.Error("Searching for ",searchInput," for common alphabet/phrase didn't get the result of ",searchOutput)
 	}
 }
-
