@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	goxid "github.com/touchtechnologies-product/xid"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -44,17 +45,19 @@ func main(){
 
 
 	defer client.Disconnect(ctx)
-	for k ,v := range Sp_list{
-		bd , err := time.Parse("2006-01-02", v.BirthDate)
+	for _ ,v := range Sp_list{
+		birthdate , err := time.Parse("2006-01-02", v.BirthDate)
 		if err != nil {
 			log.Fatal(err)
 		}
+		initID := goxid.New()
+		idGen := initID.Gen()
 		_, err = collection.InsertOne(ctx, bson.D{
-			{"ID", k+1},
+			{"_id", idGen},
 			{"Name", v.Name},
 			{"ActualName", v.ActualName},
 			{"Gender", v.Gender},
-			{"BirthDate", bd},
+			{"BirthDate", birthdate},
 			{"Height", v.Height},
 			{"SuperPower", v.SuperPower},
 			{"Alive", v.Alive},

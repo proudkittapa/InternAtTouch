@@ -11,7 +11,7 @@ import (
 )
 
 type SuperheroQ struct {
-	ID         int      `bson:"ID"`
+	ID         string   `bson:"_id"`
 	Name       string   `bson:"Name"`
 	ActualName string   `bson:"ActualName"`
 	Gender     string   `bson:"Gender"`
