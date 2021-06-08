@@ -11,13 +11,13 @@ import (
 )
 
 type Sp struct {
-	Name        string 		`bson:"Name"`
-	ActualName 	string 		`bson:"ActualName"`
-	Gender      string 		`bson:"Gender"`
-	BirthDate	int64		`bson:"BirthDate"`
-	Height      int    		`bson:"Height"`
-	SuperPower  []string 	`bson:"SuperPower"`
-	Alive		bool		`bson:"Alive"`
+	Name       string   `bson:"name" json:"name" validate:"required"`
+	ActualName string   `bson:"actual_name" json:"actual_name"`
+	Gender     string   `bson:"gender" json:"gender"`
+	BirthDate  int64    `bson:"birth_date" json:"birth_date"`
+	Height     int      `bson:"height" json:"height" validate:"gte=0"`
+	SuperPower []string `bson:"super_power" json:"super_power"`
+	Alive      bool     `bson:"alive" json:"alive"`
 }
 
 var Sp_list =  []Sp{

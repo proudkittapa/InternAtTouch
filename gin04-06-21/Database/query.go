@@ -62,12 +62,13 @@ func Insert(figure SuperheroQ) {
 	idGen := initID.Gen()
 	_, err := Coll.InsertOne(Ctx, bson.D{
 		{"_id", idGen},
-		{"Name", figure.Name},
-		{"ActualName", figure.ActualName},
-		{"Gender", figure.Gender},
-		{"BirthDate", figure.BirthDate},
-		{"Height", figure.Height},
-		{"SuperPower", figure.SuperPower},
+		{"name", figure.Name},
+		{"actual_name", figure.ActualName},
+		{"gender", figure.Gender},
+		{"birth_date", figure.BirthDate},
+		{"height", figure.Height},
+		{"super_power", figure.SuperPower},
+		{"alive", figure.Alive},
 	})
 	if err != nil {
 		log.Fatal(err)
@@ -83,20 +84,20 @@ func Delete(id string) {
 
 func Update(figure SuperheroQ, id string) {
 	if figure.Name != "" {
-		udstr(id, "Name", figure.Name)
+		udstr(id, "name", figure.Name)
 	}
 	if figure.ActualName != "" {
-		udstr(id, "ActualName", figure.ActualName)
+		udstr(id, "actual_name", figure.ActualName)
 	}
 	if figure.Gender != "" {
-		udstr(id, "Gender", figure.Gender)
+		udstr(id, "gender", figure.Gender)
 	}
 	if figure.Height != -1 {
 		_, err := Coll.UpdateOne(
 			Ctx,
 			bson.M{"_id": id},
 			bson.D{
-				{"$set", bson.D{{"Height", figure.Height}}},
+				{"$set", bson.D{{"height", figure.Height}}},
 			},
 		)
 		if err != nil {
@@ -108,7 +109,7 @@ func Update(figure SuperheroQ, id string) {
 			Ctx,
 			bson.M{"_id": id},
 			bson.D{
-				{"$set", bson.D{{"SuperPower", bson.A{figure.SuperPower}}}},
+				{"$set", bson.D{{"super_power", bson.A{figure.SuperPower}}}},
 			},
 		)
 		if err != nil {
@@ -120,7 +121,7 @@ func Update(figure SuperheroQ, id string) {
 			Ctx,
 			bson.M{"_id": id},
 			bson.D{
-				{"$set", bson.D{{"BirthDate", figure.BirthDate}}},
+				{"$set", bson.D{{"birth_date", figure.BirthDate}}},
 			},
 		)
 		if err != nil {
@@ -129,9 +130,24 @@ func Update(figure SuperheroQ, id string) {
 	}
 }
 
+func View1(id string) SuperheroQ {
+	// TODO : fix the bug of returning the incorrect output
+	var resultBson bson.D
+	var resultStruct SuperheroQ
+	err := Coll.FindOne(Ctx, bson.D{{"_id", id}}).Decode(&resultBson)
+	if err != nil {
+		log.Fatal(err)
+	}
+	bsonBytes, _ := bson.Marshal(resultBson)
+	fmt.Println(resultBson)
+	bson.Unmarshal(bsonBytes, &resultStruct)
+	fmt.Println(resultStruct)
+	return resultStruct
+}
+
 func View(id string) SuperheroQ {
 	// TODO : fix the bug of returning the incorrect output
-	var resultBson bson.M
+	var resultBson bson.D
 	var resultStruct SuperheroQ
 	err := Coll.FindOne(Ctx, bson.D{{"_id", id}}).Decode(&resultBson)
 	if err != nil {
@@ -155,7 +171,7 @@ func ViewByPage(perPage int, page int) []SuperheroQ {
 	cursor, err := Coll.Find(nil, bson.M{}, &opts)
 	var display []SuperheroQ
 	for cursor.Next(Ctx) {
-		var resultBson bson.M
+		var resultBson bson.D
 		var resultStruct SuperheroQ
 		if err = cursor.Decode(&resultBson); err != nil {
 			log.Fatal(err)
@@ -179,7 +195,7 @@ func ViewByGt(perPage int, page int) []SuperheroQ {
 	cursor, err := Coll.Find(nil, bson.M{}, &opts)
 	var display []SuperheroQ
 	for cursor.Next(Ctx) {
-		var resultBson bson.M
+		var resultBson bson.D
 		var resultStruct SuperheroQ
 		if err = cursor.Decode(&resultBson); err != nil {
 			log.Fatal(err)
@@ -204,7 +220,7 @@ func ViewAll(limit int, offset int) []SuperheroQ {
 	stop := (offset + 1) * limit
 	for cursor.Next(Ctx) {
 		if count > start && count <= stop {
-			var resultBson bson.M
+			var resultBson bson.D
 			var resultStruct SuperheroQ
 			if err = cursor.Decode(&resultBson); err != nil {
 				log.Fatal(err)
