@@ -9,6 +9,7 @@ import (
 	"touch/Database"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 )
 
 type Pagination struct {
@@ -47,59 +48,47 @@ func setupRouter() *gin.Engine {
 }
 
 func insert(c *gin.Context) {
-	buf := make([]byte, 1024)
-	num, _ := c.Request.Body.Read(buf)
-	reqBody := string(buf[0:num])
 	var t Database.SuperheroQ
-	err := json.Unmarshal(buf[0:num], &t)
-	if err != nil {
-		panic(err)
-	}
-	if t.Name == "" {
-		// fmt.Println("Need name to insert")
-		c.JSON(http.StatusUnprocessableEntity, "Need name to insert")
+	if err := c.ShouldBindJSON(&hero); err != nil{
+		c.JSON(http.StatusBadRequest, "can't bind")
 		return
 	}
-	if !checkDate(t.BirthDate) {
-		c.JSON(http.StatusUnprocessableEntity, "Wrong date")
+	
+	val, message := validate(hero)
+	if !val{
+		c.JSON(http.StatusBadRequest, message)
 		return
 	}
-
-	// if t.Age < 0 {
-	// 	fmt.Println("age is less than 0:", t.Age)
-	// 	c.JSON(http.StatusNotFound, "age is less than 0")
-	// 	return
-	// }
-	Database.Insert(t)
-	c.JSON(http.StatusOK, reqBody)
+	Database.Insert(hero)
+	c.JSON(http.StatusOK, message)
 }
 
 func updateId(c *gin.Context) {
 	id := c.Param("id")
-	i, err := strconv.Atoi(id)
-	if err != nil {
-		c.JSON(http.StatusNotFound, "wrong format should be int not string")
-		return
-	}
-	if !Database.CheckExistID(i) {
+	// i, err := strconv.Atoi(id)
+	// if err != nil {
+	// 	c.JSON(http.StatusNotFound, "wrong format should be int not string")
+	// 	return
+	// }
+	if !Database.CheckExistID(id) {
 		c.JSON(http.StatusNotFound, "this id doesn't exist")
 		return
 	}
 	buf := make([]byte, 1024)
 	num, _ := c.Request.Body.Read(buf)
 	reqBody := string(buf[0:num])
-	var t Database.SuperheroQ
+	var hero Database.SuperheroQ
 	err = json.Unmarshal(buf[0:num], &t)
 	if err != nil {
 		panic(err)
 	}
-	t.ID = i
+	// hero.ID = i
 
 	// if t.Age < 0 {
 	// 	c.JSON(http.StatusNotFound, "age is less than 0")
 	// 	return
 	// }
-	Database.Update(t, i)
+	Database.Update(hero, ID)
 	c.JSON(http.StatusOK, reqBody)
 }
 
@@ -139,12 +128,12 @@ func viewId(c *gin.Context) {
 func viewAll(c *gin.Context) {
 	p := pagination(c)
 	fmt.Println(p)
-	a := Database.ViewByPage(p.Limit, p.Page)
-	if a == nil {
+	data := Database.ViewByPage(p.Limit, p.Page)
+	if data == nil {
 		c.JSON(http.StatusNotFound, "this page is not available")
 		return
 	}
-	c.JSON(http.StatusOK, a)
+	c.JSON(http.StatusOK, data)
 }
 
 func pagination(c *gin.Context) Pagination {
@@ -176,31 +165,56 @@ func search(c *gin.Context) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	a := Database.Search(v.Value)
-	if a == nil {
+	data := Database.Search(v.Value)
+	if data == nil {
 		c.JSON(http.StatusOK, "No result")
 		return
 	}
-	c.JSON(http.StatusOK, a)
+	c.JSON(http.StatusOK, data)
 }
 
-func checkDate(name string) bool {
-	myDateString := name
-	fmt.Println("My Starting Date:\t", myDateString)
-	fmt.Printf("%T\n", myDateString)
+// func checkDate(name string) bool {
+// 	myDateString := name
+// 	fmt.Println("My Starting Date:\t", myDateString)
+// 	fmt.Printf("%T\n", myDateString)
 
-	// Parse the date string into Go's time object
-	// The 1st param specifies the format, 2nd is our date string
-	myDate, err := time.Parse("2006-01-02", myDateString)
-	fmt.Printf("%T\n", myDateString)
+// 	// Parse the date string into Go's time object
+// 	// The 1st param specifies the format, 2nd is our date string
+// 	myDate, err := time.Parse("2006-01-02", myDateString)
+// 	fmt.Printf("%T\n", myDateString)
+// 	if err != nil {
+// 		return false
+// 	}
+// 	// Format uses the same formatting style as parse, or we can use a pre-made constant
+// 	fmt.Println("My Date Reformatted:\t", myDate.Format(time.RFC822))
+// 	// fmt.Printf("%T\n", myDateString)
+// 	// In Y-m-d
+// 	fmt.Println("Just The Date:\t\t", myDate.Format("2006-01-02"))
+// 	// fmt.Printf("%T\n", myDateString)
+// 	return true
+// }
+
+func validate(hero Database.SuperheroQ) bool, string{
+	err := validate.Struct(hero)
+	message:= ""
 	if err != nil {
-		return false
+		for _, err := range err.(validator.ValidationErrors) {
+
+			fmt.Println("Namespace:", err.Namespace())
+			fmt.Println("Field:", err.Field())
+			fmt.Println("StructNameSpace:", err.StructNamespace())
+			fmt.Println("StructField:", err.StructField())
+			fmt.Println("Tag:", err.Tag())
+			fmt.Println("Actual Tag:", err.ActualTag())
+			fmt.Println("Kind:", err.Kind())
+			fmt.Println("Type:", err.Type())
+			fmt.Println("Value:", err.Value())
+			fmt.Println("Param:", err.Param())
+			message = message + err.Namespace() + err.Field() + err.StructNamespace() + err.StructField() + err.Tag() + err.ActualTag() + err.Kind() + err.Type() + err.Value() + err.Param()
+			fmt.Println()
+			
+		}
+		return false, message
 	}
-	// Format uses the same formatting style as parse, or we can use a pre-made constant
-	fmt.Println("My Date Reformatted:\t", myDate.Format(time.RFC822))
-	// fmt.Printf("%T\n", myDateString)
-	// In Y-m-d
-	fmt.Println("Just The Date:\t\t", myDate.Format("2006-01-02"))
-	// fmt.Printf("%T\n", myDateString)
-	return true
+	return true, "no error"
 }
