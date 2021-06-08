@@ -39,12 +39,12 @@ func CheckExistID(id string) bool {
 	count, err := Coll.CountDocuments(Ctx, bson.D{{"_id", id}})
 	if err != nil {
 		log.Fatal("err1: ", err)
-		return false
+		return true
 	}
 	if count >= 1 {
-		return false
+		return true
 	}
-	return true
+	return false
 }
 
 func CheckExistName(name string) bool {
@@ -69,6 +69,30 @@ func CheckExistActualName(actualName string) bool {
 		return false
 	}
 	return true
+}
+
+func CheckUpdateName(name string, id string) bool {
+	if !CheckExistName(name){
+		checkName := View(id)
+		if checkName.Name == name{
+			return true
+		}
+		return false
+	}else{
+		return true
+	}
+}
+
+func CheckUpdateActualName(actualName string, id string) bool {
+	if !CheckExistActualName(actualName){
+		checkActName := View(id)
+		if checkActName.ActualName == actualName{
+			return true
+		}
+		return false
+	}else{
+		return true
+	}
 }
 
 func Insert(figure SuperheroQ) {
@@ -97,6 +121,7 @@ func Delete(id string) {
 }
 
 func Update(figure SuperheroQ, id string) {
+	//origin := View(id)
 	if figure.Name != "" {
 		udstr(id, "name", figure.Name)
 	}
