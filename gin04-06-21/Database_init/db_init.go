@@ -8,7 +8,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
 	"time"
-	"fmt"
 )
 
 type Sp struct {
@@ -68,7 +67,7 @@ func main(){
 		}
 
 	}
-	indexName, err := collection.Indexes().CreateOne(
+	_, err = collection.Indexes().CreateOne(
 		context.Background(),
 		mongo.IndexModel{
 			Keys: bson.M{
@@ -80,8 +79,8 @@ func main(){
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(indexName)
-	indexActualName, err := collection.Indexes().CreateOne(
+	//fmt.Println(indexName)
+	_, err = collection.Indexes().CreateOne(
 		context.Background(),
 		mongo.IndexModel{
 			Keys: bson.M{
@@ -93,5 +92,5 @@ func main(){
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(indexActualName)
+	//fmt.Println(indexActualName)
 }
