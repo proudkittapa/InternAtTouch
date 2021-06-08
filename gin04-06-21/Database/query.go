@@ -73,7 +73,7 @@ func Insert(figure SuperheroQ) {
 		log.Fatal(err)
 	}
 	_, err = Coll.InsertOne(Ctx, bson.D{
-		{"$inc", bson.D{{"ID", 1}}},
+		{"ID", bson.D{{"$inc", 1}}},
 		{"Name", figure.Name},
 		{"ActualName", figure.ActualName},
 		{"Gender", figure.Gender},
@@ -144,6 +144,7 @@ func Update(figure SuperheroQ, id int) {
 }
 
 func View(id int) SuperheroQ {
+	// TODO : fix the bug of returning the incorrect output
 	var resultBson bson.M
 	var resultStruct SuperheroQ
 	err := Coll.FindOne(Ctx, bson.D{{"ID", id}}).Decode(&resultBson)
@@ -157,6 +158,31 @@ func View(id int) SuperheroQ {
 }
 
 func ViewByPage(perPage int, page int) []SuperheroQ {
+	// Using skip-limit methods, fast when the data is less -> and not sort the data
+	skip := int64(page * perPage)
+	limit := int64(perPage)
+	opts := options.FindOptions{
+		Skip:  &skip,
+		Limit: &limit,
+	}
+
+	cursor, err := Coll.Find(nil, bson.M{}, &opts)
+	var display []SuperheroQ
+	for cursor.Next(Ctx) {
+		var resultBson bson.M
+		var resultStruct SuperheroQ
+		if err = cursor.Decode(&resultBson); err != nil {
+			log.Fatal(err)
+		}
+		bsonBytes, _ := bson.Marshal(resultBson)
+		bson.Unmarshal(bsonBytes, &resultStruct)
+		display = append(display, resultStruct)
+	}
+	return display
+}
+
+func ViewByGt(perPage int, page int) []SuperheroQ {
+	// TODO make the paging by using $gt
 	skip := int64(page * perPage)
 	limit := int64(perPage)
 	opts := options.FindOptions{
@@ -180,6 +206,7 @@ func ViewByPage(perPage int, page int) []SuperheroQ {
 }
 
 func ViewAll(limit int, offset int) []SuperheroQ {
+	//Manual version of paging
 	var display []SuperheroQ
 	cursor, err := Coll.Find(Ctx, bson.M{})
 	if err != nil {
