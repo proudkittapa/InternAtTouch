@@ -2,12 +2,12 @@ package Database
 
 import (
 	"fmt"
+	"log"
+
 	goxid "github.com/touchtechnologies-product/xid"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"log"
 )
-
 
 //func MaxId() string {
 //	var result bson.M
@@ -38,7 +38,7 @@ func udstr(id string, key string, valStr string) {
 func CheckExistID(id string) bool {
 	count, err := Coll.CountDocuments(Ctx, bson.D{{"_id", id}})
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("err1: ", err)
 		return true
 	}
 	if count >= 1 {
@@ -48,9 +48,9 @@ func CheckExistID(id string) bool {
 }
 
 func CheckExistName(name string) bool {
-	count, err := Coll.CountDocuments(Ctx, bson.D{{"Name", name}})
+	count, err := Coll.CountDocuments(Ctx, bson.D{{"name", name}})
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("err2: ", err)
 		return true
 	}
 	if count >= 1 {
@@ -73,7 +73,7 @@ func Insert(figure SuperheroQ) {
 		{"alive", figure.Alive},
 	})
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("err3: ", err)
 	}
 }
 
