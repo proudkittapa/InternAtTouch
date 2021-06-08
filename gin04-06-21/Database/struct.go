@@ -1,9 +1,9 @@
 package Database
 
 type UpdateSuperhero struct {
-	ID         string   `bson:"_id" json:"id" validate:"updateID"`
+	ID         string   `bson:"_id" json:"id"`
 	Name       string   `bson:"name" json:"name"`
-	ActualName string   `bson:"actual_name" json:"actual_name" validate:"uniqueActualName2"`
+	ActualName string   `bson:"actual_name" json:"actual_name"`
 	Gender     string   `bson:"gender" json:"gender"`
 	BirthDate  int64    `bson:"birth_date" json:"birth_date"`
 	Height     int      `bson:"height" json:"height" validate:"gte=0"`
@@ -13,8 +13,8 @@ type UpdateSuperhero struct {
 
 type SuperheroQ struct {
 	ID         string   `bson:"_id" json:"id"`
-	Name       string   `bson:"name" json:"name" validate:"required,uniqueName"`
-	ActualName string   `bson:"actual_name" json:"actual_name" validate:"required,uniqueActualName"`
+	Name       string   `bson:"name" json:"name" validate:"required"`
+	ActualName string   `bson:"actual_name" json:"actual_name" validate:"required"`
 	Gender     string   `bson:"gender" json:"gender"`
 	BirthDate  int64    `bson:"birth_date" json:"birth_date"`
 	Height     int      `bson:"height" json:"height" validate:"gte=0"`
