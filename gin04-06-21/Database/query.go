@@ -108,7 +108,7 @@ func Update(figure SuperheroQ, id string) {
 			Ctx,
 			bson.M{"_id": id},
 			bson.D{
-				{"$set", bson.D{{"SuperPower", figure.SuperPower}}},
+				{"$set", bson.D{{"SuperPower", bson.A{figure.SuperPower}}}},
 			},
 		)
 		if err != nil {
@@ -138,6 +138,7 @@ func View(id string) SuperheroQ {
 		log.Fatal(err)
 	}
 	bsonBytes, _ := bson.Marshal(resultBson)
+	fmt.Println(resultBson)
 	bson.Unmarshal(bsonBytes, &resultStruct)
 	fmt.Println(resultStruct)
 	return resultStruct
