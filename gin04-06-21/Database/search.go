@@ -10,6 +10,17 @@ import (
 	// "touch/Database"
 )
 
+type SuperheroQ struct {
+	ID         string   `bson:"_id"`
+	Name       string   `bson:"Name"`
+	ActualName string   `bson:"ActualName"`
+	Gender     string   `bson:"Gender"`
+	BirthDate  string   `bson:"BirthDate"`
+	Height     int      `bson:"Height"`
+	SuperPower []string `bson:"SuperPower"`
+	Alive      bool     `bson:"Alive"`
+}
+
 type SearchValue struct {
 	Value string `bson:"value"`
 }
