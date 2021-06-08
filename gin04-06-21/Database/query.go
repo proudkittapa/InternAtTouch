@@ -69,14 +69,17 @@ func CheckExistName(name string) bool {
 
 func Insert(figure SuperheroQ) {
 	bd , err := time.Parse("2006-01-02", figure.BirthDate)
+	if err != nil {
+		log.Fatal(err)
+	}
 	_, err = Coll.InsertOne(Ctx, bson.D{
 		{"$inc", bson.D{{"ID", 1}}},
 		{"Name", figure.Name},
-		{"Actual_name", figure.ActualName},
+		{"ActualName", figure.ActualName},
 		{"Gender", figure.Gender},
 		{"BirthDate", bd},
 		{"Height", figure.Height},
-		{"Super_power", figure.SuperPower},
+		{"SuperPower", figure.SuperPower},
 	})
 	if err != nil {
 		log.Fatal(err)

@@ -21,7 +21,7 @@ type Sp struct {
 
 var Sp_list =  []Sp{
 	{"Spider-Man", "Peter Parker", "Male", "2001-08-10", 178, []string{"Web-shooting"}, true},
-	{"Batman", "Bruce Wayne", "Male", "1978-04-171", 88, []string{"Rich"}, true},
+	{"Batman", "Bruce Wayne", "Male", "1978-04-17", 188, []string{"Rich"}, true},
 	{"Superman", "Clark Kent", "Male", "1977-04-18", 191, []string{"Flight", "Strength"}, true},
 	{"Wonder woman", "Diana Prince", "Female", "1941-03-22", 178, []string{"Agility" , "Strength"}, true},
 	{"Doctor Strange", "Stephen Vincent Strange", "Male", "1930-11-18", 183, []string{"Magic"}, true},
@@ -46,14 +46,18 @@ func main(){
 	defer client.Disconnect(ctx)
 	for k ,v := range Sp_list{
 		bd , err := time.Parse("2006-01-02", v.BirthDate)
+		if err != nil {
+			log.Fatal(err)
+		}
 		_, err = collection.InsertOne(ctx, bson.D{
 			{"ID", k+1},
 			{"Name", v.Name},
-			{"Actual_name", v.ActualName},
+			{"ActualName", v.ActualName},
 			{"Gender", v.Gender},
 			{"BirthDate", bd},
 			{"Height", v.Height},
-			{"Super_power", v.SuperPower},
+			{"SuperPower", v.SuperPower},
+			{"Alive", v.Alive},
 		})
 
 		if err != nil {
