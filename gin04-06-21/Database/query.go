@@ -144,23 +144,7 @@ func Update(figure SuperheroQ, id string) {
 	}
 }
 
-func View1(id string) SuperheroQ {
-	// TODO : fix the bug of returning the incorrect output
-	var resultBson bson.D
-	var resultStruct SuperheroQ
-	err := Coll.FindOne(Ctx, bson.D{{"_id", id}}).Decode(&resultBson)
-	if err != nil {
-		log.Fatal(err)
-	}
-	bsonBytes, _ := bson.Marshal(resultBson)
-	fmt.Println(resultBson)
-	bson.Unmarshal(bsonBytes, &resultStruct)
-	fmt.Println(resultStruct)
-	return resultStruct
-}
-
 func View(id string) SuperheroQ {
-	// TODO : fix the bug of returning the incorrect output
 	var resultBson bson.D
 	var resultStruct SuperheroQ
 	err := Coll.FindOne(Ctx, bson.D{{"_id", id}}).Decode(&resultBson)
