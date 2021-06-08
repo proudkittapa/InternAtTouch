@@ -39,36 +39,36 @@ func CheckExistID(id string) bool {
 	count, err := Coll.CountDocuments(Ctx, bson.D{{"_id", id}})
 	if err != nil {
 		log.Fatal("err1: ", err)
-		return true
+		return false
 	}
 	if count >= 1 {
-		return true
+		return false
 	}
-	return false
+	return true
 }
 
 func CheckExistName(name string) bool {
 	count, err := Coll.CountDocuments(Ctx, bson.D{{"name", name}})
 	if err != nil {
 		log.Fatal("err2: ", err)
-		return true
+		return false
 	}
 	if count >= 1 {
-		return true
+		return false
 	}
-	return false
+	return true
 }
 
 func CheckExistActualName(actualName string) bool {
 	count, err := Coll.CountDocuments(Ctx, bson.D{{"actual_name", actualName}})
 	if err != nil {
 		log.Fatal("err2: ", err)
-		return true
+		return false
 	}
 	if count >= 1 {
-		return true
+		return false
 	}
-	return false
+	return true
 }
 
 func Insert(figure SuperheroQ) {

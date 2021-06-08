@@ -24,6 +24,8 @@ var validate *validator.Validate
 
 func main() {
 	validate = validator.New()
+	validate.RegisterValidation("uniqueActualName", existanceActualName)
+	validate.RegisterValidation("uniqueName", existanceName)
 	r := setupRouter()
 	Database.InitDB()
 	r.Run()
@@ -32,12 +34,7 @@ func main() {
 
 func setupRouter() *gin.Engine {
 	r := gin.Default()
-	// r.POST("/insert", insert)
-	// r.PUT("/update/:id", updateId)
-	// r.DELETE("/delete/:id", deleteId)
-	// r.GET("/view/:id", viewId)
-	// r.GET("/viewall", viewall)
-	// r.GET("/search", search)
+
 	r.POST("/superheroes", insert)
 	r.PUT("/superheroes/:id", updateId)
 	r.DELETE("/superheroes/:id", deleteId)
@@ -187,4 +184,11 @@ func validateHero(hero Database.SuperheroQ) (bool, string) {
 		return false, message
 	}
 	return true, "no error"
+}
+
+func existanceActualName(fl validator.FieldLevel) bool {
+	return Database.CheckExistActualName(fl.Field().String())
+}
+func existanceName(fl validator.FieldLevel) bool {
+	return Database.CheckExistName(fl.Field().String())
 }
