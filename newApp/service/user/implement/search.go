@@ -9,18 +9,18 @@ import (
 	// "github.com/touchtechnologies-product/go-blueprint-clean-architecture/service/util"
 )
 
-func (impl *implementation) Update(ctx context.Context, input *userin.UpdateInput) (ID string, err error) {
+func (impl *implementation) Search(ctx context.Context, input *userin.Search) (ID string, err error) {
 	err = impl.validator.Validate(input)
 	if err != nil {
 		return "", err
 	}
 
-	user := userin.UpdateInputToUserDomain(input)
+	user := userin.SearchInputToUserDomain(input)
 
-	err = impl.repo.Update(ctx, user, user.ID)
+	_, err = impl.repo.Search(ctx, user)
 	if err != nil {
 		return "", err
 	}
 
-	return user.Name, nil
+	return user.Value, nil
 }

@@ -26,7 +26,7 @@ func (ctrl *Controller) Create(c *gin.Context) {
 	initID := goxid.New()
 	input.ID = initID.Gen()
 	// _, err := ctrl.service.Create(c, input)
-	err := ctrl.service.Create(c, input)
+	_, err := ctrl.service.Create(c, input)
 	if err != nil {
 		view.MakeErrResp(c, err)
 		return

@@ -17,7 +17,7 @@ func (ctrl *Controller) Update(c *gin.Context) {
 	// 	"handler.staff.Create",
 	// )
 	// defer span.Finish()
-	input := &userin.CreateInput{}
+	input := &userin.UpdateInput{}
 	if err := c.ShouldBindJSON(input); err != nil {
 		// view.MakeErrResp(c, err)
 		fmt.Println("error")

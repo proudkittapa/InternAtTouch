@@ -16,7 +16,7 @@ func (ctrl *Controller) Search(c *gin.Context) {
 	// 	"handler.staff.Create",
 	// )
 	// defer span.Finish()
-	input := &userin.CreateInput{}
+	input := &userin.Search{}
 	if err := c.ShouldBindJSON(input); err != nil {
 		// view.MakeErrResp(c, err)
 		fmt.Println("error")
