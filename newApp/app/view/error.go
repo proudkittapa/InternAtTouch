@@ -5,7 +5,7 @@ import (
 
 	"github.com/go-playground/validator/v10"
 
-	"github.com/touchtechnologies-product/go-blueprint-clean-architecture/service/util"
+	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/util"
 
 	"github.com/gin-gonic/gin"
 )

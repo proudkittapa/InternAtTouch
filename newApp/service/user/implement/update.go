@@ -15,7 +15,7 @@ func (impl *implementation) Update(ctx context.Context, input *userin.CreateInpu
 	// 	return "", util.ValidationCreateErr(err)
 	// }
 
-	user := userin.CreateInputToUserDomain(input)
+	user := userin.UpdateInputToUserDomain(input)
 
 	// _, err = impl.repo.Create(ctx, company)
 	// if err != nil {

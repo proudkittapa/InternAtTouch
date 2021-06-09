@@ -9,15 +9,20 @@ import (
 	// "github.com/touchtechnologies-product/go-blueprint-clean-architecture/service/util"
 )
 
-func (impl *implementation) Search(ctx context.Context, input *userin.CreateInput) (ID string, err error) {
+func (impl *implementation) Search(ctx context.Context, input *userin.Search) (ID string, err error) {
+	user := userin.SearchInputToUserDomain(input)
 
-//	switch field{
-//	case "name", "actual_name", "gender", "super_power":
-//SearchByField()
-//	case "both_name":
-//SearchByBothName
-//	default:
-//		return
-//	}
+	_, err = impl.repo.Create(ctx, user)
+	// if err != nil {
+	// 	return "", util.RepoCreateErr(err)
+	// }
+	//	switch field{
+	//	case "name", "actual_name", "gender", "super_power":
+	//SearchByField()
+	//	case "both_name":
+	//SearchByBothName
+	//	default:
+	//		return
+	//	}
 	return user.Name, nil
 }
