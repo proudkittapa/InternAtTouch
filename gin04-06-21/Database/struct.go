@@ -8,6 +8,7 @@ type UpdateHero interface {
 	UHero()
 }
 
+//hello
 type UpdateSuperhero struct {
 	ID         string   `bson:"_id" json:"id"`
 	Name       string   `bson:"name" json:"name"`
