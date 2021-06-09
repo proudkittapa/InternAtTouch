@@ -9,13 +9,13 @@ import (
 	// "github.com/touchtechnologies-product/go-blueprint-clean-architecture/service/util"
 )
 
-func (impl *implementation) Create(ctx context.Context, input *userin.CreateInput) (ID string, err error) {
+func (impl *implementation) Delete(ctx context.Context, input *userin.DeleteInput) (ID string, err error) {
 	err = impl.validator.Validate(input)
 	// if err != nil {
 	// 	return "", util.ValidationCreateErr(err)
 	// }
 
-	user := userin.CreateInputToUserDomain(input)
+	user := userin.DeleteInputToUserDomain(input)
 
 	_, err = impl.repo.Create(ctx, user)
 	// if err != nil {
