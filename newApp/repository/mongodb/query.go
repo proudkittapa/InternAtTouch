@@ -69,6 +69,6 @@ func (repo *Repository)ViewAll(ctx context.Context, perPage int, page int)([]dom
 		bson.Unmarshal(bsonBytes, &resultStruct)
 		display = append(display, resultStruct)
 	}
-	
+
 	return display, err
 }
