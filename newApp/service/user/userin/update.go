@@ -25,7 +25,7 @@ func MakeTestUpdateInput() (input *UpdateInput) {
 	}
 }
 
-func CreateInputToUpdateDomain(input *CreateInput) (user *domain.UpdateQ) {
+func UpdateInputToUserDomain(input *CreateInput) (user *domain.UpdateQ) {
 	return &domain.UpdateQ{
 		ID:         input.ID,
 		Name:       input.Name,

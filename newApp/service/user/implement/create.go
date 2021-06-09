@@ -11,16 +11,16 @@ import (
 
 func (impl *implementation) Create(ctx context.Context, input *userin.CreateInput) (ID string, err error) {
 	err = impl.validator.Validate(input)
-	// if err != nil {
-	// 	return "", util.ValidationCreateErr(err)
-	// }
+	if err != nil {
+		return "", err
+	}
 
 	user := userin.CreateInputToUserDomain(input)
 
-	_, err = impl.repo.Create(ctx, user)
-	// if err != nil {
-	// 	return "", util.RepoCreateErr(err)
-	// }
+	err = impl.repo.Create(ctx, user)
+	if err != nil {
+		return "", err
+	}
 
 	return user.ID, nil
 }

@@ -19,5 +19,5 @@ type Service interface {
 	Search(ctx context.Context, input *userin.CreateInput) (q []domain.InsertQ, err error)
 	// Read(ctx context.Context, input *staffin.ReadInput) (staff *out.StaffView, err error)
 	// Update(ctx context.Context, input *staffin.UpdateInput) (err error)
-	Delete(ctx context.Context, input *userin.DeleteInput) (err error)
+	Delete(ctx context.Context, input *userin.DeleteInput) (ID string, err error)
 }

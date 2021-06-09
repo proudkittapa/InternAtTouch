@@ -27,7 +27,7 @@ func newApp(appConfig *config.Config) *app.App {
 	ctx := context.Background()
 	uRepo, err := userRepo.New(ctx, appConfig.MongoDBEndpoint, appConfig.MongoDBName, appConfig.MongoDBCompanyTableName)
 	// cRepo, err := compRepo.New(ctx, appConfig.MongoDBEndpoint, appConfig.MongoDBName, appConfig.MongoDBCompanyTableName)
-	// panicIfErr(err)
+	panicIfErr(err)
 	// sRepo, err := staffRepo.New(ctx, appConfig.MongoDBEndpoint, appConfig.MongoDBName, appConfig.MongoDBStaffTableName)
 	// panicIfErr(err)
 
@@ -37,9 +37,9 @@ func newApp(appConfig *config.Config) *app.App {
 
 	// company := companyService.New(validator, cRepo, generateID)
 	// staff := staffService.New(validator, sRepo, generateID)
-	user := userService.New(validator)
+	user := userService.New(validator, uRepo)
 
-	return app.New(staff, company)
+	return app.New(user)
 }
 
 func setupLog() *logrus.Logger {
