@@ -3,49 +3,34 @@ package mongodb
 import (
 	"context"
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/domain"
-	goxid "github.com/touchtechnologies-product/xid"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
 )
 
-func (repo *Repository)Create(ctx context.Context, figure domain.InsertQ) (ID string,  err error){
-	initID := goxid.New()
-	figure.ID  = initID.Gen()
-
-	_, err = repo.Coll.InsertOne(ctx, figure)
-	if err != nil {
-		log.Fatal("err3: ", err)
-	}
-	return figure.ID , err
+func (repo *Repository)Create(ctx context.Context, figure interface{}) (  err error){
+	//initID := goxid.New()
+	//figure.ID  = initID.Gen()
+	, err = repo.Coll.InsertOne(ctx, figure)
+	return  err
 }
 
-func (repo *Repository)Delete(ctx context.Context, id int) (err error){
-	_, err = repo.Coll.DeleteOne(ctx, bson.M{"_id": id})
-	if err != nil {
-		log.Fatal(err)
-	}
+func (repo *Repository)Delete(ctx context.Context, id interface{}) (err error){
+	, err = repo.Coll.DeleteOne(ctx, bson.M{"id": id})
 	return err
 }
 
-func (repo *Repository)Update(ctx context.Context, figure domain.InsertQ) (err error){
-	_, err = repo.Coll.UpdateOne(ctx, bson.M{"_id": figure.ID}, bson.D{{"$set", figure},},)
-	if err != nil {
-		log.Fatal(err)
-	}
+func (repo *Repository)Update(ctx context.Context, figure interface{}, id string) (err error){
+	, err = repo.Coll.UpdateOne(ctx, bson.M{"_id": id}, bson.D{{"$set", figure},},)
 	return err
 }
 
-func (repo *Repository)View(ctx context.Context, id int) (domain.InsertQ, error){
+func (repo *Repository)View(ctx context.Context, id string) (domain.InsertQ, error){
 	var resultBson bson.D
 	var resultStruct domain.InsertQ
-	err := repo.Coll.FindOne(ctx, bson.D{{"_id", id}}).Decode(&resultBson)
-	if err != nil {
-		log.Fatal(err)
-	}
-	bsonBytes, _ := bson.Marshal(resultBson)
+	err := repo.Coll.FindOne(ctx, bson.D{{"id", id}}).Decode(&resultBson)
+	bsonBytes,  := bson.Marshal(resultBson)
 	bson.Unmarshal(bsonBytes, &resultStruct)
-
 	return resultStruct ,err
 }
 
@@ -56,7 +41,6 @@ func (repo *Repository)ViewAll(ctx context.Context, perPage int, page int)([]dom
 		Skip:  &skip,
 		Limit: &limit,
 	}
-
 	cursor, err := repo.Coll.Find(nil, bson.M{}, &opts)
 	var display []domain.InsertQ
 	for cursor.Next(ctx) {
@@ -69,6 +53,5 @@ func (repo *Repository)ViewAll(ctx context.Context, perPage int, page int)([]dom
 		bson.Unmarshal(bsonBytes, &resultStruct)
 		display = append(display, resultStruct)
 	}
-
 	return display, err
 }
