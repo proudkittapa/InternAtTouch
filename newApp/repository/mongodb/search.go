@@ -29,6 +29,7 @@ func AddToArray(cursor *mongo.Cursor,err error,ctx context.Context) ([]domain.In
 }
 
 func (repo *Repository)Search(ctx context.Context,search *domain.SearchValue) (result []domain.InsertQ,err error){
+	var cursor *mongo.Cursor
 	fmt.Println("Searching for ",search.Value,"in",search.Type)
 	switch search.Type{
 	case "name", "actual_name", "gender", "birthday", "super_power", "height", "alive":
