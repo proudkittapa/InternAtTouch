@@ -28,7 +28,7 @@ func addToArray(cursor *mongo.Cursor,err error,ctx context.Context) ([]domain.In
 	return result,err
 }
 
-func (repo *Repository)SearchDefault(ctx context.Context,field string, keyword string) ([]domain.InsertQ,error){
+func (repo *Repository)SearchByField(ctx context.Context,field string, keyword string) ([]domain.InsertQ,error){
 	fmt.Println("Searching for ",keyword,"in",field)
 	cursor, err := repo.Coll.Find(ctx, bson.M{field: primitive.Regex{Pattern: keyword, Options: "i"}})
 	if err != nil {
