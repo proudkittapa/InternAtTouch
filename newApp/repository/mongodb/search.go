@@ -43,7 +43,7 @@ func (repo *Repository)SearchByBothName(ctx context.Context,field string,keyword
 				bson.M{"actual_name": primitive.Regex{Pattern: keyword, Options: "i"}},
 			}})
 	if err != nil {
-		addToArray(cursor,err,ctx)
+		return addToArray(cursor,err,ctx)
 	}
 	return addToArray(cursor,err,ctx)
 }
