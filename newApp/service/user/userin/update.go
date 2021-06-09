@@ -5,14 +5,7 @@ import (
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/domain"
 )
 
-// type CreateInput struct {
-// 	ID string `json:"ID" validate:"required"`
-// 	// ID        string `json:"id" validate:"required"`
-// 	Name string `json:"name" validate:"required"`
-// 	// Tel       string `json:"tel" validate:"required"`
-// } // @Name StaffCreateInput
-
-type CreateInput struct {
+type UpdateInput struct {
 	ID         string   `json:"id"`
 	Name       string   `son:"name" validate:"required"`
 	ActualName string   `json:"actual_name" validate:"required"`
@@ -21,17 +14,19 @@ type CreateInput struct {
 	Height     int      `json:"height" validate:"gte=0"`
 	SuperPower []string `json:"super_power"`
 	Alive      bool     `json:"alive"`
-}
+} // @Name StaffCreateInput
 
-func MakeTestCreateInput() (input *CreateInput) {
-	return &CreateInput{
-		ID:   "test",
+func MakeTestUpdateInput() (input *UpdateInput) {
+	return &UpdateInput{
+		ID: "test",
+		// ID:        "test",
 		Name: "test",
+		// Tel:       "test",
 	}
 }
 
-func CreateInputToUserDomain(input *CreateInput) (user *domain.InsertQ) {
-	return &domain.InsertQ{
+func CreateInputToUpdateDomain(input *CreateInput) (user *domain.UpdateQ) {
+	return &domain.UpdateQ{
 		ID:         input.ID,
 		Name:       input.Name,
 		ActualName: input.ActualName,

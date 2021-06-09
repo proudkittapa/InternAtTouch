@@ -19,8 +19,7 @@ func MakeTestStaff() (user *User) {
 	}
 }
 
-type SearchValue struct{
-	Type string `bson:"type"`
+type SearchValue struct {
+	Type  string `bson:"type"`
 	Value string `bson:"value"`
 }
-
