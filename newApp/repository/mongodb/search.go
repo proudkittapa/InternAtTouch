@@ -18,7 +18,10 @@ func addToArray(cursor *mongo.Cursor,err error,ctx context.Context) ([]domain.In
 			return result,err
 		}
 		bsonBytes, _ := bson.Marshal(resultBson)
-		bson.Unmarshal(bsonBytes, &resultStruct)
+		err1 := bson.Unmarshal(bsonBytes, &resultStruct)
+		if err1 != nil{
+			return result,err
+		}
 		fmt.Println(resultStruct)
 		result = append(result, resultStruct)
 	}
