@@ -3,6 +3,7 @@ package user
 import (
 	"fmt"
 
+	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/app/view"
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/user/userin"
 
 	"github.com/gin-gonic/gin"
@@ -23,11 +24,11 @@ func (ctrl *Controller) Search(c *gin.Context) {
 	}
 
 	// _, err := ctrl.service.Create(c, input)
-	ctrl.service.Search(c, input)
-	// if err != nil {
-	// 	view.MakeErrResp(c, err)
-	// 	return
-	// }
+	value, err := ctrl.service.Search(c, input)
+	if err != nil {
+		view.MakeErrResp(c, err)
+		return
+	}
 
-	// view.MakeCreatedResp(c, ID)
+	view.MakeCreatedResp(c, value)
 }

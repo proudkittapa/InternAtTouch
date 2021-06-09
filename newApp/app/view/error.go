@@ -28,7 +28,7 @@ func MakeErrResp(c *gin.Context, err error) {
 }
 
 func getHTTPStatusCode(err error) int {
-
+	return 422
 }
 
 func getRespErrors(err error) (errs []*ErrItem) {

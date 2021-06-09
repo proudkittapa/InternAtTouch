@@ -10,7 +10,7 @@ import (
 )
 
 func (ctrl *Controller) Update(c *gin.Context) {
-	id:= 
+	id := c.Param("id")
 	// span, ctx := opentracing.StartSpanFromContextWithTracer(
 	// 	c.Request.Context(),
 	// 	opentracing.GlobalTracer(),
@@ -31,5 +31,5 @@ func (ctrl *Controller) Update(c *gin.Context) {
 		return
 	}
 
-	view.MakeCreatedResp(c, ID)
+	view.MakeCreatedResp(c, id)
 }

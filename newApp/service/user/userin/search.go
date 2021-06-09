@@ -25,12 +25,5 @@ func SearchInputToUserDomain(input *Search) (user *domain.SearchValue) {
 	return &domain.SearchValue{
 		Type:  input.Type,
 		Value: input.Value,
-		// CompanyID: input.CompanyID,
-		// ID:        input.ID,
-		// Name: input.Name,
-
-		// Tel:       input.Tel,
-		// CreatedAt: carbon.Now().Unix(),
-		// UpdatedAt: carbon.Now().Unix(),
 	}
 }

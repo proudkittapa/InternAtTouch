@@ -39,7 +39,7 @@ func newApp(appConfig *config.Config) *app.App {
 	// staff := staffService.New(validator, sRepo, generateID)
 	user := userService.New(validator, uRepo)
 
-	return app.New(user, company)
+	return app.New(user)
 }
 
 func setupLog() *logrus.Logger {
