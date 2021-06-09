@@ -1,5 +1,13 @@
 package Database
 
+type InsertHero interface {
+	IHero()
+}
+
+type UpdateHero interface {
+	UHero()
+}
+
 type UpdateSuperhero struct {
 	ID         string   `bson:"_id" json:"id"`
 	Name       string   `bson:"name" json:"name"`
