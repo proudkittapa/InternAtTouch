@@ -60,7 +60,7 @@ func insert(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, "can't bind, check the format")
 		return
 	}
-	// if Database.CheckExistName(hero.Name) { //if jer
+	// if Database.CheckExistName(user.Name) { //if jer
 	// 	c.JSON(http.StatusBadRequest, "name already exist")
 	// 	return
 	// }
@@ -70,7 +70,7 @@ func insert(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, message)
 		return
 	}
-	// Database.Insert(hero)
+	// Database.Insert(user)
 	c.JSON(http.StatusOK, "inserted")
 }
 
@@ -96,7 +96,7 @@ func updateId(c *gin.Context) {
 		return
 	}
 
-	// Database.Update(hero, id)
+	// Database.Update(user, id)
 	c.JSON(http.StatusOK, "updated")
 }
 
@@ -205,7 +205,7 @@ func validateInsert(hero Database.SuperheroQ) (b bool, out Err) {
 	return b, out
 }
 func validateUpdate(hero Database.UpdateSuperhero) (b bool, out Err) {
-	fmt.Println("hero:", hero)
+	fmt.Println("user:", hero)
 	err := validate.Struct(hero)
 	fmt.Println(err)
 	var arr []string

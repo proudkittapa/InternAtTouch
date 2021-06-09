@@ -12,6 +12,7 @@ require (
 	github.com/swaggo/gin-swagger v1.3.0 // indirect
 	github.com/toorop/gin-logrus v0.0.0-20210225092905-2c785434f26f // indirect
 	github.com/touchtechnologies-product/go-blueprint-clean-architecture v0.0.0-20201015052435-93dd4b1a88c3 // indirect
+	github.com/touchtechnologies-product/xid v0.0.0-20200602111826-04f58074f910 // indirect
 	github.com/uber/jaeger-client-go v2.29.1+incompatible // indirect
 	github.com/uber/jaeger-lib v2.4.1+incompatible // indirect
 	github.com/uniplaces/carbon v0.1.6 // indirect
