@@ -5,12 +5,13 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
+	"context"
 	"reflect"
 )
 
-func (repo *Repository)udstr(id string, key string, valStr string) {
-	_, err := Coll.UpdateOne(
-		Ctx,
+func (repo *Repository)udstr(ctx context.Context, id string, key string, valStr string) {
+	_, err := repo.Coll.UpdateOne(
+		ctx,
 		bson.M{"_id": id},
 		bson.D{
 			{"$set", bson.D{{key, valStr}}},
@@ -21,10 +22,10 @@ func (repo *Repository)udstr(id string, key string, valStr string) {
 	}
 }
 
-func (figure *InsertQ)RunQ(){
+func (repo *Repository)Create(ctx context.Context){
 	initID := goxid.New()
 	idGen := initID.Gen()
-	_, err := Coll.InsertOne(Ctx, bson.D{
+	_, err := repo.Coll.InsertOne(Ctx, bson.D{
 		{"_id", idGen},
 		{"name", figure.Name},
 		{"actual_name", figure.ActualName},
