@@ -1,4 +1,4 @@
-module touch
+module github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp
 
 go 1.16
 

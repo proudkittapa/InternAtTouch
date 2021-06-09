@@ -3,13 +3,14 @@ package main
 import (
 	"io"
 	"log"
-	"touch/config"
+
+	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/config"
 
 	// validatorService "github.com/touchtechnologies-product/go-blueprint-clean-architecture/service/validator"
 
-	validatorService "touch/service/validator"
+	validatorService "github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/validator"
 
-	"touch/app"
+	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/app"
 
 	"github.com/opentracing/opentracing-go"
 	"github.com/sirupsen/logrus"
