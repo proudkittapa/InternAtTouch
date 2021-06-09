@@ -2,6 +2,7 @@ package mongodb
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	domain "github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/domain"
 	"go.mongodb.org/mongo-driver/bson"
@@ -28,16 +29,28 @@ func AddToArray(cursor *mongo.Cursor,err error,ctx context.Context) ([]domain.In
 	return result,err
 }
 
-func (repo *Repository)Search(ctx context.Context,search *domain.SearchValue) (result []domain.InsertQ,err error){
+func toString(resultArray []domain.InsertQ, err error) (string, error){
+	var result string
+	for _, temp := range resultArray{
+		out, err := json.Marshal(temp)
+		if err != nil {
+			return result, err
+		}
+		result = result + string(out)
+	}
+	return result, err
+}
+
+func (repo *Repository)Search(ctx context.Context,search *domain.SearchValue) /*(result []domain.InsertQ,err error)*/ (result string, err error){
 	var cursor *mongo.Cursor
 	fmt.Println("Searching for ",search.Value,"in",search.Type)
 	switch search.Type{
 	case "name", "actual_name", "gender", "birthday", "super_power", "height", "alive":
 	cursor, err := repo.Coll.Find(ctx, bson.M{search.Type: primitive.Regex{Pattern: search.Value, Options: "i"}})
 		if err != nil {
-			return AddToArray(cursor,err,ctx)
+			return toString(AddToArray(cursor,err,ctx))
 		}
-		return AddToArray(cursor,err,ctx)
+		return toString(AddToArray(cursor,err,ctx))
 	case "both_name":
 		cursor, err := repo.Coll.Find(ctx,
 			bson.M{
@@ -46,10 +59,10 @@ func (repo *Repository)Search(ctx context.Context,search *domain.SearchValue) (r
 					bson.M{"actual_name": primitive.Regex{Pattern: search.Value, Options: "i"}},
 				}})
 		if err != nil {
-			return AddToArray(cursor,err,ctx)
+			return toString(AddToArray(cursor,err,ctx))
 		}
-		return AddToArray(cursor,err,ctx)
+		return toString(AddToArray(cursor,err,ctx))
 	}
-	return AddToArray(cursor,err,ctx)
+	return toString(AddToArray(cursor,err,ctx))
 }
 
