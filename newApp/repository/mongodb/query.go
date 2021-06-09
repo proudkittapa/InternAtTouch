@@ -1,127 +1,67 @@
 package mongodb
 
 import (
+	"context"
+	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/domain"
 	goxid "github.com/touchtechnologies-product/xid"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
-	"context"
-	"reflect"
 )
 
-func (repo *Repository)udstr(ctx context.Context, id string, key string, valStr string) {
-	_, err := repo.Coll.UpdateOne(
-		ctx,
-		bson.M{"_id": id},
-		bson.D{
-			{"$set", bson.D{{key, valStr}}},
-		},
-	)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-func (repo *Repository)Create(ctx context.Context){
+func (repo *Repository)Create(ctx context.Context, figure domain.InsertQ) (ID string,  err error){
 	initID := goxid.New()
-	idGen := initID.Gen()
-	_, err := repo.Coll.InsertOne(Ctx, bson.D{
-		{"_id", idGen},
-		{"name", figure.Name},
-		{"actual_name", figure.ActualName},
-		{"gender", figure.Gender},
-		{"birth_date", figure.BirthDate},
-		{"height", figure.Height},
-		{"super_power", figure.SuperPower},
-		{"alive", figure.Alive},
-	})
+	figure.ID  = initID.Gen()
+
+	_, err = repo.Coll.InsertOne(ctx, figure)
 	if err != nil {
 		log.Fatal("err3: ", err)
 	}
+	return figure.ID , err
 }
 
-func (d *DeleteQ)RunQ() {
-	_, err := Coll.DeleteOne(Ctx, bson.M{"_id": d.ID})
+func (repo *Repository)Delete(ctx context.Context, id int) (err error){
+	_, err = repo.Coll.DeleteOne(ctx, bson.M{"_id": id})
 	if err != nil {
 		log.Fatal(err)
 	}
+	return err
 }
 
-func (figure *UpdateQ)RunQ() {
-	v := ViewQ{ID : figure.ID}
-	origin := v.RunView()
-	if figure.Name != origin.Name {
-		udstr(figure.ID, "name", figure.Name)
+func (repo *Repository)Update(ctx context.Context, figure domain.InsertQ) (err error){
+	_, err = repo.Coll.UpdateOne(ctx, bson.M{"_id": figure.ID}, bson.D{{"$set", figure},},)
+	if err != nil {
+		log.Fatal(err)
 	}
-	if figure.ActualName != origin.ActualName {
-		udstr(figure.ID, "actual_name", figure.ActualName)
-	}
-	if figure.Gender != "" {
-		udstr(figure.ID, "gender", figure.Gender)
-	}
-	if figure.Height != origin.Height {
-		_, err := Coll.UpdateOne(
-			Ctx,
-			bson.M{"_id": figure.ID},
-			bson.D{
-				{"$set", bson.D{{"height", figure.Height}}},
-			},
-		)
-		if err != nil {
-			log.Fatal(err)
-		}
-	}
-	if !reflect.DeepEqual(figure.SuperPower, origin.SuperPower) {
-		_, err := Coll.UpdateOne(
-			Ctx,
-			bson.M{"_id": figure.ID},
-			bson.D{
-				{"$set", bson.D{{"super_power", bson.A{figure.SuperPower}}}},
-			},
-		)
-		if err != nil {
-			log.Fatal(err)
-		}
-	}
-	if figure.BirthDate != origin.BirthDate {
-		_, err := Coll.UpdateOne(
-			Ctx,
-			bson.M{"_id": figure.ID},
-			bson.D{
-				{"$set", bson.D{{"birth_date", figure.BirthDate}}},
-			},
-		)
-		if err != nil {
-			log.Fatal(err)
-		}
-	}
+	return err
 }
 
-func (v *ViewQ)RunView() SuperheroQ {
+func (repo *Repository)View(ctx context.Context, id int) (domain.InsertQ, error){
 	var resultBson bson.D
-	var resultStruct SuperheroQ
-	err := Coll.FindOne(Ctx, bson.D{{"_id", v.ID}}).Decode(&resultBson)
+	var resultStruct domain.InsertQ
+	err := repo.Coll.FindOne(ctx, bson.D{{"_id", id}}).Decode(&resultBson)
 	if err != nil {
 		log.Fatal(err)
 	}
 	bsonBytes, _ := bson.Marshal(resultBson)
 	bson.Unmarshal(bsonBytes, &resultStruct)
-	return resultStruct
+
+	return resultStruct ,err
 }
 
-func (v *ViewByPageQ)RunViewAll()[]SuperheroQ {
-	skip := int64(v.page * v.perPage)
-	limit := int64(v.perPage)
+func (repo *Repository)ViewAll(ctx context.Context, perPage int, page int)([]domain.InsertQ, error) {
+	skip := int64(page * perPage)
+	limit := int64(perPage)
 	opts := options.FindOptions{
 		Skip:  &skip,
 		Limit: &limit,
 	}
 
-	cursor, err := Coll.Find(nil, bson.M{}, &opts)
-	var display []SuperheroQ
-	for cursor.Next(Ctx) {
+	cursor, err := repo.Coll.Find(nil, bson.M{}, &opts)
+	var display []domain.InsertQ
+	for cursor.Next(ctx) {
 		var resultBson bson.D
-		var resultStruct SuperheroQ
+		var resultStruct domain.InsertQ
 		if err = cursor.Decode(&resultBson); err != nil {
 			log.Fatal(err)
 		}
@@ -129,5 +69,6 @@ func (v *ViewByPageQ)RunViewAll()[]SuperheroQ {
 		bson.Unmarshal(bsonBytes, &resultStruct)
 		display = append(display, resultStruct)
 	}
-	return display
+	
+	return display, err
 }
