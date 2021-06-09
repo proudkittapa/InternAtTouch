@@ -3,7 +3,9 @@ package user
 import (
 	"fmt"
 
+	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/app/view"
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/user/userin"
+	goxid "github.com/touchtechnologies-product/xid"
 
 	"github.com/gin-gonic/gin"
 )
@@ -21,13 +23,14 @@ func (ctrl *Controller) Create(c *gin.Context) {
 		fmt.Println("error")
 		return
 	}
-
+	initID := goxid.New()
+	input.ID = initID.Gen()
 	// _, err := ctrl.service.Create(c, input)
-	ctrl.service.Create(c, input)
-	// if err != nil {
-	// 	view.MakeErrResp(c, err)
-	// 	return
-	// }
+	err := ctrl.service.Create(c, input)
+	if err != nil {
+		view.MakeErrResp(c, err)
+		return
+	}
 
-	// view.MakeCreatedResp(c, ID)
+	view.MakeCreatedResp(c, input.ID)
 }

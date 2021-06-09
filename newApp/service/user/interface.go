@@ -15,7 +15,7 @@ import (
 type Service interface {
 	// List(ctx context.Context, opt *domain.PageOption) (total int, items []*out.StaffView, err error)
 	Update(ctx context.Context, input *userin.CreateInput) (err error)
-	Create(ctx context.Context, input *userin.CreateInput) (ID string, err error)
+	Create(ctx context.Context, input *userin.CreateInput) (err error)
 	Search(ctx context.Context, input *userin.CreateInput) (q []domain.InsertQ, err error)
 	// Read(ctx context.Context, input *staffin.ReadInput) (staff *out.StaffView, err error)
 	// Update(ctx context.Context, input *staffin.UpdateInput) (err error)
