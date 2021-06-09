@@ -1,7 +1,6 @@
 package Database
 
 import (
-	"fmt"
 	"log"
 	"reflect"
 
@@ -36,7 +35,7 @@ func udstr(id string, key string, valStr string) {
 	}
 }
 
-func Insert(figure SuperheroQ) {
+func (figure *InsertQ)RunQ(){
 	initID := goxid.New()
 	idGen := initID.Gen()
 	_, err := Coll.InsertOne(Ctx, bson.D{
@@ -54,28 +53,29 @@ func Insert(figure SuperheroQ) {
 	}
 }
 
-func Delete(id string) {
-	_, err := Coll.DeleteOne(Ctx, bson.M{"_id": id})
+func (d *DeleteQ)RunQ() {
+	_, err := Coll.DeleteOne(Ctx, bson.M{"_id": d.ID})
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
-func Update(figure UpdateSuperhero, id string) {
-	origin := View(id)
+func (figure *UpdateQ)RunQ() {
+	v := ViewQ{ID : figure.ID}
+	origin := v.RunView()
 	if figure.Name != origin.Name {
-		udstr(id, "name", figure.Name)
+		udstr(figure.ID, "name", figure.Name)
 	}
 	if figure.ActualName != origin.ActualName {
-		udstr(id, "actual_name", figure.ActualName)
+		udstr(figure.ID, "actual_name", figure.ActualName)
 	}
 	if figure.Gender != "" {
-		udstr(id, "gender", figure.Gender)
+		udstr(figure.ID, "gender", figure.Gender)
 	}
 	if figure.Height != origin.Height {
 		_, err := Coll.UpdateOne(
 			Ctx,
-			bson.M{"_id": id},
+			bson.M{"_id": figure.ID},
 			bson.D{
 				{"$set", bson.D{{"height", figure.Height}}},
 			},
@@ -87,7 +87,7 @@ func Update(figure UpdateSuperhero, id string) {
 	if !reflect.DeepEqual(figure.SuperPower, origin.SuperPower) {
 		_, err := Coll.UpdateOne(
 			Ctx,
-			bson.M{"_id": id},
+			bson.M{"_id": figure.ID},
 			bson.D{
 				{"$set", bson.D{{"super_power", bson.A{figure.SuperPower}}}},
 			},
@@ -99,7 +99,7 @@ func Update(figure UpdateSuperhero, id string) {
 	if figure.BirthDate != origin.BirthDate {
 		_, err := Coll.UpdateOne(
 			Ctx,
-			bson.M{"_id": id},
+			bson.M{"_id": figure.ID},
 			bson.D{
 				{"$set", bson.D{{"birth_date", figure.BirthDate}}},
 			},
@@ -110,10 +110,10 @@ func Update(figure UpdateSuperhero, id string) {
 	}
 }
 
-func View(id string) SuperheroQ {
+func (v *ViewQ)RunView() SuperheroQ {
 	var resultBson bson.D
 	var resultStruct SuperheroQ
-	err := Coll.FindOne(Ctx, bson.D{{"_id", id}}).Decode(&resultBson)
+	err := Coll.FindOne(Ctx, bson.D{{"_id", v.ID}}).Decode(&resultBson)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -122,9 +122,9 @@ func View(id string) SuperheroQ {
 	return resultStruct
 }
 
-func ViewByPage(perPage int, page int) []SuperheroQ {
-	skip := int64(page * perPage)
-	limit := int64(perPage)
+func (v *ViewByPageQ)RunViewAll()[]SuperheroQ {
+	skip := int64(v.page * v.perPage)
+	limit := int64(v.perPage)
 	opts := options.FindOptions{
 		Skip:  &skip,
 		Limit: &limit,
@@ -145,35 +145,35 @@ func ViewByPage(perPage int, page int) []SuperheroQ {
 	return display
 }
 
-func ViewAll(limit int, offset int) []SuperheroQ {
-	//Manual version of paging
-	var display []SuperheroQ
-	cursor, err := Coll.Find(Ctx, bson.M{})
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer cursor.Close(Ctx)
-	count := 1
-	start := (offset) * limit
-	stop := (offset + 1) * limit
-	for cursor.Next(Ctx) {
-		if count > start && count <= stop {
-			var resultBson bson.D
-			var resultStruct SuperheroQ
-			if err = cursor.Decode(&resultBson); err != nil {
-				log.Fatal(err)
-			}
-			bsonBytes, _ := bson.Marshal(resultBson)
-			bson.Unmarshal(bsonBytes, &resultStruct)
-			display = append(display, resultStruct)
-
-			if count == stop {
-				fmt.Println(display)
-				return display
-			}
-		}
-		count += 1
-	}
-	fmt.Println(display)
-	return display
-}
+//func ViewAll(limit int, offset int) []SuperheroQ {
+//	//Manual version of paging
+//	var display []SuperheroQ
+//	cursor, err := Coll.Find(Ctx, bson.M{})
+//	if err != nil {
+//		log.Fatal(err)
+//	}
+//	defer cursor.Close(Ctx)
+//	count := 1
+//	start := (offset) * limit
+//	stop := (offset + 1) * limit
+//	for cursor.Next(Ctx) {
+//		if count > start && count <= stop {
+//			var resultBson bson.D
+//			var resultStruct SuperheroQ
+//			if err = cursor.Decode(&resultBson); err != nil {
+//				log.Fatal(err)
+//			}
+//			bsonBytes, _ := bson.Marshal(resultBson)
+//			bson.Unmarshal(bsonBytes, &resultStruct)
+//			display = append(display, resultStruct)
+//
+//			if count == stop {
+//				fmt.Println(display)
+//				return display
+//			}
+//		}
+//		count += 1
+//	}
+//	fmt.Println(display)
+//	return display
+//}
