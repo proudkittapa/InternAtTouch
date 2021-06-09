@@ -2,7 +2,7 @@ package userin
 
 import (
 	// "github.com/touchtechnologies-product/go-blueprint-clean-architecture/domain"
-	"touch/domain"
+	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/domain"
 )
 
 type CreateInput struct {

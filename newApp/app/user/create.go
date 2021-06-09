@@ -2,8 +2,9 @@ package user
 
 import (
 	"fmt"
-	"touch/app/view"
-	"touch/service/user/userin"
+
+	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/app/view"
+	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/user/userin"
 
 	"github.com/gin-gonic/gin"
 )
@@ -15,7 +16,6 @@ func (ctrl *Controller) Create(c *gin.Context) {
 	// 	"handler.staff.Create",
 	// )
 	// defer span.Finish()
-
 	input := &userin.CreateInput{}
 	if err := c.ShouldBindJSON(input); err != nil {
 		// view.MakeErrResp(c, err)
@@ -23,7 +23,7 @@ func (ctrl *Controller) Create(c *gin.Context) {
 		return
 	}
 
-	_, err := ctrl.service.Create(input)
+	_, err := ctrl.service.Create(c, input)
 	if err != nil {
 		view.MakeErrResp(c, err)
 		return

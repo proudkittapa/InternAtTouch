@@ -1,7 +1,7 @@
 package user
 
 import (
-	"touch/service/user"
+	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/user"
 	// "github.com/touchtechnologies-product/go-blueprint-clean-architecture/service/staff"
 )
 
