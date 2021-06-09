@@ -29,7 +29,7 @@ var Sp_list =  []Sp{
 	{"Iron man", "Tony Stark", "Male", 12787200, 185, []string{"Genius", "super-suit"}, false},
 	{"Black Widow", "Natasha Romanoff", "Female", 469929600, 170, []string{"Expert spy"}, false},
 	{"Scarlet Witch", "Wanda Maximoff", "Female", 192758400, 170, []string{"Energy manipulation"}, true},
-	{"Harley Quinn", "Dr. Harleen Quinzel", "Female",  929836800, 168, []string{"Immunity and Strength"}, true},
+	{"Harley Quinn", "Dr. Harleen Quinzel", "Female",  929836800, 168, []string{"Immunity", "Strength"}, true},
 	{"Captain America", "Steve Rogers", "Male", -1625097600, 188, []string{"Immunity", "Strength"}, true},
 }
 
