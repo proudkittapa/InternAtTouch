@@ -25,7 +25,7 @@ func (ctrl *Controller) Update(c *gin.Context) {
 	}
 
 	// _, err := ctrl.service.Create(c, input)
-	err := ctrl.service.Update(c, input)
+	_, err := ctrl.service.Update(c, input)
 	if err != nil {
 		view.MakeErrResp(c, err)
 		return

@@ -15,7 +15,7 @@ type Repository interface {
 	// Read(ctx context.Context, filters []string, out interface{}) (err error)
 	Update(ctx context.Context, ent interface{}, ID string) (err error)
 	Delete(ctx context.Context, ent interface{}) (err error)
-	Search(ctx context.Context, s *domain.SearchValue) (q []domain.InsertQ, err error)
+	Search(ctx context.Context, s *domain.SearchValue) (result string, err error)
 
 	// Count(ctx context.Context, filters []string) (total int, err error)
 

@@ -9,7 +9,7 @@ import (
 	// "github.com/touchtechnologies-product/go-blueprint-clean-architecture/service/util"
 )
 
-func (impl *implementation) Search(ctx context.Context, input *userin.Search) (ID string, err error) {
+func (impl *implementation) Search(ctx context.Context, input *userin.Search) (result string, err error) {
 	err = impl.validator.Validate(input)
 	if err != nil {
 		return "", err
