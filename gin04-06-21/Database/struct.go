@@ -31,6 +31,6 @@ type SuperheroQ struct {
 	Alive      bool     `bson:"alive" json:"alive"`
 }
 
-type SearchValue struct {
-	Value string `bson:"value"`
-}
+//type SearchValue struct {
+//	Value string `bson:"value"`
+//}
