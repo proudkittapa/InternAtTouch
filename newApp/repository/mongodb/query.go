@@ -11,7 +11,7 @@ import (
 func (repo *Repository)Create(ctx context.Context, figure interface{}) (  err error){
 	//initID := goxid.New()
 	//figure.ID  = initID.Gen()
-	, err = repo.Coll.InsertOne(ctx, figure)
+	_, err = repo.Coll.InsertOne(ctx, figure)
 	return  err
 }
 
