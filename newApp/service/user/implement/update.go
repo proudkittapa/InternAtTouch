@@ -9,7 +9,7 @@ import (
 	// "github.com/touchtechnologies-product/go-blueprint-clean-architecture/service/util"
 )
 
-func (impl *implementation) Create(ctx context.Context, input *userin.CreateInput) (ID string, err error) {
+func (impl *implementation) Update(ctx context.Context, input *userin.CreateInput) (ID string, err error) {
 	err = impl.validator.Validate(input)
 	// if err != nil {
 	// 	return "", util.ValidationCreateErr(err)

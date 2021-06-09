@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (ctrl *Controller) Create(c *gin.Context) {
+func (ctrl *Controller) Update(c *gin.Context) {
 	// span, ctx := opentracing.StartSpanFromContextWithTracer(
 	// 	c.Request.Context(),
 	// 	opentracing.GlobalTracer(),
@@ -23,7 +23,7 @@ func (ctrl *Controller) Create(c *gin.Context) {
 	}
 
 	// _, err := ctrl.service.Create(c, input)
-	ctrl.service.Create(c, input)
+	ctrl.service.Update(c, input)
 	// if err != nil {
 	// 	view.MakeErrResp(c, err)
 	// 	return
