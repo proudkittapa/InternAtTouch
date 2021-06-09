@@ -9,7 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func addToArray(cursor *mongo.Cursor,err error,ctx context.Context) ([]domain.InsertQ, error) {
+func AddToArray(cursor *mongo.Cursor,err error,ctx context.Context) ([]domain.InsertQ, error) {
 	var result []domain.InsertQ
 	for cursor.Next(ctx) {
 		var resultBson bson.M
@@ -34,9 +34,9 @@ func (repo *Repository)Search(ctx context.Context,search *domain.SearchValue) (r
 	case "name", "actual_name", "gender", "birthday", "super_power", "height", "alive":
 	cursor, err := repo.Coll.Find(ctx, bson.M{search.Type: primitive.Regex{Pattern: search.Value, Options: "i"}})
 		if err != nil {
-			return addToArray(cursor,err,ctx)
+			return AddToArray(cursor,err,ctx)
 		}
-		return addToArray(cursor,err,ctx)
+		return AddToArray(cursor,err,ctx)
 	case "both_name":
 		cursor, err := repo.Coll.Find(ctx,
 			bson.M{
@@ -45,10 +45,10 @@ func (repo *Repository)Search(ctx context.Context,search *domain.SearchValue) (r
 					bson.M{"actual_name": primitive.Regex{Pattern: search.Value, Options: "i"}},
 				}})
 		if err != nil {
-			return addToArray(cursor,err,ctx)
+			return AddToArray(cursor,err,ctx)
 		}
-		return addToArray(cursor,err,ctx)
+		return AddToArray(cursor,err,ctx)
 	}
-	return addToArray(cursor,err,ctx)
+	return AddToArray(cursor,err,ctx)
 }
 
