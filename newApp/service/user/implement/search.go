@@ -10,17 +10,14 @@ import (
 )
 
 func (impl *implementation) Search(ctx context.Context, input *userin.CreateInput) (ID string, err error) {
-	err = impl.validator.Validate(input)
-	// if err != nil {
-	// 	return "", util.ValidationCreateErr(err)
-	// }
 
-	user := userin.CreateInputToUserDomain(input)
-
-	// _, err = impl.repo.Create(ctx, company)
-	// if err != nil {
-	// 	return "", util.RepoCreateErr(err)
-	// }
-
+//	switch field{
+//	case "name", "actual_name", "gender", "super_power":
+//SearchByField()
+//	case "both_name":
+//SearchByBothName
+//	default:
+//		return
+//	}
 	return user.Name, nil
 }
