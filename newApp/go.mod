@@ -15,4 +15,5 @@ require (
 	github.com/uber/jaeger-client-go v2.29.1+incompatible // indirect
 	github.com/uber/jaeger-lib v2.4.1+incompatible // indirect
 	github.com/uniplaces/carbon v0.1.6 // indirect
+	go.mongodb.org/mongo-driver v1.5.3 // indirect
 )
