@@ -10,16 +10,20 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-var Coll *mongo.Collection
-var Ctx context.Context
+type dbconfig struct{
+	Coll	*mongo.Collection
+	Ctx		context.Context
+}
+
 
 func InitDB() {
+	var heroDB dbconfig
 	uri := os.Getenv("MONGODB_URI")
 	client, err := mongo.NewClient(options.Client().ApplyURI(uri))
 	if err != nil {
 		log.Fatal(err)
 	}
-	Coll = client.Database("superhero").Collection("lists")
-	Ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-	err = client.Connect(Ctx)
+	heroDB.Coll = client.Database("superhero").Collection("lists")
+	heroDB.Ctx,_ = context.WithTimeout(context.Background(), 10*time.Second)
+	err = client.Connect(heroDB.Ctx)
 }
