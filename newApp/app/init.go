@@ -21,9 +21,12 @@ func New(userService userService.Service) *App {
 }
 
 func (app *App) RegisterRoute(router *gin.Engine) *App {
-	r := gin.Default()
-	r.POST("/superheores", app.user.Create)
-	router = r
+	apiRoutes := router.Group("/api/v1")
+	{
+		apiRoutes.POST("/superheores", app.user.Create)
+		apiRoutes.PUT("/superheores", app.user.Update)
+		apiRoutes.GET("/superheroes", app.user.Search)
+	}
 
 	return app
 }

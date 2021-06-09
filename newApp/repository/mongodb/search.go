@@ -9,7 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func addToArray(cursor *mongo.Cursor,err error,ctx context.Context) ([]domain.InsertQ, error) {
+func AddToArray(cursor *mongo.Cursor,err error,ctx context.Context) ([]domain.InsertQ, error) {
 	var result []domain.InsertQ
 	for cursor.Next(ctx) {
 		var resultBson bson.M
@@ -28,25 +28,27 @@ func addToArray(cursor *mongo.Cursor,err error,ctx context.Context) ([]domain.In
 	return result,err
 }
 
-func (repo *Repository)SearchByField(ctx context.Context,field string, keyword string) ([]domain.InsertQ,error){
-	fmt.Println("Searching for ",keyword,"in",field)
-	cursor, err := repo.Coll.Find(ctx, bson.M{field: primitive.Regex{Pattern: keyword, Options: "i"}})
-	if err != nil {
-		return addToArray(cursor,err,ctx)
+func (repo *Repository)Search(ctx context.Context,search *domain.SearchValue) (result []domain.InsertQ,err error){
+	fmt.Println("Searching for ",search.Value,"in",search.Type)
+	switch search.Type{
+	case "name", "actual_name", "gender", "birthday", "super_power", "height", "alive":
+	cursor, err := repo.Coll.Find(ctx, bson.M{search.Type: primitive.Regex{Pattern: search.Value, Options: "i"}})
+		if err != nil {
+			return AddToArray(cursor,err,ctx)
+		}
+		return AddToArray(cursor,err,ctx)
+	case "both_name":
+		cursor, err := repo.Coll.Find(ctx,
+			bson.M{
+				"$or": bson.A{
+					bson.M{"name": primitive.Regex{Pattern: search.Value, Options: "i"}},
+					bson.M{"actual_name": primitive.Regex{Pattern: search.Value, Options: "i"}},
+				}})
+		if err != nil {
+			return AddToArray(cursor,err,ctx)
+		}
+		return AddToArray(cursor,err,ctx)
 	}
-	return addToArray(cursor,err,ctx)
+	return AddToArray(cursor,err,ctx)
 }
 
-func (repo *Repository)SearchByBothName(ctx context.Context,field string,keyword string) ([]domain.InsertQ, error) {
-	fmt.Println("Searching for ",keyword,"in",field)
-	cursor, err := repo.Coll.Find(ctx,
-		bson.M{
-			"$or": bson.A{
-				bson.M{"name": primitive.Regex{Pattern: keyword, Options: "i"}},
-				bson.M{"actual_name": primitive.Regex{Pattern: keyword, Options: "i"}},
-			}})
-	if err != nil {
-		return addToArray(cursor,err,ctx)
-	}
-	return addToArray(cursor,err,ctx)
-}
