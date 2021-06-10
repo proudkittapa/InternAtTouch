@@ -1,8 +1,6 @@
 package user
 
 import (
-	"fmt"
-
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/app/view"
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/user/userin"
 
@@ -18,12 +16,12 @@ func (ctrl *Controller) View(c *gin.Context) {
 	// )
 	// defer span.Finish()
 	input := &userin.ViewInput{}
-	if err := c.ShouldBindJSON(input); err != nil {
-		// view.MakeErrResp(c, err)
-		fmt.Println("error")
-		return
-	}
-
+	// if err := c.ShouldBindJSON(input); err != nil {
+	// 	// view.MakeErrResp(c, err)
+	// 	fmt.Println("error")
+	// 	return
+	// }
+	input.ID = id
 	// _, err := ctrl.service.Create(c, input)
 	_, err := ctrl.service.View(c, input)
 	if err != nil {

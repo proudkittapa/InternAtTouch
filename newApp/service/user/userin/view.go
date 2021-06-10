@@ -25,8 +25,8 @@ func MakeTestViewInput() (input *UpdateInput) {
 	}
 }
 
-func ViewInputToUserDomain(input *ViewInput) (user *domain.InsertQ) {
-	return &domain.InsertQ{
+func ViewInputToUserDomain(input *ViewInput) (user *domain.ViewQ) {
+	return &domain.ViewQ{
 		ID: input.ID,
 	}
 }
