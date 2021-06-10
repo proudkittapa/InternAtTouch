@@ -2,6 +2,7 @@ package implement
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/user/userin"
 	// "github.com/touchtechnologies-product/go-blueprint-clean-architecture/service/util"
@@ -10,9 +11,10 @@ import (
 )
 
 func (impl *implementation) Update(ctx context.Context, input *userin.UpdateInput) (ID string, err error) {
-	// err = impl.validator.Validate(input)
+	err = impl.validator.Validate(input)
 	if err != nil {
-		return "", err
+		fmt.Println("validte", err)
+		return "validate error", err
 	}
 
 	user := userin.UpdateInputToUserDomain(input)

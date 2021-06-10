@@ -7,7 +7,7 @@ import (
 
 type UpdateInput struct {
 	ID         string   `json:"id"`
-	Name       string   `son:"name" validate:"required"`
+	Name       string   `json:"name" validate:"required"`
 	ActualName string   `json:"actual_name" validate:"required"`
 	Gender     string   `json:"gender"`
 	BirthDate  int64    `json:"birth_date"`

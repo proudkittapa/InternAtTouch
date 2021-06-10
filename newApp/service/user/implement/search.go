@@ -11,11 +11,11 @@ import (
 )
 
 func (impl *implementation) Search(ctx context.Context, input *userin.Search) (result string, err error) {
-	// err = impl.validator.Validate(input)
-	// if err != nil {
-	// 	return "", err
-	// }
-
+	err = impl.validator.Validate(input)
+	if err != nil {
+		fmt.Println("validte", err)
+		return "validate error", err
+	}
 	user := userin.SearchInputToUserDomain(input)
 	fmt.Println("user input search:", user)
 	a, err := impl.repo.Search(ctx, user)

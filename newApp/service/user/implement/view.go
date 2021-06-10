@@ -13,9 +13,9 @@ import (
 func (impl *implementation) View(ctx context.Context, input *userin.ViewInput) (a domain.InsertQ, err error) {
 	err = impl.validator.Validate(input)
 	if err != nil {
+		fmt.Println("validte", err)
 		return a, err
 	}
-
 	user := userin.ViewInputToUserDomain(input)
 	fmt.Println("user input view: ", user)
 	fmt.Println("user.ID: ", user.ID)

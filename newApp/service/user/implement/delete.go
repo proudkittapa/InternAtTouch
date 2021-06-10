@@ -13,9 +13,9 @@ import (
 func (impl *implementation) Delete(ctx context.Context, input *userin.DeleteInput) (ID string, err error) {
 	// err = impl.validator.Validate(input)
 	// if err != nil {
-	// 	return "", err
+	// 	fmt.Println("validte", err)
+	// 	return "validate error", err
 	// }
-
 	user := userin.DeleteInputToUserDomain(input)
 	fmt.Println("user input delete:", user)
 
@@ -27,5 +27,5 @@ func (impl *implementation) Delete(ctx context.Context, input *userin.DeleteInpu
 		return "", err
 	}
 
-	return user.ID, nil
+	return user.ID, err
 }

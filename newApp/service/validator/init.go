@@ -8,14 +8,21 @@ import (
 
 type GoPlayGroundValidator struct {
 	validate *validator.Validate
-	user     util.Repository
+	userRepo util.Repository
 }
 
-func New() (v *GoPlayGroundValidator) {
+func New(userRepo util.Repository) (v *GoPlayGroundValidator) {
 	v = &GoPlayGroundValidator{
 		validate: validator.New(),
+		userRepo: userRepo,
 	}
-	v.validate.RegisterStructValidation(v.IsProud, &userin.CreateInput{})
+	// v.validate.RegisterStructValidation(v.IsProud, &userin.CreateInput{})
+	v.validate.RegisterStructValidation(v.UserCreateStructLevelValidation, &userin.CreateInput{})
+	v.validate.RegisterStructValidation(v.UserUpdateStructLevelValidation, &userin.UpdateInput{})
+	// v.validate.RegisterStructValidation(v.UserIDStructLevelValidation, &userin.UpdateInput{})
+	// v.validate.RegisterStructValidation(v.UserIDStructLevelValidation, &userin.Search{})
+	// v.validate.RegisterStructValidation(v.UserIDStructLevelValidation, &userin.ViewInput{})
+	// v.validate.RegisterStructValidation(v.UserIDStructLevelValidation, &userin.DeleteInput{})
 	// v.validate.RegisterStructValidation(v.CompanyCreateStructLevelValidation, &companyin.CreateInput{})
 	// v.validate.RegisterStructValidation(v.CompanyUpdateStructLevelValidation, &companyin.UpdateInput{})
 	// v.validate.RegisterStructValidation(v.PageOptionStructLevelValidation, &domain.PageOption{})

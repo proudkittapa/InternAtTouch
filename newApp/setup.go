@@ -31,7 +31,7 @@ func newApp(appConfig *config.Config) *app.App {
 	// sRepo, err := staffRepo.New(ctx, appConfig.MongoDBEndpoint, appConfig.MongoDBName, appConfig.MongoDBStaffTableName)
 	// panicIfErr(err)
 
-	validator := validatorService.New()
+	validator := validatorService.New(uRepo)
 	// generateID, err := util.NewUUID()
 	// panicIfErr(err)
 

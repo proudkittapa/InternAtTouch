@@ -24,7 +24,7 @@ func (app *App) RegisterRoute(router *gin.Engine) *App {
 	apiRoutes := router.Group("/api/v1")
 	{
 		apiRoutes.POST("/superheroes", app.user.Create)
-		apiRoutes.PUT("/superheroes/:id", app.user.Update)
+		apiRoutes.PUT("/superheroes", app.user.Update)
 		apiRoutes.GET("/superheroes/search", app.user.Search)
 		apiRoutes.DELETE("/superheroes/:id", app.user.Delete)
 		apiRoutes.GET("/superheroes/:id", app.user.View)

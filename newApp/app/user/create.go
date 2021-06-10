@@ -29,7 +29,7 @@ func (ctrl *Controller) Create(c *gin.Context) {
 	// _, err := ctrl.service.Create(c, input)
 	_, err := ctrl.service.Create(c, input)
 	if err != nil {
-		view.MakeErrResp(c, 200, "can't insert")
+		view.MakeErrResp2(c, 422, err)
 		return
 	}
 

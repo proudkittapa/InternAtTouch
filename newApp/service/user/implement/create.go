@@ -14,7 +14,7 @@ func (impl *implementation) Create(ctx context.Context, input *userin.CreateInpu
 	err = impl.validator.Validate(input)
 	if err != nil {
 		fmt.Println("validte", err)
-		return "", err
+		return "validate error", err
 	}
 
 	user := userin.CreateInputToUserDomain(input)

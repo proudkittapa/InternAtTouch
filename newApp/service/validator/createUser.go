@@ -1,12 +1,12 @@
 package validator
 
 import (
-	"fmt"
-	"log"
+	"context"
+	"regexp"
 
+	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/domain"
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/user/userin"
 	"github.com/go-playground/validator/v10"
-	"gopkg.in/mgo.v2/bson"
 )
 
 func (v *GoPlayGroundValidator) IsProud(structLV validator.StructLevel) {
@@ -14,83 +14,41 @@ func (v *GoPlayGroundValidator) IsProud(structLV validator.StructLevel) {
 	v.checkName(structLV, input.Name)
 }
 
-func (v *GoPlayGroundValidator) CheckExistID(structLV validator.StructLevel, input Database.UpdateSuperhero) {
-	count, err := Database.Coll.CountDocuments(Database.Ctx, bson.D{{"_id", input.ID}})
-	if err != nil {
-		log.Fatal("err1: ", err)
-	}
-	if count < 1 {
-		structLV.ReportError("ID is not in the database", "id", "id", "unique", "")
+func (v *GoPlayGroundValidator) UserCreateStructLevelValidation(structLV validator.StructLevel) {
+	ctx := context.Background()
+	input := structLV.Current().Interface().(userin.CreateInput)
+	//v.checkTH(structLV, input.Name)
+	// v.checkName(structLV, input.Name)
+	v.checkUserNameUnique(ctx, structLV, input.Name)
+	v.checkUserActualNameUnique(ctx, structLV, input.ActualName)
+}
+
+func (v *GoPlayGroundValidator) checkTH(structLV validator.StructLevel, name string) {
+	re := regexp.MustCompile("[A-Za-z]+")
+	ok := re.MatchString(name)
+	if !ok {
+		structLV.ReportError(name, "err validation", "err validation", "match", "")
 	}
 }
 
-func (v *GoPlayGroundValidator) checkExistName(name string) bool {
-	count, err := Database.Coll.CountDocuments(Database.Ctx, bson.D{{"name", name}})
+func (v *GoPlayGroundValidator) checkUserNameUnique(ctx context.Context, structLV validator.StructLevel, name string) (user *domain.InsertQ) {
+	a, err := v.userRepo.CheckExistName(ctx, name)
 	if err != nil {
-		log.Fatal("err2: ", err)
-		return false
+		structLV.ReportError(err, "err validation", "err validation", "error from database", "")
 	}
-	if count >= 1 {
-		fmt.Println("name: false")
-		return false
+	if a == true {
+		structLV.ReportError(name, "name", "name", "unique", "")
 	}
-	fmt.Println("name: true")
-	return true
+	return user
 }
 
-func (v *GoPlayGroundValidator) checkExistActualName(actualName string) bool {
-	count, err := Database.Coll.CountDocuments(Database.Ctx, bson.D{{"actual_name", actualName}})
-	if err != nil {
-		log.Fatal("err2: ", err)
-		return false
+func (v *GoPlayGroundValidator) checkUserActualNameUnique(ctx context.Context, structLV validator.StructLevel, name string) (user *domain.InsertQ) {
+	a, _ := v.userRepo.CheckExistActualName(ctx, name)
+	// if err != nil {
+	// 	structLV.ReportError(err, "err validation", "err validation", "error from database", "")
+	// }
+	if a == true {
+		structLV.ReportError(name, "actual_name", "actual_name", "unique", "")
 	}
-	if count >= 1 {
-		fmt.Println("actual_name: false")
-		return false
-	}
-	fmt.Println("actual_name: true")
-	return true
-}
-
-func (v *GoPlayGroundValidator) CheckUpdateActualName(structLV validator.StructLevel, input Database.UpdateSuperhero) {
-	if !checkExistActualName(input.ActualName) {
-		checkActName := Database.View(input.ID)
-		fmt.Println(checkActName, input)
-		if checkActName.ActualName != input.ActualName {
-			fmt.Println("CheckUpdateActualName")
-			structLV.ReportError("same actual name, but not same id", "actual_name", "actual_name", "unique", "")
-		}
-	}
-	// return true
-}
-func (v *GoPlayGroundValidator) CheckUpdateName(structLV validator.StructLevel, input Database.UpdateSuperhero) {
-	if !checkExistName(input.Name) {
-		checkName := Database.View(input.ID)
-		fmt.Println(checkName, input)
-		if checkName.Name != input.Name {
-			fmt.Println("CheckUpdateName")
-			structLV.ReportError("same name, but not same id", "actual_name", "actual_name", "unique", "")
-		}
-	}
-	// return true
-}
-
-func (v *GoPlayGroundValidator) CheckExistName(structLV validator.StructLevel, input Database.SuperheroQ) {
-	count, err := Database.Coll.CountDocuments(Database.Ctx, bson.D{{"name", input.Name}})
-	if err != nil {
-		log.Fatal("err2: ", err)
-	}
-	if count >= 1 {
-		structLV.ReportError("name already existed", "name", "name", "unique", "")
-	}
-}
-
-func (v *GoPlayGroundValidator) CheckExistActualName(structLV validator.StructLevel, input Database.SuperheroQ) {
-	count, err := Database.Coll.CountDocuments(Database.Ctx, bson.D{{"actual_name", input.ActualName}})
-	if err != nil {
-		log.Fatal("err2: ", err)
-	}
-	if count >= 1 {
-		structLV.ReportError("actual name already existed", "actual_name", "actual_name", "unique", "")
-	}
+	return user
 }
