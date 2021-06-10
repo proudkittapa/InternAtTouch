@@ -10,7 +10,7 @@ import (
 )
 
 func (impl *implementation) Update(ctx context.Context, input *userin.UpdateInput) (ID string, err error) {
-	err = impl.validator.Validate(input)
+	// err = impl.validator.Validate(input)
 	if err != nil {
 		return "", err
 	}

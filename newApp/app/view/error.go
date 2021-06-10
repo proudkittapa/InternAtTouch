@@ -7,9 +7,9 @@ import (
 const errorStatus = "ERROR"
 
 type ErrResp struct {
-	Status string     `json:"status"`
-	Code   int        `json:"code"`
-	Errors []*ErrItem `json:"errors"`
+	Status string `json:"status"`
+	Code   int    `json:"code"`
+	Errors string `json:"errors"`
 } // @Name ErrorResponse
 
 type ErrItem struct {
@@ -18,22 +18,25 @@ type ErrItem struct {
 	SubCode string `json:"subCode"`
 } // @Name ErrorItemResponse
 
-func MakeErrResp(c *gin.Context, err error) {
+func MakeErrResp(c *gin.Context, code int, err string) {
 	errResp := &ErrResp{
 		Status: errorStatus,
-		Code:   getHTTPStatusCode(err),
-		Errors: getRespErrors(err),
+		Code:   code,
+		Errors: err,
+	}
+	if code == 400 {
+
 	}
 	c.JSON(errResp.Code, errResp)
 }
 
-func getHTTPStatusCode(err error) int {
-	return 422
-}
+// func getHTTPStatusCode(err error) int {
+// 	return 422
+// }
 
-func getRespErrors(err error) (errs []*ErrItem) {
-	return errs
-}
+// func getRespErrors(err error) (errs []*ErrItem) {
+// 	return errs
+// }
 
 // func getHTTPStatusCode(err error) (code int) {
 // 	switch err := util.TypeOfErr(err); {
