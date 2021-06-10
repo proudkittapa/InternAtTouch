@@ -8,8 +8,8 @@ import (
 	// "github.com/touchtechnologies-product/go-blueprint-clean-architecture/service/staff/staffin"
 )
 
-// "github.com/touchtechnologies-product/go-blueprint-clean-architecture/service/staff/out"
-// "github.com/touchtechnologies-product/go-blueprint-clean-architecture/service/staff/staffin"
+	// "github.com/touchtechnologies-product/go-blueprint-clean-architecture/service/staff/out"
+	// "github.com/touchtechnologies-product/go-blueprint-clean-architecture/service/staff/staffin"
 
 //go:generate mockery --name=Service
 type Service interface {
