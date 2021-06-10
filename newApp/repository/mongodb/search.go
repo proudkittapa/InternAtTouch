@@ -54,7 +54,7 @@ func (repo *Repository)Search(ctx context.Context,search *domain.SearchValue) /*
 	case "alive":
 		alive, err := strconv.ParseBool(search.Value)
 		if err != nil {
-			return toString(AddToArray(cursor, err, ctx))
+			return "Can not convert "+search.Value+" to boolean", err
 		}
 		cursor, err := repo.Coll.Find(ctx, bson.M{search.Type: alive})
 		if err != nil {
