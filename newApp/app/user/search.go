@@ -29,9 +29,9 @@ func (ctrl *Controller) Search(c *gin.Context) {
 	value, err := ctrl.service.Search(c, input)
 	fmt.Println("value: ", value)
 	if err != nil {
-		view.MakeErrResp(c, err)
+		view.MakeErrResp(c, 422, "error search")
 		return
 	}
 
-	view.MakeCreatedResp(c, value)
+	view.MakeSuccessResp(c, 200, value)
 }

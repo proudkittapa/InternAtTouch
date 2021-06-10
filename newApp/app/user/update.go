@@ -15,7 +15,7 @@ func (ctrl *Controller) Update(c *gin.Context) {
 	input.ID = id
 
 	if err := c.ShouldBindJSON(input); err != nil {
-		view.MakeErrResp(c, err)
+		view.MakeErrResp(c, 400, "can't bind")
 		// fmt.Println("error")
 		return
 	}
@@ -24,9 +24,9 @@ func (ctrl *Controller) Update(c *gin.Context) {
 	a, err := ctrl.service.Update(c, input)
 	fmt.Println("a, err:", a, err)
 	if err != nil {
-		view.MakeErrResp(c, err)
+		view.MakeErrResp(c, 422, "error update")
 		return
 	}
 
-	view.MakeCreatedResp(c, id)
+	view.MakeSuccessResp(c, 200, "updated")
 }

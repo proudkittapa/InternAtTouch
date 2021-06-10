@@ -13,11 +13,11 @@ func (ctrl *Controller) View(c *gin.Context) {
 	input := &userin.ViewInput{}
 
 	input.ID = id
-	_, err := ctrl.service.View(c, input)
+	a, err := ctrl.service.View(c, input)
 	if err != nil {
-		view.MakeErrResp(c, err)
+		view.MakeErrResp(c, 422, "error view")
 		return
 	}
 
-	view.MakeCreatedResp(c, id)
+	view.MakeSuccessResp(c, 200, a)
 }

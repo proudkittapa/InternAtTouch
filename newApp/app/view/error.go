@@ -1,6 +1,8 @@
 package view
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -19,15 +21,18 @@ type ErrItem struct {
 } // @Name ErrorItemResponse
 
 func MakeErrResp(c *gin.Context, code int, err string) {
+	var s int
 	errResp := &ErrResp{
 		Status: errorStatus,
 		Code:   code,
 		Errors: err,
 	}
-	if code == 400 {
-
+	if code == 422 {
+		s = http.StatusUnprocessableEntity
+	} else if code == 400 {
+		s = http.StatusBadRequest
 	}
-	c.JSON(errResp.Code, errResp)
+	c.JSON(s, errResp)
 }
 
 // func getHTTPStatusCode(err error) int {
