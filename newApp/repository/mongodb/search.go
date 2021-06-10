@@ -43,11 +43,10 @@ func toString(resultArray []domain.InsertQ, err error) (string, error){
 }
 
 func (repo *Repository)Search(ctx context.Context,search *domain.SearchValue) /*(result []domain.InsertQ,err error)*/ (result string, err error){
-	var cursor *mongo.Cursor
 	fmt.Println("Searching for ",search.Value,"in",search.Type)
 	switch search.Type{
 	case "name", "actual_name", "gender", "super_power":
-	cursor, err := repo.Coll.Find(ctx, bson.M{search.Type: primitive.Regex{Pattern: search.Value, Options: "i"}})
+		cursor, err := repo.Coll.Find(ctx, bson.M{search.Type: primitive.Regex{Pattern: search.Value, Options: "i"}})
 		if err != nil {
 			return toString(AddToArray(cursor,err,ctx))
 		}
@@ -62,7 +61,7 @@ func (repo *Repository)Search(ctx context.Context,search *domain.SearchValue) /*
 			return toString(AddToArray(cursor,err,ctx))
 		}
 		return toString(AddToArray(cursor,err,ctx))
-	case "birthday", "height":
+	case "height":
 		cursor, err := repo.Coll.Find(ctx, bson.M{"$where":
 			"/"+search.Value+".*/.test(this."+search.Type+")"})
 		if err != nil {
@@ -80,7 +79,8 @@ func (repo *Repository)Search(ctx context.Context,search *domain.SearchValue) /*
 			return toString(AddToArray(cursor,err,ctx))
 		}
 		return toString(AddToArray(cursor,err,ctx))
+	default:
+		return "No "+search.Type+" exist", err
 	}
-	return toString(AddToArray(cursor,err,ctx))
 }
 
