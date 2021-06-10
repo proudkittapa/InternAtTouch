@@ -2,13 +2,9 @@ package mongodb
 
 import (
 	"context"
-	"fmt"
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/domain"
-	"github.com/go-playground/validator/v10"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"log"
-	"touch/Database"
 )
 
 func (repo *Repository)Create(ctx context.Context, figure interface{}) (  err error){
@@ -54,7 +50,7 @@ func (repo *Repository) CheckExistID(ctx context.Context, input domain.UpdateQ) 
 	return true , err
 }
 
-func (repo *Repository) checkExistName(ctx context.Context, name string) (bool, error) {
+func (repo *Repository) CheckExistName(ctx context.Context, name string) (bool, error) {
 	count, err := repo.Coll.CountDocuments(ctx, bson.D{{"name", name}})
 	if count < 1 {
 		return false, err
@@ -62,7 +58,7 @@ func (repo *Repository) checkExistName(ctx context.Context, name string) (bool, 
 	return true, err
 }
 
-func (repo *Repository) checkExistActualName(ctx context.Context, actualName string) (bool, error) {
+func (repo *Repository) CheckExistActualName(ctx context.Context, actualName string) (bool, error) {
 	count, err := repo.Coll.CountDocuments(ctx, bson.D{{"actual_name", actualName}})
 	if count < 1 {
 		return false , err
