@@ -8,6 +8,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"strconv"
 )
 
 func AddToArray(cursor *mongo.Cursor,err error,ctx context.Context) ([]domain.InsertQ, error) {
@@ -45,8 +46,25 @@ func (repo *Repository)Search(ctx context.Context,search *domain.SearchValue) /*
 	var cursor *mongo.Cursor
 	fmt.Println("Searching for ",search.Value,"in",search.Type)
 	switch search.Type{
-	case "name", "actual_name", "gender", "birthday", "super_power", "height", "alive":
+	case "name", "actual_name", "gender", "super_power":
 	cursor, err := repo.Coll.Find(ctx, bson.M{search.Type: primitive.Regex{Pattern: search.Value, Options: "i"}})
+		if err != nil {
+			return toString(AddToArray(cursor,err,ctx))
+		}
+		return toString(AddToArray(cursor,err,ctx))
+	case "alive":
+		alive, err := strconv.ParseBool(search.Value)
+		if err != nil {
+			return toString(AddToArray(cursor, err, ctx))
+		}
+		cursor, err := repo.Coll.Find(ctx, bson.M{search.Type: alive})
+		if err != nil {
+			return toString(AddToArray(cursor,err,ctx))
+		}
+		return toString(AddToArray(cursor,err,ctx))
+	case "birthday", "height":
+		cursor, err := repo.Coll.Find(ctx, bson.M{"$where":
+			"/"+search.Value+".*/.test(this."+search.Type+")"})
 		if err != nil {
 			return toString(AddToArray(cursor,err,ctx))
 		}
