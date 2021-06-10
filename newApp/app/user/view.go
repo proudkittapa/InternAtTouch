@@ -9,29 +9,27 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (ctrl *Controller) Search(c *gin.Context) {
+func (ctrl *Controller) View(c *gin.Context) {
+	id := c.Param("id")
 	// span, ctx := opentracing.StartSpanFromContextWithTracer(
 	// 	c.Request.Context(),
 	// 	opentracing.GlobalTracer(),
 	// 	"handler.staff.Create",
 	// )
 	// defer span.Finish()
-	input := &userin.Search{}
-	fmt.Println("input in app search:", input)
+	input := &userin.ViewInput{}
 	if err := c.ShouldBindJSON(input); err != nil {
 		// view.MakeErrResp(c, err)
 		fmt.Println("error")
 		return
 	}
-	fmt.Println("input2 in app search:", input)
 
 	// _, err := ctrl.service.Create(c, input)
-	value, err := ctrl.service.Search(c, input)
-	fmt.Println("value: ", value)
+	_, err := ctrl.service.View(c, input)
 	if err != nil {
 		view.MakeErrResp(c, err)
 		return
 	}
 
-	view.MakeCreatedResp(c, value)
+	view.MakeCreatedResp(c, id)
 }

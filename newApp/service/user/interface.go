@@ -3,6 +3,7 @@ package user
 import (
 	"context"
 
+	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/domain"
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/user/userin"
 	// "github.com/touchtechnologies-product/go-blueprint-clean-architecture/service/staff/staffin"
 )
@@ -19,4 +20,6 @@ type Service interface {
 	// Read(ctx context.Context, input *staffin.ReadInput) (staff *out.StaffView, err error)
 	// Update(ctx context.Context, input *staffin.UpdateInput) (err error)
 	Delete(ctx context.Context, input *userin.DeleteInput) (ID string, err error)
+	View(ctx context.Context, input *userin.ViewInput) (a domain.InsertQ, err error)
+	// ViewAll(ctx context.Context, input *userin.ViewAllInput) (ID string, err error)
 }

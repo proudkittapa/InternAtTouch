@@ -6,9 +6,9 @@ import (
 )
 
 type Search struct {
-	Type string `json:"ID" validate:"required"`
+	Type string `json:"type" validate:"required"`
 	// ID        string `json:"id" validate:"required"`
-	Value string `json:"name" validate:"required"`
+	Value string `json:"value" validate:"required"`
 	// Tel       string `json:"tel" validate:"required"`
 } // @Name StaffCreateInput
 

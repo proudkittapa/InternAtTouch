@@ -18,6 +18,7 @@ func (ctrl *Controller) Create(c *gin.Context) {
 	// )
 	// defer span.Finish()
 	input := &userin.CreateInput{}
+	fmt.Println("input create app:", input)
 	if err := c.ShouldBindJSON(input); err != nil {
 		// view.MakeErrResp(c, err)
 		fmt.Println("error")
