@@ -2,11 +2,13 @@ package validator
 
 import (
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/user/userin"
+	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/util"
 	"github.com/go-playground/validator/v10"
 )
 
 type GoPlayGroundValidator struct {
 	validate *validator.Validate
+	user     util.Repository
 }
 
 func New() (v *GoPlayGroundValidator) {

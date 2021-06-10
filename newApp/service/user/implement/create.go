@@ -11,10 +11,11 @@ import (
 )
 
 func (impl *implementation) Create(ctx context.Context, input *userin.CreateInput) (ID string, err error) {
-	// err = impl.validator.Validate(input)
-	// if err != nil {
-	// 	return "", err
-	// }
+	err = impl.validator.Validate(input)
+	if err != nil {
+		fmt.Println("validte", err)
+		return "", err
+	}
 
 	user := userin.CreateInputToUserDomain(input)
 	fmt.Println("user input create:", user)

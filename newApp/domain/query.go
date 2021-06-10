@@ -12,7 +12,7 @@ type InsertQ struct {
 }
 
 type DeleteQ struct {
-	ID  string  `bson:"_id" json:"id"`
+	ID string `bson:"_id" json:"id"`
 }
 
 type UpdateQ struct {
@@ -27,10 +27,10 @@ type UpdateQ struct {
 }
 
 type ViewQ struct {
-	ID  string  `bson:"_id" json:"id"`
+	ID string `bson:"_id" json:"id"`
 }
 
 type ViewByPageQ struct {
-	perPage int
-	page 	int
+	PerPage int
+	Page    int
 }

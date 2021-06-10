@@ -8,8 +8,8 @@ import (
 	// "github.com/touchtechnologies-product/go-blueprint-clean-architecture/service/staff/staffin"
 )
 
-	// "github.com/touchtechnologies-product/go-blueprint-clean-architecture/service/staff/out"
-	// "github.com/touchtechnologies-product/go-blueprint-clean-architecture/service/staff/staffin"
+// "github.com/touchtechnologies-product/go-blueprint-clean-architecture/service/staff/out"
+// "github.com/touchtechnologies-product/go-blueprint-clean-architecture/service/staff/staffin"
 
 //go:generate mockery --name=Service
 type Service interface {
@@ -21,5 +21,5 @@ type Service interface {
 	// Update(ctx context.Context, input *staffin.UpdateInput) (err error)
 	Delete(ctx context.Context, input *userin.DeleteInput) (ID string, err error)
 	View(ctx context.Context, input *userin.ViewInput) (a domain.InsertQ, err error)
-	// ViewAll(ctx context.Context, input *userin.ViewAllInput) (ID string, err error)
+	ViewAll(ctx context.Context, input *userin.ViewAllInput) (a []domain.InsertQ, err error)
 }
