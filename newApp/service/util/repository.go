@@ -17,7 +17,7 @@ type Repository interface {
 	Delete(ctx context.Context, id string) (err error)
 	Search(ctx context.Context, s *domain.SearchValue) (result string, err error)
 	View(ctx context.Context, id string) (a domain.InsertQ, err error)
-	// ViewAll(ctx context.Context, perPage int, page int) (a []domain.InsertQ, err error)
+	ViewAll(ctx context.Context, perPage int, page int) (a []domain.InsertQ, err error)
 	// Count(ctx context.Context, filters []string) (total int, err error)
 
 	// Push(ctx context.Context, param *domain.SetOpParam) (err error)

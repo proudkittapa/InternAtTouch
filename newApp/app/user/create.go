@@ -33,5 +33,5 @@ func (ctrl *Controller) Create(c *gin.Context) {
 		return
 	}
 
-	view.MakeCreatedResp(c, "created")
+	view.MakeSuccessResp(c, 200, "created")
 }
