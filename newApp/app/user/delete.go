@@ -28,7 +28,7 @@ func (ctrl *Controller) Delete(c *gin.Context) {
 	id, err := ctrl.service.Delete(c, input)
 	fmt.Println("id", err)
 	if err != nil {
-		view.MakeErrResp(c, 422, "can't delete")
+		view.MakeErrResp2(c, 422, err)
 		return
 	}
 

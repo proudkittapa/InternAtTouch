@@ -3,10 +3,11 @@ package mongodb
 import (
 	"context"
 	"errors"
+	"log"
+
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/domain"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"log"
 )
 
 func (repo *Repository) Create(ctx context.Context, figure interface{}) (err error) {
@@ -28,15 +29,14 @@ func (repo *Repository) Update(ctx context.Context, figure interface{}, id strin
 	return err
 }
 
-
-func (repo *Repository)View(ctx context.Context, id string) (resultStruct domain.InsertQ, err error){
+func (repo *Repository) View(ctx context.Context, id string) (resultStruct domain.InsertQ, err error) {
 	_, err = repo.checkExistID(ctx, id)
 	if err != nil {
 		return resultStruct, err
 	}
 	var resultBson bson.D
 	err = repo.Coll.FindOne(ctx, bson.D{{"_id", id}}).Decode(&resultBson)
-	bsonBytes,_ := bson.Marshal(resultBson)
+	bsonBytes, _ := bson.Marshal(resultBson)
 	bson.Unmarshal(bsonBytes, &resultStruct)
 	return resultStruct, err
 }
@@ -52,8 +52,7 @@ func (repo *Repository) ViewAll(ctx context.Context, perPage int, page int) ([]d
 	return AddToArray(cursor, err, ctx)
 }
 
-
-func (repo *Repository) checkExistID(ctx context.Context, id string) (bool, error){
+func (repo *Repository) checkExistID(ctx context.Context, id string) (bool, error) {
 	count, err := repo.Coll.CountDocuments(ctx, bson.D{{"_id", id}})
 	if count < 1 {
 		err = errors.New("ID does not exist")

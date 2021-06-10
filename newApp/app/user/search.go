@@ -28,6 +28,10 @@ func (ctrl *Controller) Search(c *gin.Context) {
 	// _, err := ctrl.service.Create(c, input)
 	value, err := ctrl.service.Search(c, input)
 	fmt.Println("value: ", value)
+	if value == "No birthday exist" {
+		view.MakeErrResp(c, 204, "error search")
+		return
+	}
 	if err != nil {
 		view.MakeErrResp(c, 422, "error search")
 		return

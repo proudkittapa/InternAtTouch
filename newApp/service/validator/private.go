@@ -3,9 +3,10 @@ package validator
 import (
 	"context"
 	"fmt"
-	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/domain"
 	"log"
 	"regexp"
+
+	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/domain"
 
 	"github.com/go-playground/validator/v10"
 )
@@ -46,7 +47,6 @@ func (v *GoPlayGroundValidator) checkUserActualNameUnique(ctx context.Context, s
 	}
 	return user
 }
-
 
 func (v *GoPlayGroundValidator) checkUserNameUniqueUpdate(ctx context.Context, structLV validator.StructLevel, name string, actualName string, id string) (user *domain.UpdateQ) {
 	n, err := v.userRepo.CheckExistName(ctx, name)

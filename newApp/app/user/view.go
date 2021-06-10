@@ -15,7 +15,7 @@ func (ctrl *Controller) View(c *gin.Context) {
 	input.ID = id
 	a, err := ctrl.service.View(c, input)
 	if err != nil {
-		view.MakeErrResp(c, 422, "error view")
+		view.MakeErrResp2(c, 422, err)
 		return
 	}
 

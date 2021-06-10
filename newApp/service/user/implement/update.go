@@ -21,6 +21,7 @@ func (impl *implementation) Update(ctx context.Context, input *userin.UpdateInpu
 
 	err = impl.repo.Update(ctx, user, user.ID)
 	if err != nil {
+		// fmt.Println("er")
 		return "", err
 	}
 
