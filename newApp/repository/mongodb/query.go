@@ -13,7 +13,7 @@ func (repo *Repository)Create(ctx context.Context, figure interface{}) (  err er
 }
 
 func (repo *Repository)Delete(ctx context.Context, id interface{}) (err error){
-	_, err = repo.Coll.DeleteOne(ctx, bson.M{"id": id})
+	_, err = repo.Coll.DeleteOne(ctx, bson.M{"_id": id})
 	return err
 }
 
@@ -25,7 +25,7 @@ func (repo *Repository)Update(ctx context.Context, figure interface{}, id string
 func (repo *Repository)View(ctx context.Context, id string) (domain.InsertQ, error){
 	var resultBson bson.D
 	var resultStruct domain.InsertQ
-	err := repo.Coll.FindOne(ctx, bson.D{{"id", id}}).Decode(&resultBson)
+	err := repo.Coll.FindOne(ctx, bson.D{{"_id", id}}).Decode(&resultBson)
 	bsonBytes,_ := bson.Marshal(resultBson)
 	bson.Unmarshal(bsonBytes, &resultStruct)
 	return resultStruct ,err
