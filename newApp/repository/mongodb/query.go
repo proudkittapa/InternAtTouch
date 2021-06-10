@@ -12,7 +12,7 @@ func (repo *Repository)Create(ctx context.Context, figure interface{}) (  err er
 	return  err
 }
 
-func (repo *Repository)Delete(ctx context.Context, id interface{}) (err error){
+func (repo *Repository)Delete(ctx context.Context, id string) (err error){
 	_, err = repo.Coll.DeleteOne(ctx, bson.M{"_id": id})
 	return err
 }
