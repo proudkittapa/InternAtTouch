@@ -10,6 +10,7 @@ import (
 )
 
 func (ctrl *Controller) Delete(c *gin.Context) {
+	id := c.Param("id")
 	// span, ctx := opentracing.StartSpanFromContextWithTracer(
 	// 	c.Request.Context(),
 	// 	opentracing.GlobalTracer(),
@@ -17,14 +18,16 @@ func (ctrl *Controller) Delete(c *gin.Context) {
 	// )
 	// defer span.Finish()
 	input := &userin.DeleteInput{}
-	if err := c.ShouldBindJSON(input); err != nil {
-		// view.MakeErrResp(c, err)
-		fmt.Println("error")
-		return
-	}
+	input.ID = id
+	// if err := c.ShouldBindJSON(input); err != nil {
+	// 	// view.MakeErrResp(c, err)
+	// 	fmt.Println("error")
+	// 	returns
+	// }
 	ID := input.ID
 	// _, err := ctrl.service.Create(c, input)
-	_, err := ctrl.service.Delete(c, input)
+	id, err := ctrl.service.Delete(c, input)
+	fmt.Println("id", id)
 	if err != nil {
 		view.MakeErrResp(c, err)
 		return
