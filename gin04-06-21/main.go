@@ -3,11 +3,14 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 	"touch/Database"
+	"touch/validatePack"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 )
 
 type Pagination struct {
@@ -19,7 +22,18 @@ type Person struct {
 	Name string
 }
 
+var validate *validator.Validate
+
 func main() {
+	validate = validator.New()
+
+	// validate.RegisterValidation("updateName", updateName)
+	// validate.RegisterValidation("updateActualName", updateActualName)
+	validate.RegisterStructValidation(existanceActualName, Database.SuperheroQ{})
+	validate.RegisterStructValidation(existanceName, Database.SuperheroQ{})
+	validate.RegisterStructValidation(updateName, Database.UpdateSuperhero{})
+	validate.RegisterStructValidation(updateActualName, Database.UpdateSuperhero{})
+	validate.RegisterStructValidation(updateID, Database.UpdateSuperhero{})
 
 	r := setupRouter()
 	Database.InitDB()
@@ -29,12 +43,7 @@ func main() {
 
 func setupRouter() *gin.Engine {
 	r := gin.Default()
-	// r.POST("/insert", insert)
-	// r.PUT("/update/:id", updateId)
-	// r.DELETE("/delete/:id", deleteId)
-	// r.GET("/view/:id", viewId)
-	// r.GET("/viewall", viewall)
-	// r.GET("/search", search)
+
 	r.POST("/superheroes", insert)
 	r.PUT("/superheroes/:id", updateId)
 	r.DELETE("/superheroes/:id", deleteId)
@@ -46,110 +55,96 @@ func setupRouter() *gin.Engine {
 }
 
 func insert(c *gin.Context) {
-	buf := make([]byte, 1024)
-	num, _ := c.Request.Body.Read(buf)
-	reqBody := string(buf[0:num])
-	var t Database.SuperheroQ
-	err := json.Unmarshal(buf[0:num], &t)
-	if err != nil {
-		panic(err)
-	}
-	if t.Name == "" {
-		// fmt.Println("Need name to insert")
-		c.JSON(http.StatusUnprocessableEntity, "Need name to insert")
+	var hero Database.SuperheroQ
+	if err := c.ShouldBindJSON(&hero); err != nil {
+		c.JSON(http.StatusBadRequest, "can't bind, check the format")
 		return
 	}
-	if t.Age < 0 {
-		fmt.Println("age is less than 0:", t.Age)
-		c.JSON(http.StatusNotFound, "age is less than 0")
+	// if Database.CheckExistName(user.Name) { //if jer
+	// 	c.JSON(http.StatusBadRequest, "name already exist")
+	// 	return
+	// }
+	val, message := validateInsert(hero)
+	fmt.Println("hrerhere", message)
+	if !val {
+		c.JSON(http.StatusBadRequest, message)
 		return
 	}
-	Database.Insert(t)
-	c.JSON(http.StatusOK, reqBody)
+	// Database.Insert(user)
+	c.JSON(http.StatusOK, "inserted")
 }
 
 func updateId(c *gin.Context) {
 	id := c.Param("id")
-	i, err := strconv.Atoi(id)
-	if err != nil {
-		c.JSON(http.StatusNotFound, "wrong format should be int not string")
-		return
-	}
-	if !Database.CheckExistID(i) {
-		c.JSON(http.StatusNotFound, "this id doens't exist")
-		return
-	}
-	buf := make([]byte, 1024)
-	num, _ := c.Request.Body.Read(buf)
-	reqBody := string(buf[0:num])
-	var t Database.SuperheroQ
-	err = json.Unmarshal(buf[0:num], &t)
-	if err != nil {
-		panic(err)
-	}
-	t.ID = i
 
-	if t.Age < 0 {
-		c.JSON(http.StatusNotFound, "age is less than 0")
+	// if !Database.CheckExistID(id) {
+	// 	c.JSON(http.StatusNotFound, "this id doesn't exist")
+	// 	return
+	// }
+	var hero Database.UpdateSuperhero
+	if err := c.ShouldBindJSON(&hero); err != nil {
+		c.JSON(http.StatusBadRequest, "can't bind")
 		return
 	}
-	Database.Update(t, i)
-	c.JSON(http.StatusOK, reqBody)
+
+	hero.ID = id
+
+	val, message := validateUpdate(hero)
+	log.Println(message)
+	if !val {
+		c.JSON(http.StatusBadRequest, message)
+		return
+	}
+
+	// Database.Update(user, id)
+	c.JSON(http.StatusOK, "updated")
 }
 
 func deleteId(c *gin.Context) {
 	id := c.Param("id")
-	i, err := strconv.Atoi(id)
-	if err != nil {
-		c.JSON(http.StatusNotFound, "wrong format should be int not string")
-		return
-	}
-	if !Database.CheckExistID(i) {
-		// fmt.Println("this id doesn't exist")
-		c.JSON(http.StatusNotFound, "this id doens't exist")
-		return
-	}
-	Database.Delete(i)
-	c.JSON(http.StatusOK, i)
+	// if !validatePack.CheckExistID(id) {
+	// 	// fmt.Println("this id doesn't exist")
+	// 	c.JSON(http.StatusNotFound, "this id doesn't exist")
+	// 	return
+	// }
+	Database.Delete(id)
+	c.JSON(http.StatusOK, "deleted")
 }
 
 func viewId(c *gin.Context) {
 	id := c.Param("id")
-	i, err := strconv.Atoi(id)
-	if err != nil {
-		c.JSON(http.StatusNotFound, "wrong format should be int not string")
-		return
-	}
-	if !Database.CheckExistID(i) {
-		// fmt.Println("this id doesn't exist")
-		c.JSON(http.StatusNotFound, "this id doens't exist")
-		return
-	}
 
-	var a Database.SuperheroQ = Database.View(i) //return struct
-	c.JSON(http.StatusOK, a)
+	// if !validatePack.CheckExistID(id) {
+	// 	// fmt.Println("this id doesn't exist")
+	// 	c.JSON(http.StatusNotFound, "this id doesn't exist")
+	// 	return
+	// }
+
+	var data Database.SuperheroQ = Database.View(id)
+	c.JSON(http.StatusOK, data)
 }
 
 func viewAll(c *gin.Context) {
 	p := pagination(c)
-	a := Database.Viewall(p.Limit, p.Page)
-	if a == nil {
+	fmt.Println(p)
+	data := Database.ViewByPage(p.Limit, p.Page)
+	if data == nil {
 		c.JSON(http.StatusNotFound, "this page is not available")
 		return
 	}
-	c.JSON(http.StatusOK, a)
+	c.JSON(http.StatusOK, data)
 }
 
 func pagination(c *gin.Context) Pagination {
 	limit := 2
-	page := 1
+	page := 0
 	query := c.Request.URL.Query()
 	for key, value := range query {
 		queryValue := value[len(value)-1]
 		switch key {
 		case "limit":
 			limit, _ = strconv.Atoi(queryValue)
-		case "Page":
+		case "page":
 			page, _ = strconv.Atoi(queryValue)
 		}
 	}
@@ -169,10 +164,92 @@ func search(c *gin.Context) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	a := Database.Search(v.Value)
-	if a == nil {
+	data := Database.Search(v.Value)
+	if data == nil {
 		c.JSON(http.StatusOK, "No result")
 		return
 	}
-	c.JSON(http.StatusOK, a)
+	c.JSON(http.StatusOK, data)
+}
+
+type Err struct {
+	Code  int
+	Cause []string
+}
+
+type Name struct {
+	n string
+}
+
+func validateInsert(hero Database.SuperheroQ) (b bool, out Err) {
+	err := validate.Struct(hero)
+	var arr []string
+	if err != nil {
+		for _, err := range err.(validator.ValidationErrors) {
+			// name := Name{
+			// 	n: string(err.StructField()) + " " + string(err.ActualTag()),
+			// }
+			name := string(err.StructField()) + " " + string(err.ActualTag())
+			arr = append(arr, name)
+			out = Err{
+				Code:  400,
+				Cause: arr,
+			}
+		}
+		log.Println("out:", out)
+
+		b = false
+		return b, out
+	}
+	b = true
+	return b, out
+}
+func validateUpdate(hero Database.UpdateSuperhero) (b bool, out Err) {
+	fmt.Println("user:", hero)
+	err := validate.Struct(hero)
+	fmt.Println(err)
+	var arr []string
+	if err != nil {
+		for _, err := range err.(validator.ValidationErrors) {
+			// name := Name{
+			// 	n: string(err.StructField()) + " " + string(err.ActualTag()),
+			// }
+			name := string(err.StructField()) + " " + string(err.ActualTag())
+			arr = append(arr, name)
+			out = Err{
+				Code:  400,
+				Cause: arr,
+			}
+		}
+		log.Println("update out", out)
+
+		b = false
+		return b, out
+	}
+	b = true
+	return b, out
+}
+
+func existanceActualName(structLV validator.StructLevel) {
+	input := structLV.Current().Interface().(Database.SuperheroQ)
+	validatePack.CheckExistActualName(structLV, input)
+}
+func existanceName(structLV validator.StructLevel) {
+	input := structLV.Current().Interface().(Database.SuperheroQ)
+	validatePack.CheckExistName(structLV, input)
+}
+
+func updateActualName(structLV validator.StructLevel) {
+	fmt.Println("herejrhe")
+	input := structLV.Current().Interface().(Database.UpdateSuperhero)
+	validatePack.CheckUpdateActualName(structLV, input)
+}
+
+func updateName(structLV validator.StructLevel) {
+	input := structLV.Current().Interface().(Database.UpdateSuperhero)
+	validatePack.CheckUpdateName(structLV, input)
+}
+func updateID(structLV validator.StructLevel) {
+	input := structLV.Current().Interface().(Database.UpdateSuperhero)
+	validatePack.CheckExistID(structLV, input)
 }
