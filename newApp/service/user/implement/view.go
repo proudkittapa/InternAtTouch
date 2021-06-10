@@ -20,7 +20,6 @@ func (impl *implementation) View(ctx context.Context, input *userin.ViewInput) (
 	fmt.Println("user input view: ", user)
 	fmt.Println("user.ID: ", user.ID)
 	a, err = impl.repo.View(ctx, user.ID)
-	fmt.Println("out put view: ", a)
 	fmt.Println("err:", err)
 	if err != nil {
 		return a, err
