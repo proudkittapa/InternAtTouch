@@ -8,6 +8,7 @@ import (
 type Kafka struct {
 	message.Broker
 }
+
 type Config struct {
 	BackOffTime  int
 	MaximumRetry int
