@@ -2,6 +2,8 @@ package util
 
 import (
 	"context"
+	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/msgbroker/msgbrokerin"
+	"github.com/touchtechnologies-product/message-broker/common"
 
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/domain"
 )
@@ -30,4 +32,13 @@ type Repository interface {
 	// IsFirst(ctx context.Context, param *domain.SetOpParam) (is bool, err error)
 	// CountArray(ctx context.Context, param *domain.SetOpParam) (total int, err error)
 	// ClearArray(ctx context.Context, param *domain.SetOpParam) (err error)
+}
+
+type RepositoryUsers interface{
+	Repository
+}
+type RepositoryMsgBroker interface{
+	Consumer()
+	Producer(topic msgbrokerin.TopicMsgBroker, msg []byte) (err error)
+	RegisterHandler(topics msgbrokerin.TopicMsgBroker, handler common.Handler)
 }

@@ -30,7 +30,7 @@ func MakeTestCreateInput() (input *CreateInput) {
 	}
 }
 
-func CreateInputToUserDomain(input *CreateInput) (user *domain.InsertQ) {
+func (input *CreateInput)CreateInputToUserDomain() (user *domain.InsertQ) {
 	return &domain.InsertQ{
 		ID:         input.ID,
 		Name:       input.Name,
@@ -42,3 +42,17 @@ func CreateInputToUserDomain(input *CreateInput) (user *domain.InsertQ) {
 		Alive:      input.Alive,
 	}
 }
+
+//func ToDomain(input *CreateInput) (user *domain.InsertQ) {
+//
+//	return &domain.InsertQ{
+//		ID:         input.ID,
+//		Name:       input.Name,
+//		ActualName: input.ActualName,
+//		Gender:     input.Gender,
+//		BirthDate:  input.BirthDate,
+//		Height:     input.Height,
+//		SuperPower: input.SuperPower,
+//		Alive:      input.Alive,
+//	}
+//}

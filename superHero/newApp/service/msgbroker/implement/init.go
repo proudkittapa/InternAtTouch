@@ -2,7 +2,10 @@ package implement
 
 import (
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/msgbroker"
-	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/user"
+	userService "github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/user"
+	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/util"
+
+	//"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/user"
 )
 
 type implementation struct{
@@ -12,7 +15,7 @@ type implementation struct{
 
 func New(msgBroker util.RepositoryMsgBroker, usrService userService.Service) (service msgbroker.Service){
 	impl := &implementation{
-		msgBroker: msgbroker,
+		msgBroker: msgBroker,
 		usrService: usrService,
 	}
 	return impl
