@@ -11,6 +11,7 @@ require (
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.1 // indirect
 	github.com/sirupsen/logrus v1.8.1
+	github.com/touchtechnologies-product/message-broker v0.0.0-20200721081750-84510f1b3a6d
 	github.com/touchtechnologies-product/xid v0.0.0-20200602111826-04f58074f910
 	github.com/ugorji/go v1.1.13 // indirect
 	go.mongodb.org/mongo-driver v1.5.3

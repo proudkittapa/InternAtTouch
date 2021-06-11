@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/repository/kafka"
 	"log"
 
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/config"
@@ -14,6 +15,7 @@ import (
 
 	userRepo "github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/repository/user"
 	userService "github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/user/implement"
+
 	"github.com/sirupsen/logrus"
 	// "github.com/touchtechnologies-product/go-blueprint-clean-architecture/app"
 	// "github.com/touchtechnologies-product/go-blueprint-clean-architecture/config"
@@ -26,6 +28,8 @@ import (
 func newApp(appConfig *config.Config) *app.App {
 	ctx := context.Background()
 	uRepo, err := userRepo.New(ctx, appConfig.MongoDBEndpoint, appConfig.MongoDBName, appConfig.MongoDBHeroTableName)
+	panicIfErr(err)
+	kRepo, err := kafka.New(configKafka(appConfig) )
 	// cRepo, err := compRepo.New(ctx, appConfig.MongoDBEndpoint, appConfig.MongoDBName, appConfig.MongoDBCompanyTableName)
 	panicIfErr(err)
 	// sRepo, err := staffRepo.New(ctx, appConfig.MongoDBEndpoint, appConfig.MongoDBName, appConfig.MongoDBStaffTableName)
@@ -37,7 +41,7 @@ func newApp(appConfig *config.Config) *app.App {
 
 	// company := companyService.New(validator, cRepo, generateID)
 	// staff := staffService.New(validator, sRepo, generateID)
-	user := userService.New(validator, uRepo)
+	user := userService.New(validator, uRepo, kRepo)
 
 	return app.New(user)
 }
@@ -52,5 +56,15 @@ func setupLog() *logrus.Logger {
 func panicIfErr(err error) {
 	if err != nil {
 		log.Panic(err)
+	}
+}
+
+func configKafka(appConfig *config.Config) *kafka.Config {
+	return &kafka.Config{
+		BackOffTime:  appConfig.MessageBrokerBackOffTime,
+		MaximumRetry: appConfig.MessageBrokerMaximumRetry,
+		Host:         appConfig.MessageBrokerEndpoint,
+		Group:        appConfig.MessageBrokerGroup,
+		Version:      appConfig.MessageBrokerVersion,
 	}
 }
