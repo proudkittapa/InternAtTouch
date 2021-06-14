@@ -45,7 +45,7 @@ func (repo *Repository)search(keyword string,ctx context.Context)(map[string]int
 }
 
 func (repo *Repository)view(id string,ctx context.Context)(map[string]interface{}, error){
-	result, err := repo.query(ctx,buildSearchRequest(id))
+	result, err := repo.query(ctx,buildViewRequest(id))
 	return result, err
 }
 
