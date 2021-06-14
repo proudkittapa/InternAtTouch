@@ -3,15 +3,16 @@ package main
 import (
 	"context"
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/repository/kafka"
+	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/msgbroker/msgbrokerin"
 	"log"
 
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/config"
 
 	// validatorService "github.com/touchtechnologies-product/go-blueprint-clean-architecture/service/validator"
 
-	validatorService "github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/validator"
-
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/app"
+	msgBrokerService "github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/msgbroker/implement"
+	validatorService "github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/validator"
 
 	userRepo "github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/repository/user"
 	userService "github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/user/implement"
@@ -29,20 +30,14 @@ func newApp(appConfig *config.Config) *app.App {
 	ctx := context.Background()
 	uRepo, err := userRepo.New(ctx, appConfig.MongoDBEndpoint, appConfig.MongoDBName, appConfig.MongoDBHeroTableName)
 	panicIfErr(err)
-	kRepo, err := kafka.New(configKafka(appConfig) )
-	// cRepo, err := compRepo.New(ctx, appConfig.MongoDBEndpoint, appConfig.MongoDBName, appConfig.MongoDBCompanyTableName)
+	kRepo, err := kafka.New(configKafka(appConfig))
 	panicIfErr(err)
-	// sRepo, err := staffRepo.New(ctx, appConfig.MongoDBEndpoint, appConfig.MongoDBName, appConfig.MongoDBStaffTableName)
-	// panicIfErr(err)
-
 	validator := validatorService.New(uRepo)
-	// generateID, err := util.NewUUID()
-	// panicIfErr(err)
 
-	// company := companyService.New(validator, cRepo, generateID)
-	// staff := staffService.New(validator, sRepo, generateID)
 	user := userService.New(validator, uRepo, kRepo)
+	msgService := msgBrokerService.New(kRepo, user)
 
+	go msgService.Receiver(topics)
 	return app.New(user)
 }
 
@@ -67,4 +62,9 @@ func configKafka(appConfig *config.Config) *kafka.Config {
 		Group:        appConfig.MessageBrokerGroup,
 		Version:      appConfig.MessageBrokerVersion,
 	}
+}
+var topics = []msgbrokerin.TopicMsgBroker{
+	msgbrokerin.TopicUser,
+	//msgbrokerin.TopicOTP,
+	//msgbrokerin.TopicVerify,
 }

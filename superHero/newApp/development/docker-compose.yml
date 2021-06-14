@@ -56,13 +56,13 @@ services: # each service run simultaneously (parallel)
     networks:
       - backend
 
-  redis:
-    image: redis:alpine3.13
-    container_name: redis
-#    volumes:
-#      - "$PWD/config/redis.conf:/redis.conf"
-    ports:
-      - 6379:6379
+#  redis:
+#    image: redis:alpine3.13
+#    container_name: redis
+##    volumes:
+##      - "$PWD/config/redis.conf:/redis.conf"
+#    ports:
+#      - 6379:6379
 
 
 networks:

@@ -38,6 +38,9 @@ func newApp(appConfig *config.Config) *app.App {
 	// company := companyService.New(validator, cRepo, generateID)
 	// staff := staffService.New(validator, sRepo, generateID)
 	user := userService.New(validator, uRepo)
+	//msgService := msgBrokerService.New(kafkaRepo, users)
+	//
+	//go msgService.Receiver(topics)
 
 	return app.New(user)
 }

@@ -13,6 +13,7 @@ import (
 )
 
 func (impl *implementation) Create(ctx context.Context, input *userin.CreateInput) (ID string, err error) {
+	//var msg []byte
 	defer func(){
 		if !reflect2.IsNil(err){
 			return
@@ -20,7 +21,13 @@ func (impl *implementation) Create(ctx context.Context, input *userin.CreateInpu
 		if err == impl.sendMsgCreate(input){
 			log.Println(err)
 		}
-
+		//if err == impl.receiverMsgCreate(){
+		//	log.Println(err)
+		//}
+		//err = impl.MsgReceiver(ctx, msg)
+		//if err != nil{
+		//	log.Println(err)
+		//}
 	}()
 	err = impl.validator.Validate(input)
 	if err != nil {
@@ -57,3 +64,9 @@ func (impl *implementation) sendMsgCreate(input *userin.CreateInput) (err error)
 	})
 	return err
 }
+
+//func (impl *implementation) receiverMsgCreate(msg []byte) (err error) {
+//	ctx := context.Background()
+//	err = impl.MsgReceiver(ctx, msg )
+//	return err
+//}
