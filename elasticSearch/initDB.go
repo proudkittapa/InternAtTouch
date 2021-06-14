@@ -13,10 +13,10 @@ import (
 )
 
 // A function for marshaling structs to JSON string
-func jsonStructInit(doc Sp) string {
+func jsonStructInit(doc InsertStruct) string {
 
 	// Create struct instance of the Elasticsearch fields struct object
-	docStruct := &Sp{
+	docStruct := &InsertStruct{
 		Name: doc.Name,
 		ActualName: doc.ActualName,
 		ActualLastName: doc.ActualLastName,
