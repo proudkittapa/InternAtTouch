@@ -10,6 +10,8 @@ import (
 	"log"
 	"reflect"
 	//"strconv"
+
+	//"strconv"
 	"strings"
 	//"sync"
 )
@@ -17,26 +19,63 @@ import (
 var r  map[string]interface{}
 
 
-func buildRequest(keyword string) bytes.Buffer {
+//func buildRequest(keyword string) bytes.Buffer {
+//	var buf bytes.Buffer
+//	query := map[string]interface{}{
+//		"query": map[string]interface{}{
+//			"query_string": map[string]interface{}{
+//				"query" : "*"+keyword+"*",
+//				"fields" : []interface{}{
+//					"name",
+//					"actual_name",
+//					"actual_lastname",
+//					"gender",
+//					"super_power",
+//					"universe",
+//					"movies",
+//					"enemies",
+//					"family_member",
+//					"about",
+//				},
+//				},
+//			},
+//	}
+//	if err := json.NewEncoder(&buf).Encode(query); err != nil {
+//		log.Fatalf("Error encoding query: %s", err)
+//	}
+//	return buf
+//}
+
+//func buildRequest(keyword string) bytes.Buffer {
+//	var buf bytes.Buffer
+//	query := map[string]interface{}{
+//		"from": "0",
+//		"size": "20",
+//		"query" : map[string]interface{}{
+//			"match": map[string]interface{}{
+//				"_index": "superhero",
+//				},
+//			},
+//		}
+//
+//
+//	if err := json.NewEncoder(&buf).Encode(query); err != nil {
+//		log.Fatalf("Error encoding query: %s", err)
+//	}
+//	return buf
+//}
+
+func buildRequest(page int, size int) bytes.Buffer{
 	var buf bytes.Buffer
+	from := (page-1)*size
 	query := map[string]interface{}{
-		"query": map[string]interface{}{
-			"query_string": map[string]interface{}{
-				"query" : "*"+keyword+"*",
-				"fields" : []interface{}{
-					"name",
-					"actual_name",
-					"actual_lastname",
-					"gender",
-					"super_power",
-					"universe",
-					"movies",
-					"enemies",
-					"family_member",
-					"about",
-				},
-				},
+		"from": from,
+		"size": size,
+		"query" : map[string]interface{}{
+			"match": map[string]interface{}{
+				"_index": "superhero",
 			},
+		},
 	}
 	if err := json.NewEncoder(&buf).Encode(query); err != nil {
 		log.Fatalf("Error encoding query: %s", err)
@@ -131,7 +170,7 @@ func main() {
 
 	// Declare empty array for the document string
 	log.Println(strings.Repeat("=", 37))
-	search(ctx,client,res,buildRequest("s"),err)
+	search(ctx,client,res,buildRequest(2,5),err)
 	log.Printf(
 		"[%s] %d hits; took: %dms",
 		res.Status(),
@@ -140,6 +179,7 @@ func main() {
 	)
 	// Print the ID and document source for each hit.
 	for _, hit := range r["hits"].(map[string]interface{})["hits"].([]interface{}) {
+		log.Println(hit.(map[string]interface{})["_id"])
 		log.Println(hit.(map[string]interface{})["_source"].(map[string]interface{})["name"])
 		//log.Println(hit.(map[string]interface{})["_source"].(map[string]interface{})["actual_name"])
 			//log.Printf(" * ID=%s, %s", hit.(map[string]interface{})["_id"], hit.(map[string]interface{})["_source"])
