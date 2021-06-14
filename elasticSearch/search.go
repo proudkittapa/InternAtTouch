@@ -11,6 +11,7 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
+	"sync"
 )
 
 var r  map[string]interface{}
@@ -56,10 +57,10 @@ type Sp struct {
 //
 //func createDb(es *elasticsearch.Client){
 //	var wg sync.WaitGroup
-//	for i, title := range Sp_list{
+//	for i, title := range spList{
 //		wg.Add(1)
 //
-//		go func(i int, title Sp) {
+//		go func(i int, title ElasticDocs) {
 //			defer wg.Done()
 //			out, err := json.Marshal(title)
 //			if err != nil {
@@ -103,26 +104,15 @@ type Sp struct {
 //	}
 //	wg.Wait()
 //}
-//
-func buildRequest() bytes.Buffer {
+
+func buildRequest(keyword string) bytes.Buffer {
 	var buf bytes.Buffer
 	query := map[string]interface{}{
-			"query": map[string]interface{}{
-				"wildcard": map[string]interface{}{
-					"name": map[string]interface{}{
-						"value": "s*",
-							//"filter": map[string]interface{}{
-							//	"not_containing": map[string]interface{}{
-							//		"match": map[string]interface{}{
-							//			"query": "s",
-							//		},
-							//	},
-							//},
-						},
-					},
-				},
-}
-
+		"query": map[string]interface{}{
+			"match_all": map[string]interface{}{
+			},
+		},
+	}
 
 	if err := json.NewEncoder(&buf).Encode(query); err != nil {
 		log.Fatalf("Error encoding query: %s", err)
@@ -244,114 +234,9 @@ func jsonStruct(doc ElasticDocs) string {
 func main() {
 
 	// Allow for custom formatting of log output
-	log.SetFlags(0)
 
-	// Create a context object for the API calls
-	ctx := context.Background()
-
-	// Create a mapping for the Elasticsearch documents
-	var (
-		docMap map[string]interface{}
-	)
-	fmt.Println("docMap:", docMap)
-	fmt.Println("docMap TYPE:", reflect.TypeOf(docMap))
-
-	// Declare an Elasticsearch configuration
-	cfg := elasticsearch.Config{
-		Addresses: []string{
-			"http://localhost:9200",
-		},
-		Username: "user",
-		Password: "pass",
-	}
-
-	// Instantiate a new Elasticsearch client object instance
-	client, err := elasticsearch.NewClient(cfg)
-
-	if err != nil {
-		fmt.Println("Elasticsearch connection error:", err)
-	}
-
-	// Have the client instance return a response
-	res, err := client.Info()
-
-	// Deserialize the response into a map.
-	if err != nil {
-		log.Fatal(err)
-	} else {
-		log.Print(res)
-	}
-
-	// Declare empty array for the document strings
-	var docs []string
-	//
-	//// Declare documents to be indexed using struct
-	//doc1 := ElasticDocs{}
-	//doc1.SomeStr = "Some Value"
-	//doc1.SomeInt = 123456
-	//doc1.SomeBool = true
-	//
-	//doc2 := ElasticDocs{}
-	//doc2.SomeStr = "Another Value"
-	//doc2.SomeInt = 42
-	//doc2.SomeBool = false
-	//
-	//// Marshal Elasticsearch document struct objects to JSON string
-	//docStr1 := jsonStruct(doc1)
-	//docStr2 := jsonStruct(doc2)
-	//
-	//// Append the doc strings to an array
-	//docs = append(docs, docStr1)
-	//docs = append(docs, docStr2)
-
-	for _, hero := range spList{
-		heroStr := jsonStruct(hero)
-		docs = append(docs, heroStr)
-	}
-
-	// Iterate the array of string documents
-	for i, bod := range docs {
-		//fmt.Println("\nDOC _id:", i+1)
-		//fmt.Println(bod)
-
-		// Instantiate a request object
-		req := esapi.IndexRequest{
-			Index:      "superhero",
-			DocumentID: strconv.Itoa(i + 1),
-			Body:       strings.NewReader(bod),
-			Refresh:    "true",
-		}
-		fmt.Println(reflect.TypeOf(req))
-
-		// Return an API response object from request
-		res, err := req.Do(ctx, client)
-		if err != nil {
-			log.Fatalf("IndexRequest ERROR: %s", err)
-		}
-		//defer res.Body.Close()
-
-		if res.IsError() {
-			log.Printf("%s ERROR indexing document ID=%d", res.Status(), i+1)
-		} else {
-
-			// Deserialize the response into a map.
-			var resMap map[string]interface{}
-			if err := json.NewDecoder(res.Body).Decode(&resMap); err != nil {
-				log.Printf("Error parsing the response body: %s", err)
-			} else {
-				//log.Printf("\nIndexRequest() RESPONSE:")
-				// Print the response status and indexed document version.
-				//fmt.Println("Status:", res.Status())
-				//fmt.Println("Result:", resMap["result"])
-				//fmt.Println("Version:", int(resMap["_version"].(float64)))
-				fmt.Println("resMap:", resMap)
-				//fmt.Println("\n")
-			}
-		}
-
-	}
 	log.Println(strings.Repeat("=", 37))
-	search(ctx,client,res,buildRequest(),err)
+	search(ctx,client,res,buildRequest("c"),err)
 	log.Printf(
 		"[%s] %d hits; took: %dms",
 		res.Status(),
@@ -360,7 +245,8 @@ func main() {
 	)
 	// Print the ID and document source for each hit.
 	for _, hit := range r["hits"].(map[string]interface{})["hits"].([]interface{}) {
-		log.Print(hit.(map[string]interface{})["_source"].(map[string]interface{})["name"])
+		log.Println(hit.(map[string]interface{})["_source"].(map[string]interface{})["name"])
+		//log.Println(hit.(map[string]interface{})["_source"].(map[string]interface{})["actual_name"])
 			//log.Printf(" * ID=%s, %s", hit.(map[string]interface{})["_id"], hit.(map[string]interface{})["_source"])
 	}
 
