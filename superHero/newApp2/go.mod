@@ -1,9 +1,10 @@
-module github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp
+module github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp2
 
 go 1.16
 
 require (
 	github.com/caarlos0/env/v6 v6.6.2
+	github.com/elastic/go-elasticsearch/v8 v8.0.0-20210608143047-aa1301e7ba9d // indirect
 	github.com/gin-gonic/gin v1.7.2
 	github.com/go-playground/validator/v10 v10.6.1
 	github.com/golang/protobuf v1.4.2 // indirect

@@ -66,7 +66,7 @@ func createDb(es *elasticsearch.Client) error{
 	return err
 }
 
-func buildRequestUpdate(t InsertStruct) bytes.Buffer {
+func buildRequestUpdate(t UpdateStruct) bytes.Buffer {
 	var buf bytes.Buffer
 	query := map[string]interface{}{
 		"doc": map[string]interface{}{
@@ -145,7 +145,7 @@ func update(ctx context.Context, es *elasticsearch.Client, title InsertStruct, i
 	return err
 }
 
-func update2(ctx context.Context,es *elasticsearch.Client, title InsertStruct, id string){
+func update2(ctx context.Context,es *elasticsearch.Client, title UpdateStruct, id string){
 	buf := buildRequestUpdate(title)
 	res, err := es.Update(
 		//TODO update to receive the name from config as well
