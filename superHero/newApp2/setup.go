@@ -2,18 +2,21 @@ package main
 
 import (
 	"context"
+	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/repository/kafka"
+	msgBrokerService "github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/msgbroker/implement"
+	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/msgbroker/msgbrokerin"
 	"log"
 
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/config"
 
 	// validatorService "github.com/touchtechnologies-product/go-blueprint-clean-architecture/service/validator"
 
-	validatorService "github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/validator"
-
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/app"
+	validatorService "github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/validator"
 
 	userRepo "github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/repository/user"
 	userService "github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/user/implement"
+
 	"github.com/sirupsen/logrus"
 	// "github.com/touchtechnologies-product/go-blueprint-clean-architecture/app"
 	// "github.com/touchtechnologies-product/go-blueprint-clean-architecture/config"
@@ -26,22 +29,15 @@ import (
 func newApp(appConfig *config.Config) *app.App {
 	ctx := context.Background()
 	uRepo, err := userRepo.New(ctx, appConfig.MongoDBEndpoint, appConfig.MongoDBName, appConfig.MongoDBHeroTableName)
-	// cRepo, err := compRepo.New(ctx, appConfig.MongoDBEndpoint, appConfig.MongoDBName, appConfig.MongoDBCompanyTableName)
 	panicIfErr(err)
-	// sRepo, err := staffRepo.New(ctx, appConfig.MongoDBEndpoint, appConfig.MongoDBName, appConfig.MongoDBStaffTableName)
-	// panicIfErr(err)
-
+	kRepo, err := kafka.New(configKafka(appConfig))
+	panicIfErr(err)
 	validator := validatorService.New(uRepo)
-	// generateID, err := util.NewUUID()
-	// panicIfErr(err)
 
-	// company := companyService.New(validator, cRepo, generateID)
-	// staff := staffService.New(validator, sRepo, generateID)
-	user := userService.New(validator, uRepo)
-	//msgService := msgBrokerService.New(kafkaRepo, users)
-	//
-	//go msgService.Receiver(topics)
+	user := userService.New(validator, uRepo, kRepo)
+	msgService := msgBrokerService.New(kRepo, user)
 
+	go msgService.Receiver(topics)
 	return app.New(user)
 }
 
@@ -57,3 +53,20 @@ func panicIfErr(err error) {
 		log.Panic(err)
 	}
 }
+
+func configKafka(appConfig *config.Config) *kafka.Config {
+	return &kafka.Config{
+		BackOffTime:  appConfig.MessageBrokerBackOffTime,
+		MaximumRetry: appConfig.MessageBrokerMaximumRetry,
+		Host:         appConfig.MessageBrokerEndpoint,
+		Group:        appConfig.MessageBrokerGroup,
+		Version:      appConfig.MessageBrokerVersion,
+	}
+}
+var topics = []msgbrokerin.TopicMsgBroker{
+	msgbrokerin.TopicUser,
+	//msgbrokerin.TopicOTP,
+	//msgbrokerin.TopicVerify,
+}
+
+//hi

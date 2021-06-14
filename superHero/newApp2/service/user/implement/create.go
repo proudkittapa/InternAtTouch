@@ -3,11 +3,10 @@ package implement
 import (
 	"context"
 	"fmt"
-
+	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/msgbroker/msgbrokerin"
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/user/userin"
-	// "github.com/touchtechnologies-product/go-blueprint-clean-architecture/service/util"
-	// "github.com/touchtechnologies-product/go-blueprint-clean	-architecture/service/company/companyin"
-	// "github.com/touchtechnologies-product/go-blueprint-clean-architecture/service/util"
+	"github.com/modern-go/reflect2"
+	"log"
 )
 
 func (impl *implementation) Create(ctx context.Context, input *userin.CreateInput) (ID string, err error) {
@@ -17,7 +16,8 @@ func (impl *implementation) Create(ctx context.Context, input *userin.CreateInpu
 		return "validate error", err
 	}
 
-	user := userin.CreateInputToUserDomain(input)
+	//user := userin.CreateInputToUserDomain(input)
+	user := input.CreateInputToUserDomain()
 	fmt.Println("user input create:", user)
 
 	err = impl.repo.Create(ctx, user)
