@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/repository/kafka"
+	msgBrokerService "github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/msgbroker/implement"
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/msgbroker/msgbrokerin"
 	"log"
 
@@ -11,7 +12,6 @@ import (
 	// validatorService "github.com/touchtechnologies-product/go-blueprint-clean-architecture/service/validator"
 
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/app"
-	msgBrokerService "github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/msgbroker/implement"
 	validatorService "github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/validator"
 
 	userRepo "github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/repository/user"

@@ -51,7 +51,7 @@ func (impl *implementation) Create(ctx context.Context, input *userin.CreateInpu
 }
 
 func (impl *implementation) sendMsgCreate(input *userin.CreateInput) (err error) {
-	return impl.MsgSender(msgbrokerin.TopicUser, userin.MsgBrokerCreate{
+	return impl.MsgSender("create", userin.MsgBrokerCreate{
 		Action:     msgbrokerin.ActionCreate,
 		ID:         input.ID,
 		Name:       input.Name,
