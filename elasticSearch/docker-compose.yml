@@ -18,5 +18,14 @@ services:
 #      - data01:/usr/share/elasticsearch/data
     ports:
       - 9200:9200
-#    networks:
-#      - elastic
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.13.1
+    env_file:
+      - kibana.env
+    ports:
+      - "5601:5601"
+    environment:
+      ELASTICSEARCH_URL: http://elas:9200
+      ELASTICSEARCH_HOSTS: http://elas:9200
+    depends_on:
+      - elas

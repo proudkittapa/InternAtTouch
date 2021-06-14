@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -11,145 +10,7 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
-	"sync"
 )
-
-//
-//func initDb()(*elasticsearch.Client, *esapi.Response,error){
-//	es, err := elasticsearch.NewDefaultClient()
-//	if err != nil {
-//		log.Fatalf("Error creating the client: %s", err)
-//	}
-//
-//	// 1. Get cluster info
-//	//
-//	res, err := es.Info()
-//	if err != nil {
-//		log.Fatalf("Error getting response: %s", err)
-//	}
-//	defer res.Body.Close()
-//	// Check response status
-//	if res.IsError() {
-//		log.Fatalf("Error: %s", res.String())
-//	}
-//	return es,res,err
-//}
-//
-//func createDb(es *elasticsearch.Client){
-//	var wg sync.WaitGroup
-//	for i, title := range spList{
-//		wg.Add(1)
-//
-//		go func(i int, title ElasticDocs) {
-//			defer wg.Done()
-//			out, err := json.Marshal(title)
-//			if err != nil {
-//				panic (err)
-//			}
-//
-//			// Build the request body.
-//			var b strings.Builder
-//			//b.WriteString(`{"title" : "`)
-//			b.WriteString(string(out))
-//			//b.WriteString(`"}`)
-//
-//			// Set up the request object.
-//			req := esapi.IndexRequest{
-//				Index:      "universe",
-//				DocumentID: strconv.Itoa(i + 1),
-//				Body:       strings.NewReader(b.String()),
-//				Refresh:    "true",
-//			}
-//
-//			// Perform the request with the client.
-//			res, err := req.Do(context.Background(), es)
-//			if err != nil {
-//				log.Fatalf("Error getting response: %s", err)
-//			}
-//			defer res.Body.Close()
-//
-//			if res.IsError() {
-//				log.Printf("[%s] Error indexing document ID=%d", res.Status(), i+1)
-//			} else {
-//				// Deserialize the response into a map.
-//				var r map[string]interface{}
-//				if err := json.NewDecoder(res.Body).Decode(&r); err != nil {
-//					log.Printf("Error parsing the response body: %s", err)
-//				} else {
-//					// Print the response status and indexed document version.
-//					log.Printf("[%s] %s; version=%d", res.Status(), r["result"], int(r["_version"].(float64)))
-//				}
-//			}
-//		}(i, title)
-//	}
-//	wg.Wait()
-//}
-
-func buildRequest(keyword string) bytes.Buffer {
-	var buf bytes.Buffer
-	query := map[string]interface{}{
-		"query": map[string]interface{}{
-			"match_all": map[string]interface{}{
-			},
-		},
-	}
-
-	if err := json.NewEncoder(&buf).Encode(query); err != nil {
-		log.Fatalf("Error encoding query: %s", err)
-	}
-	return buf
-}
-//
-func search(ctx context.Context,es *elasticsearch.Client, res *esapi.Response, buf bytes.Buffer, err error){
-	res, err = es.Search(
-		es.Search.WithContext(ctx),
-		es.Search.WithIndex("superhero"),
-		es.Search.WithBody(&buf),
-		es.Search.WithTrackTotalHits(true),
-		es.Search.WithPretty(),
-	)
-	if err != nil {
-		log.Fatalf("Error getting response: %s", err)
-	}
-	defer res.Body.Close()
-
-	if res.IsError() {
-		var e map[string]interface{}
-		if err := json.NewDecoder(res.Body).Decode(&e); err != nil {
-			log.Fatalf("Error parsing the response body: %s", err)
-		} else {
-			// Print the response status and error information.
-			log.Fatalf("[%s] %s: %s",
-				res.Status(),
-				e["error"].(map[string]interface{})["type"],
-				e["error"].(map[string]interface{})["reason"],
-			)
-		}
-	}
-
-	if err := json.NewDecoder(res.Body).Decode(&r); err != nil {
-		log.Fatalf("Error parsing the response body: %s", err)
-	}
-}
-
-//func main(){
-//	es,res,err := initDb()
-//	createDb(es)
-//	buf :=buildRequest()
-//	search(es,res,buf,err)
-//	log.Printf(
-//		"[%s] %d hits; took: %dms",
-//		res.Status(),
-//		int(r["hits"].(map[string]interface{})["total"].(map[string]interface{})["value"].(float64)),
-//		int(r["took"].(float64)),
-//	)
-//	// Print the ID and document source for each hit.
-//	for _, hit := range r["hits"].(map[string]interface{})["hits"].([]interface{}) {
-//		log.Printf(" * ID=%s, %s", hit.(map[string]interface{})["_id"], hit.(map[string]interface{})["_source"])
-//	}
-//
-//	log.Println(strings.Repeat("=", 37))
-//}
 
 type ElasticDocs struct {
 	Name      		string   `bson:"name" json:"name" validate:"required"`
@@ -211,23 +72,110 @@ func jsonStruct(doc ElasticDocs) string {
 	return string(b)
 }
 
-func main() {
+func main(){
+	log.SetFlags(0)
 
-	// Allow for custom formatting of log output
+	// Create a context object for the API calls
+	ctx := context.Background()
 
-	log.Println(strings.Repeat("=", 37))
-	search(ctx,client,res,buildRequest("c"),err)
-	log.Printf(
-		"[%s] %d hits; took: %dms",
-		res.Status(),
-		int(r["hits"].(map[string]interface{})["total"].(map[string]interface{})["value"].(float64)),
-		int(r["took"].(float64)),
+	// Create a mapping for the Elasticsearch documents
+	var (
+		docMap map[string]interface{}
 	)
-	// Print the ID and document source for each hit.
-	for _, hit := range r["hits"].(map[string]interface{})["hits"].([]interface{}) {
-		log.Println(hit.(map[string]interface{})["_source"].(map[string]interface{})["name"])
-		//log.Println(hit.(map[string]interface{})["_source"].(map[string]interface{})["actual_name"])
-			//log.Printf(" * ID=%s, %s", hit.(map[string]interface{})["_id"], hit.(map[string]interface{})["_source"])
+	fmt.Println("docMap:", docMap)
+	fmt.Println("docMap TYPE:", reflect.TypeOf(docMap))
+
+	// Declare an Elasticsearch configuration
+	cfg := elasticsearch.Config{
+		Addresses: []string{
+			"http://localhost:9200",
+		},
+		Username: "user",
+		Password: "pass",
 	}
 
+	// Instantiate a new Elasticsearch client object instance
+	client, err := elasticsearch.NewClient(cfg)
+	createDb(client)
+	if err != nil {
+		fmt.Println("Elasticsearch connection error:", err)
+	}
+
+	// Have the client instance return a response
+	res, err := client.Info()
+
+	// Deserialize the response into a map.
+	if err != nil {
+		log.Fatal(err)
+	} else {
+		log.Print(res)
+	}
+
+	// Declare empty array for the document strings
+	var docs []string
+	//
+	//// Declare documents to be indexed using struct
+	//doc1 := ElasticDocs{}
+	//doc1.SomeStr = "Some Value"
+	//doc1.SomeInt = 123456
+	//doc1.SomeBool = true
+	//
+	//doc2 := ElasticDocs{}
+	//doc2.SomeStr = "Another Value"
+	//doc2.SomeInt = 42
+	//doc2.SomeBool = false
+	//
+	//// Marshal Elasticsearch document struct objects to JSON string
+	//docStr1 := jsonStruct(doc1)
+	//docStr2 := jsonStruct(doc2)
+	//
+	//// Append the doc strings to an array
+	//docs = append(docs, docStr1)
+	//docs = append(docs, docStr2)
+
+	for _, hero := range spList{
+		heroStr := jsonStruct(hero)
+		docs = append(docs, heroStr)
+	}
+
+	// Iterate the array of string documents
+	for i, bod := range docs {
+		//fmt.Println("\nDOC _id:", i+1)
+		//fmt.Println(bod)
+
+		// Instantiate a request object
+		req := esapi.IndexRequest{
+			Index:      "name",
+			DocumentID: strconv.Itoa(i + 1),
+			Body:       strings.NewReader(bod),
+			Refresh:    "true",
+		}
+		fmt.Println(reflect.TypeOf(req))
+
+		// Return an API response object from request
+		res, err := req.Do(ctx, client)
+		if err != nil {
+			log.Fatalf("IndexRequest ERROR: %s", err)
+		}
+		//defer res.Body.Close()
+
+		if res.IsError() {
+			log.Printf("%s ERROR indexing document ID=%d", res.Status(), i+1)
+		} else {
+
+			// Deserialize the response into a map.
+			var resMap map[string]interface{}
+			if err := json.NewDecoder(res.Body).Decode(&resMap); err != nil {
+				log.Printf("Error parsing the response body: %s", err)
+			} else {
+				//log.Printf("\nIndexRequest() RESPONSE:")
+				// Print the response status and indexed document version.
+				//fmt.Println("Status:", res.Status())
+				//fmt.Println("Result:", resMap["result"])
+				//fmt.Println("Version:", int(resMap["_version"].(float64)))
+				fmt.Println("resMap:", resMap)
+				//fmt.Println("\n")
+			}
+		}
+	}
 }

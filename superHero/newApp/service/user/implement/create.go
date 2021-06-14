@@ -20,6 +20,7 @@ func (impl *implementation) Create(ctx context.Context, input *userin.CreateInpu
 		if err == impl.sendMsgCreate(input){
 			log.Println(err)
 		}
+
 	}()
 	err = impl.validator.Validate(input)
 	if err != nil {
@@ -32,7 +33,7 @@ func (impl *implementation) Create(ctx context.Context, input *userin.CreateInpu
 	user := input.CreateInputToUserDomain()
 	fmt.Println("user input create:", user)
 
-	err = impl.repo.Create(ctx, user)
+	//err = impl.repo.Create(ctx, user)
 	// fmt.Println("output create:", user)
 
 	if err != nil {
