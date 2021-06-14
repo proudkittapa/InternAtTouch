@@ -2,16 +2,8 @@ package elastic
 
 import (
 	"bytes"
-	//"context"
 	"encoding/json"
-	//"fmt"
-	"github.com/elastic/go-elasticsearch/v8"
-	"github.com/elastic/go-elasticsearch/v8/esapi"
 	"log"
-	//"reflect"
-	"strconv"
-	//"strings"
-	//"sync"
 )
 
 func buildSearchRequest(keyword string) bytes.Buffer {
@@ -43,8 +35,6 @@ func buildSearchRequest(keyword string) bytes.Buffer {
 
 func buildViewAllRequest(page int, size int) bytes.Buffer{
 	var buf bytes.Buffer
-	page = strconv.Atoi(page)
-	size = strconv.Atoi(size)
 	from := (page-1)*size
 	query := map[string]interface{}{
 		"from": from,
