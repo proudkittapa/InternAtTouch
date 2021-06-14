@@ -68,7 +68,6 @@ func main(){
 
 	// Instantiate a new Elasticsearch client object instance
 	client, err := elasticsearch.NewClient(cfg)
-	createDb(client)
 	if err != nil {
 		fmt.Println("Elasticsearch connection error:", err)
 	}
@@ -117,7 +116,7 @@ func main(){
 
 		// Instantiate a request object
 		req := esapi.IndexRequest{
-			Index:      "name",
+			Index:      "superhero",
 			DocumentID: strconv.Itoa(i + 1),
 			Body:       strings.NewReader(bod),
 			Refresh:    "true",

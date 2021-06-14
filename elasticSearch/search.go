@@ -11,7 +11,7 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
-	"sync"
+	//"sync"
 )
 
 //
@@ -85,13 +85,21 @@ import (
 //	wg.Wait()
 //}
 
+var r  map[string]interface{}
+
+
 func buildRequest(keyword string) bytes.Buffer {
 	var buf bytes.Buffer
 	query := map[string]interface{}{
 		"query": map[string]interface{}{
-			"match_all": map[string]interface{}{
+			"query_string": map[string]interface{}{
+				"query" : "*s*",
+				"fields" : []interface{}{
+					"name", "actual_name","actual_lastname",
+				},
+				},
 			},
-		},
+
 	}
 
 	if err := json.NewEncoder(&buf).Encode(query); err != nil {
@@ -237,7 +245,7 @@ func main() {
 
 	// Instantiate a new Elasticsearch client object instance
 	client, err := elasticsearch.NewClient(cfg)
-	createDb(client)
+	//createDb(client)
 	if err != nil {
 		fmt.Println("Elasticsearch connection error:", err)
 	}
