@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -27,7 +28,7 @@ func initDb(uri string, username string, password string)(*elasticsearch.Client,
 
 func createDb(es *elasticsearch.Client){
 	var wg sync.WaitGroup
-	for _ , title := range Sp_list{
+	for _ , title := range SpList{
 		wg.Add(1)
 
 		go func(title Sp) {
@@ -114,7 +115,53 @@ func upsert(ctx context.Context, es *elasticsearch.Client, title Sp){
 	defer res.Body.Close()
 }
 
+func buildQueryID(keyword string) bytes.Buffer {
+	var buf bytes.Buffer
+	query := map[string]interface{}{
+		"query": map[string]interface{}{
+			"match": map[string]interface{}{
+				"_id" : keyword,
+			},
+		},
+	}
 
+	if err := json.NewEncoder(&buf).Encode(query); err != nil {
+		log.Fatalf("Error encoding query: %s", err)
+	}
+	return buf
+}
+
+func Create(ctx context.Context,es *elasticsearch.Client, res *esapi.Response, buf bytes.Buffer, err error){
+	res, err = es.Search(
+		es.Search.WithContext(ctx),
+		es.Search.WithIndex("superhero"),
+		es.Search.WithBody(&buf),
+		es.Search.WithTrackTotalHits(true),
+		es.Search.WithPretty(),
+	)
+	if err != nil {
+		log.Fatalf("Error getting response: %s", err)
+	}
+	defer res.Body.Close()
+
+	if res.IsError() {
+		var e map[string]interface{}
+		if err := json.NewDecoder(res.Body).Decode(&e); err != nil {
+			log.Fatalf("Error parsing the response body: %s", err)
+		} else {
+			// Print the response status and error information.
+			log.Fatalf("[%s] %s: %s",
+				res.Status(),
+				e["error"].(map[string]interface{})["type"],
+				e["error"].(map[string]interface{})["reason"],
+			)
+		}
+	}
+
+	if err := json.NewDecoder(res.Body).Decode(&r); err != nil {
+		log.Fatalf("Error parsing the response body: %s", err)
+	}
+}
 
 func main(){
 	log.SetFlags(0)
@@ -132,6 +179,7 @@ func main(){
 
 	figure := Sp{"Black Panther", "T'challa", "-", "Male", 218048400, 183, []string{"Speed", "Strength"}, true, "Marvel", []string{"Black Pabther", "The Avengers0"}, []string{"Erik Killmonger"}, []string{"Shuri", "T'Chaka"}, "The king the Wakanda"}
 	upsert(ctx, es, figure)
+
 
 
 }
