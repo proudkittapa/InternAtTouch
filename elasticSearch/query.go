@@ -26,8 +26,9 @@ func initDb(uri string, username string, password string)(*elasticsearch.Client,
 	return es,err
 }
 
-func createDb(es *elasticsearch.Client){
+func createDb(es *elasticsearch.Client) error{
 	var wg sync.WaitGroup
+	var err error
 	for _ , title := range SpList{
 		wg.Add(1)
 
@@ -59,6 +60,7 @@ func createDb(es *elasticsearch.Client){
 		}(title)
 	}
 	wg.Wait()
+	return err
 }
 
 func structToJson(doc Sp) string {
@@ -88,7 +90,7 @@ func structToJson(doc Sp) string {
 	return string(b)
 }
 
-func upsert(ctx context.Context, es *elasticsearch.Client, title Sp){
+func upsert(ctx context.Context, es *elasticsearch.Client, title Sp) error{
 	out, err := json.Marshal(title)
 	if err != nil {
 		panic (err)
@@ -113,6 +115,7 @@ func upsert(ctx context.Context, es *elasticsearch.Client, title Sp){
 		log.Fatalf("Error getting response: %s", err)
 	}
 	defer res.Body.Close()
+	return err
 }
 
 func buildQueryID(keyword string) bytes.Buffer {
@@ -131,36 +134,21 @@ func buildQueryID(keyword string) bytes.Buffer {
 	return buf
 }
 
-func Create(ctx context.Context,es *elasticsearch.Client, res *esapi.Response, buf bytes.Buffer, err error){
-	res, err = es.Search(
-		es.Search.WithContext(ctx),
-		es.Search.WithIndex("superhero"),
-		es.Search.WithBody(&buf),
-		es.Search.WithTrackTotalHits(true),
-		es.Search.WithPretty(),
-	)
+func Delete(ctx context.Context, es *elasticsearch.Client, id string) error{
+	req := esapi.DeleteRequest{
+		Index:      "list",
+		DocumentID: id,
+		Refresh:    "true",
+	}
+
+	// Perform the request with the client.
+	res, err := req.Do(ctx, es)
 	if err != nil {
 		log.Fatalf("Error getting response: %s", err)
 	}
 	defer res.Body.Close()
 
-	if res.IsError() {
-		var e map[string]interface{}
-		if err := json.NewDecoder(res.Body).Decode(&e); err != nil {
-			log.Fatalf("Error parsing the response body: %s", err)
-		} else {
-			// Print the response status and error information.
-			log.Fatalf("[%s] %s: %s",
-				res.Status(),
-				e["error"].(map[string]interface{})["type"],
-				e["error"].(map[string]interface{})["reason"],
-			)
-		}
-	}
-
-	if err := json.NewDecoder(res.Body).Decode(&r); err != nil {
-		log.Fatalf("Error parsing the response body: %s", err)
-	}
+	return err
 }
 
 func main(){
