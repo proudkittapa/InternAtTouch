@@ -15,13 +15,13 @@ import (
 
 func newApp(appConfig *config.Config) *app.App {
 	ctx := context.Background()
-	uRepo, err := userRepo.New(ctx, appConfig.MongoDBEndpoint, appConfig.MongoDBName, appConfig.MongoDBHeroTableName)
+	//uRepo, err := userRepo.New(ctx, appConfig.MongoDBEndpoint, appConfig.MongoDBName, appConfig.MongoDBHeroTableName)
 	panicIfErr(err)
 	kRepo, err := kafka.New(configKafka(appConfig))
 	panicIfErr(err)
-	validator := validatorService.New(uRepo)
+	//validator := validatorService.New(uRepo)
 
-	user := userService.New(validator, uRepo, kRepo)
+	//user := userService.New(validator, uRepo, kRepo)
 	msgService := msgBrokerService.New(kRepo, user)
 	//wg.Add(1)
 	msgService.Receiver(topics)
