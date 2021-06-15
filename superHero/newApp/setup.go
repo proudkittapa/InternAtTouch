@@ -11,19 +11,19 @@ import (
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/app"
 	validatorService "github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/validator"
 
-	userRepo "github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/repository/user"
+	//userRepo "github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/repository/user"
 	userService "github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/user/implement"
 )
 
 func newApp(appConfig *config.Config) *app.App {
 	ctx := context.Background()
-	uRepo, err := userRepo.New(ctx, appConfig.MongoDBEndpoint, appConfig.MongoDBName, appConfig.MongoDBHeroTableName)
-	panicIfErr(err)
+	//uRepo, err := userRepo.New(ctx, appConfig.MongoDBEndpoint, appConfig.MongoDBName, appConfig.MongoDBHeroTableName)
+	//panicIfErr(err)
 	kRepo, err := kafka.New(configKafka(appConfig))
 	panicIfErr(err)
-	validator := validatorService.New(uRepo)
+	//validator := validatorService.New(uRepo)
 
-	user := userService.New(validator, uRepo, kRepo)
+	//user := userService.New(validator, uRepo, kRepo)
 	msgService := msgBrokerService.New(kRepo, user)
 	//wg.Add(1)
 	msgService.Receiver(topics)
