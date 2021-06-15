@@ -5,7 +5,7 @@ import (
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/app"
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/config"
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/repository/kafka"
-	userRepo "github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/repository/user"
+	//userRepo "github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/repository/user"
 	msgBrokerService "github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/msgbroker/implement"
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/msgbroker/msgbrokerin"
 	userService "github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/user/implement"
