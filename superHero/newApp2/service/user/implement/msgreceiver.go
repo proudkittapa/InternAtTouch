@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/msgbroker/msgbrokerin"
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/user/userin"
+	"github.com/modern-go/reflect2"
+	"log"
 )
 
 func (impl *implementation) MsgReceiver(ctx context.Context, msg []byte) (err error) {
@@ -15,23 +17,26 @@ func (impl *implementation) MsgReceiver(ctx context.Context, msg []byte) (err er
 		return err
 	}
 
-	//msgAuthInput := &
-	//err = json.Unmarshal(msg, msgInput)
-
 	fmt.Println(string(msg))
 	switch msgInput.Action {
 	case msgbrokerin.ActionCreate:
+		fmt.Println("receive action response")
 		err = impl.receiveCreateAction(ctx, msgInput)
 		if err != nil {
 			return err
 		}
-
-	//case msgbrokerin.ActionUpdate:
-	//	//    TODO Update Users
-	//	fmt.Println(fmt.Sprintf("%s has updated", msgInput.FirstName.En))
-	//case msgbrokerin.ActionDelete:
-	//	//    TODO Delete Users
-	//	fmt.Println(fmt.Sprintf("%s has deleted", msgInput.FirstName.En))
+	case msgbrokerin.ActionUpdate:
+		fmt.Println("receive update response")
+		err = impl.receiveUpdateAction(ctx, msgInput)
+		if err != nil {
+			return err
+		}
+	case msgbrokerin.ActionDelete:
+		fmt.Println("receive delete response")
+		err = impl.receiveDeleteAction(ctx, msgInput)
+		if err != nil {
+			return err
+		}
 
 	}
 
@@ -40,11 +45,55 @@ func (impl *implementation) MsgReceiver(ctx context.Context, msg []byte) (err er
 
 func (impl *implementation) receiveCreateAction(ctx context.Context, msgBrokerInput *userin.MsgBrokerCreate) (err error) {
 	input := msgBrokerInput.ToCreateInput()
-	domainUser := input.CreateInputToUserDomain()
-	err = impl.repo.Create(ctx, domainUser)
-	if err != nil {
-		return err
-	}
+	//domainUser := input.CreateInputToUserDomain()
+	fmt.Println("reached receive create action")
+	//err = impl.repo.Create(ctx, domainUser)
+
+	defer func(){
+		if !reflect2.IsNil(err){
+			return
+		}
+		fmt.Println("response create")
+		if err == impl.sendMsgCreate(input){
+			log.Println(err)
+		}
+	}()
+
+	return nil
+}
+
+func (impl *implementation) receiveUpdateAction(ctx context.Context, msgBrokerInput *userin.MsgBrokerCreate) (err error) {
+	input := msgBrokerInput.ToUpdateInput()
+	//domainUser := input.CreateInputToUserDomain()
+	fmt.Println("reached receive Update action")
+	//err = impl.repo.Create(ctx, domainUser)
+	defer func(){
+		if !reflect2.IsNil(err){
+			return
+		}
+		fmt.Println("response Update")
+		if err == impl.sendMsgUpdate(input){
+			log.Println(err)
+		}
+	}()
+
+	return nil
+}
+func (impl *implementation) receiveDeleteAction(ctx context.Context, msgBrokerInput *userin.MsgBrokerCreate) (err error) {
+	input := msgBrokerInput.ToDeleteInput()
+	//domainUser := input.CreateInputToUserDomain()
+	fmt.Println("reached receive create action")
+	//err = impl.repo.Create(ctx, domainUser)
+
+	defer func(){
+		if !reflect2.IsNil(err){
+			return
+		}
+		fmt.Println("response delete")
+		if err == impl.sendMsgDelete(input){
+			log.Println(err)
+		}
+	}()
 
 	return nil
 }

@@ -3,6 +3,7 @@ package kafka
 import (
 	"github.com/touchtechnologies-product/message-broker"
 	"github.com/touchtechnologies-product/message-broker/common"
+	"log"
 )
 
 type Kafka struct {
@@ -19,6 +20,7 @@ type Config struct {
 
 func New(config *Config) (kafka *Kafka, err error) {
 	conf := config.setConfig()
+	log.Println("Host in app 1", conf.Host)
 	msgBrokers, err := message.NewBroker(common.KafkaBrokerType, conf)
 	if err != nil {
 		return nil, err

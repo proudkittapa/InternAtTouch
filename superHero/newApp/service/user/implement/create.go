@@ -3,21 +3,22 @@ package implement
 import (
 	"context"
 	"fmt"
+	"log"
+
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/msgbroker/msgbrokerin"
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/user/userin"
 	"github.com/modern-go/reflect2"
-	"log"
 	// "github.com/touchtechnologies-product/go-blueprint-clean-architecture/service/util"
 	// "github.com/touchtechnologies-product/go-blueprint-clean	-architecture/service/company/companyin"
 	// "github.com/touchtechnologies-product/go-blueprint-clean-architecture/service/util"
 )
 
 func (impl *implementation) Create(ctx context.Context, input *userin.CreateInput) (ID string, err error) {
-	defer func(){
-		if !reflect2.IsNil(err){
+	defer func() {
+		if !reflect2.IsNil(err) {
 			return
 		}
-		if err == impl.sendMsgCreate(input){
+		if err == impl.sendMsgCreate(input) {
 			log.Println(err)
 		}
 
@@ -27,7 +28,6 @@ func (impl *implementation) Create(ctx context.Context, input *userin.CreateInpu
 		fmt.Println("validte", err)
 		return "validate error", err
 	}
-
 
 	//user := userin.CreateInputToUserDomain(input)
 	user := input.CreateInputToUserDomain()
@@ -55,5 +55,4 @@ func (impl *implementation) sendMsgCreate(input *userin.CreateInput) (err error)
 		SuperPower: input.SuperPower,
 		Alive:      input.Alive,
 	})
-	return err
 }

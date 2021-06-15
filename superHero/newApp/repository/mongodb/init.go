@@ -15,8 +15,8 @@ type Repository struct{
 }
 
 func New(ctx context.Context , uri string, dbName string, collName string)(repo *Repository, err error) {
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI(uri))
-	if err != nil {
+	fullURI := fmt.Sprintf("%s/%s?authSource=admin", uri, dbName)
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI(fullURI))	if err != nil {
 		return nil, err
 	}
 

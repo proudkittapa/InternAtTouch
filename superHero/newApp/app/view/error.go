@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	// "github.com/touchtechnologies-product/go-blueprint-clean-architecture/service/util"
 )
 
 const errorStatus = "ERROR"
