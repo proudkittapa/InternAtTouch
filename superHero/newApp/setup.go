@@ -6,6 +6,7 @@ import (
 	msgBrokerService "github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/msgbroker/implement"
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/msgbroker/msgbrokerin"
 	"log"
+	"time"
 
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/config"
 
@@ -36,8 +37,9 @@ func newApp(appConfig *config.Config) *app.App {
 
 	user := userService.New(validator, uRepo, kRepo)
 	msgService := msgBrokerService.New(kRepo, user)
-
+	//wg.Add(1)
 	go msgService.Receiver(topics)
+	time.Sleep(10 * time.Second)
 	return app.New(user)
 }
 
@@ -64,7 +66,8 @@ func configKafka(appConfig *config.Config) *kafka.Config {
 	}
 }
 var topics = []msgbrokerin.TopicMsgBroker{
-	msgbrokerin.TopicUser,
+	msgbrokerin.TopicResponse,
+	msgbrokerin.TopicCreate,
 	//msgbrokerin.TopicOTP,
 	//msgbrokerin.TopicVerify,
 }

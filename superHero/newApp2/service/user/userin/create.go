@@ -16,11 +16,17 @@ type CreateInput struct {
 	ID         string   `json:"id"`
 	Name       string   `son:"name" validate:"required"`
 	ActualName string   `json:"actual_name" validate:"required"`
+	ActualLastName string `json:"actual_last_name"`
 	Gender     string   `json:"gender"`
 	BirthDate  int64    `json:"birth_date"`
 	Height     int      `json:"height" validate:"gte=0"`
 	SuperPower []string `json:"super_power"`
 	Alive      bool     `json:"alive"`
+	Universe       string   `json:"universe"`
+	Movies         []string `json:"movies"`
+	Enemies        []string `json:"enemies"`
+	FamilyMember   []string `json:"family_member"`
+	About          string   `json:"about"`
 }
 
 func MakeTestCreateInput() (input *CreateInput) {
@@ -30,7 +36,27 @@ func MakeTestCreateInput() (input *CreateInput) {
 	}
 }
 
-func CreateInputToUserDomain(input *CreateInput) (user *domain.InsertQ) {
+func (input *CreateInput)CreateInputToUserDomain() (user *domain.InsertQ) {
+	return &domain.InsertQ{
+		ID:             input.ID,
+		Name:           input.Name,
+		ActualName:     input.ActualName,
+		ActualLastName: input.ActualLastName,
+		Gender:         input.Gender,
+		BirthDate:      input.BirthDate,
+		Height:         input.Height,
+		SuperPower:     input.SuperPower,
+		Alive:          input.Alive,
+		Universe:       input.Universe,
+		Movies:         input.Movies,
+		Enemies:        input.Enemies,
+		FamilyMember:   input.FamilyMember,
+		About:          input.About,
+	}
+}
+
+func ToDomain(input *CreateInput) (user *domain.InsertQ) {
+
 	return &domain.InsertQ{
 		ID:         input.ID,
 		Name:       input.Name,

@@ -1,9 +1,8 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
-
 	// "github.com/touchtechnologies-product/go-blueprint-clean-architecture/config"
+	"github.com/gin-gonic/gin"
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/config"
 )
 
@@ -32,5 +31,5 @@ func main() {
 	_ = newApp(appConfig).RegisterRoute(router)
 
 	// Gin start listen
-	_ = router.Run()
+	_ = router.Run(":8080")
 }

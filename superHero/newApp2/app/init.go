@@ -1,11 +1,10 @@
 package app
 
 import (
+	"github.com/gin-gonic/gin"
 	// "touch/service/user"
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/app/user"
 	userService "github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/user"
-
-	"github.com/gin-gonic/gin"
 )
 
 type App struct {

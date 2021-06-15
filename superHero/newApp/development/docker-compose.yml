@@ -1,17 +1,34 @@
 version: '3.8'
 services: # each service run simultaneously (parallel)
-#
-#  my-app:
-#    image: app:1.2
-#    depends_on:
-#      - mongodb
-#    restart: unless-stopped
-#    ports:
-#      - 8080:8080
-#    environment: # variable of the server or OS
-#      MONGODB_URI : "mongodb://touch:touchja@mongodb:27017"
-#    networks:
-#      - backend
+
+  #  my-app1:
+  #    image: app:1.4
+  #    depends_on:
+  #      - "mongodb"
+  #      - "kafka"
+  #    restart: always
+  #    ports:
+  #      - 8080:8080
+  #    environment: # variable of the server or OS
+  #      MONGODB_URI : "mongodb://touch:touchja@mongodb:27017"
+  #      MESSAGE_BROKER_BACKOFF_TIME: "2"
+  #      MESSAGE_BROKER_MAXIMUM_RETRY: "3"
+  #      MESSAGE_BROKER_ENDPOINT: "kafka:9094"
+  #      MESSAGE_BROKER_GROUP: "my-group"
+  #      MESSAGE_BROKER_VERSION: "2.6.1"
+  #
+  #  my-app2:
+  #    image: app2:1.5
+  #    depends_on:
+  #      - "kafka"
+  #    restart: always
+  #    environment: # variable of the server or OS
+  #      MESSAGE_BROKER_BACKOFF_TIME: "2"
+  #      MESSAGE_BROKER_MAXIMUM_RETRY: "3"
+  #      MESSAGE_BROKER_ENDPOINT: "kafka:9094"
+  #      MESSAGE_BROKER_GROUP: "my-group"
+  #      MESSAGE_BROKER_VERSION: "2.6.1"
+
   zookeeper:
     image: confluentinc/cp-zookeeper:6.1.0
     ports:
@@ -28,11 +45,12 @@ services: # each service run simultaneously (parallel)
       - "zookeeper"
     ports:
       - "9094:9094"
+      - "9092:9092"
     restart: always
     environment:
       ALLOW_PLAINTEXT_LISTENER: "yes"
       KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
-      KAFKA_ADVERTISED_LISTENERS: "LISTENER_INTERNAL://:9092,LISTENER_LOCAL://localhost:9094"
+      KAFKA_ADVERTISED_LISTENERS: "LISTENER_INTERNAL://localhost:9092,LISTENER_LOCAL://kafka:9094"
       KAFKA_LISTENERS: "LISTENER_INTERNAL://:9092,LISTENER_LOCAL://:9094"
       KAFKA_INTER_BROKER_LISTENER_NAME: "LISTENER_INTERNAL"
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "LISTENER_INTERNAL:PLAINTEXT,LISTENER_LOCAL:PLAINTEXT"
@@ -49,12 +67,10 @@ services: # each service run simultaneously (parallel)
       MONGO_INITDB_DATABASE: gin
       MONGO_INITDB_ROOT_USERNAME: touch
       MONGO_INITDB_ROOT_PASSWORD: touchja
-#    volumes: # need to know where the specific file of that service locate at. Search "data path {service name}"
-#      - "$PWD/data:/data/db"
+    #    volumes: # need to know where the specific file of that service locate at. Search "data path {service name}"
+    #      - "$PWD/data:/data/db"
     ports:
       - 27017:27017
-    networks:
-      - backend
 
 #  redis:
 #    image: redis:alpine3.13
@@ -63,7 +79,3 @@ services: # each service run simultaneously (parallel)
 ##      - "$PWD/config/redis.conf:/redis.conf"
 #    ports:
 #      - 6379:6379
-
-
-networks:
-  backend:

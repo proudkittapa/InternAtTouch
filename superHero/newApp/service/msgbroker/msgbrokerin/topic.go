@@ -2,5 +2,7 @@ package msgbrokerin
 
 type TopicMsgBroker string
 const (
-	TopicUser TopicMsgBroker = "users"
+	TopicResponse TopicMsgBroker = "response"
+	TopicCreate TopicMsgBroker = "create"
+
 )

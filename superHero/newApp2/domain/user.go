@@ -23,3 +23,8 @@ type SearchValue struct {
 	Type  string `bson:"type"`
 	Value string `bson:"value"`
 }
+
+type Response struct{
+	Code int
+	Err string
+}

@@ -6,10 +6,11 @@ import (
 	"fmt"
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/msgbroker/msgbrokerin"
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/user/userin"
+	"log"
 )
 
 func (impl *implementation) MsgReceiver(ctx context.Context, msg []byte) (err error) {
-	msgInput := &userin.MsgBrokerCreate{}
+	msgInput := &userin.MsgBrokerResponse{}
 	err = json.Unmarshal(msg, msgInput)
 	if err != nil {
 		return err
@@ -20,8 +21,9 @@ func (impl *implementation) MsgReceiver(ctx context.Context, msg []byte) (err er
 
 	fmt.Println(string(msg))
 	switch msgInput.Action {
-	case msgbrokerin.ActionCreate:
-		err = impl.receiveCreateAction(ctx, msgInput)
+	case msgbrokerin.ActionUpsert:
+		log.Println("receive createe")
+		err = impl.receiveUpsertAction(ctx, msgInput)
 		if err != nil {
 			return err
 		}
@@ -38,10 +40,10 @@ func (impl *implementation) MsgReceiver(ctx context.Context, msg []byte) (err er
 	return
 }
 
-func (impl *implementation) receiveCreateAction(ctx context.Context, msgBrokerInput *userin.MsgBrokerCreate) (err error) {
-	input := msgBrokerInput.ToCreateInput()
-	domainUser := input.CreateInputToUserDomain()
-	err = impl.repo.Create(ctx, domainUser)
+func (impl *implementation) receiveUpsertAction(ctx context.Context, msgBrokerInput *userin.MsgBrokerResponse) (err error) {
+	msgBrokerInput.ToResponseInput()
+	//domainUser := input.CreateInputToUserDomain()
+	//err = impl.repo.Create(ctx, domainUser)
 	if err != nil {
 		return err
 	}

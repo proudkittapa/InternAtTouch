@@ -3,6 +3,7 @@ package implement
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/msgbroker/msgbrokerin"
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/user/userin"
 )
@@ -10,9 +11,9 @@ import (
 const InvalidInputTypeErr string = "invalid authentication type"
 
 func (impl *implementation) MsgSender(topic msgbrokerin.TopicMsgBroker, input interface{}) (err error) {
-
+	fmt.Println("enter msgsender")
 	switch topic {
-	case msgbrokerin.TopicUser:
+	case msgbrokerin.TopicCreate:
 		err = impl.sender(topic, input)
 		if err != nil {
 			return err
@@ -33,6 +34,7 @@ func (impl *implementation) sender(topic msgbrokerin.TopicMsgBroker, input inter
 	}
 
 	err = impl.mBroker.Producer(topic, msg)
+	fmt.Println("producer", err)
 	if err != nil {
 		return err
 	}

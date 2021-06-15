@@ -64,8 +64,8 @@ func configKafka(appConfig *config.Config) *kafka.Config {
 	}
 }
 var topics = []msgbrokerin.TopicMsgBroker{
+	msgbrokerin.TopicResponse,
 	msgbrokerin.TopicUser,
-	//msgbrokerin.TopicOTP,
 	//msgbrokerin.TopicVerify,
 }
 
