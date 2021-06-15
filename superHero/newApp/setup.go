@@ -7,20 +7,12 @@ import (
 	msgBrokerService "github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/msgbroker/implement"
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/msgbroker/msgbrokerin"
 	"log"
-	// validatorService "github.com/touchtechnologies-product/go-blueprint-clean-architecture/service/validator"
 
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/app"
 	validatorService "github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/validator"
 
 	userRepo "github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/repository/user"
 	userService "github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/user/implement"
-
-	// "github.com/touchtechnologies-product/go-blueprint-clean-architecture/app"
-	// "github.com/touchtechnologies-product/go-blueprint-clean-architecture/config"
-	// compRepo "github.com/touchtechnologies-product/go-blueprint-clean-architecture/repository/company"
-	// staffRepo "github.com/touchtechnologies-product/go-blueprint-clean-architecture/repository/staff"
-	// companyService "github.com/touchtechnologies-product/go-blueprint-clean-architecture/service/company/implement"
-	// staffService "github.com/touchtechnologies-product/go-blueprint-clean-architecture/service/staff/implement"
 )
 
 func newApp(appConfig *config.Config) *app.App {
