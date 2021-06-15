@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/elastic/go-elasticsearch/v8/esapi"
-	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp2/domain"
+	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/domain"
 	"log"
 	"strings"
 )
