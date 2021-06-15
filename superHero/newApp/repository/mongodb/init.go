@@ -4,6 +4,7 @@ import (
 	"context"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"fmt"
 )
 
 type Repository struct{
@@ -16,7 +17,8 @@ type Repository struct{
 
 func New(ctx context.Context , uri string, dbName string, collName string)(repo *Repository, err error) {
 	fullURI := fmt.Sprintf("%s/%s?authSource=admin", uri, dbName)
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI(fullURI))	if err != nil {
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI(fullURI))
+	if err != nil {
 		return nil, err
 	}
 
