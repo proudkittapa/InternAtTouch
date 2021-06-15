@@ -26,7 +26,7 @@ type Sp struct {
 	About			string	 `bson:"about" json:"about"`
 }
 
-var Sp_list =  []Sp{
+var SpList =  []Sp{
 	{"Spider-Man", "Peter", "Parker", "Male", 997401600, 178, []string{"Web-shooting"}, true, "Marvel", []string{"Spiderman", "The Avengers"}, []string{"Globlin", "Doctor Octopus"}, []string{"Richard Parker", "Mary Parker"}, "A boy who has been bitten by a spider and become superhero."},
 	{"Batman", "Bruce", "Wayne", "Male", 261619200, 188, []string{"Rich"}, true, "DC", []string{"Batman", "Justice League", "The Dark Knight"}, []string{"Joker", "Superman"}, []string{"Tim Drake", "Cassandra Cain"}, "A rich man who want to be a superhero."},
 	{"Superman", "Clark", "Kent", "Male", 230169600, 191, []string{"Flight", "Strength"}, true, "DC", []string{"Superman", "Man of Steel", "Justice League"}, []string{"Batman", "Justice league"}, []string{"Kara Kent", "Linda Danvers"}, "A alien who come from Krypton and become superhero in the earth."},
@@ -51,7 +51,7 @@ func main(){
 
 
 	defer client.Disconnect(ctx)
-	for _ ,v := range Sp_list{
+	for _ ,v := range SpList{
 		if err != nil {
 			log.Fatal(err)
 		}

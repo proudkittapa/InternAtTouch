@@ -1,16 +1,9 @@
 package userin
 
 import (
-	// "github.com/touchtechnologies-product/go-blueprint-clean-architecture/domain"
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/domain"
 )
 
-// type CreateInput struct {
-// 	ID string `json:"ID" validate:"required"`
-// 	// ID        string `json:"id" validate:"required"`
-// 	Name string `json:"name" validate:"required"`
-// 	// Tel       string `json:"tel" validate:"required"`
-// } // @Name StaffCreateInput
 
 type CreateInput struct {
 	ID         string   `json:"id"`
@@ -29,12 +22,6 @@ type CreateInput struct {
 	About          string   `json:"about"`
 }
 
-func MakeTestCreateInput() (input *CreateInput) {
-	return &CreateInput{
-		ID:   "test",
-		Name: "test",
-	}
-}
 
 func (input *CreateInput)CreateInputToUserDomain() (user *domain.InsertQ) {
 	return &domain.InsertQ{

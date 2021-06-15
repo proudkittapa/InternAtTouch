@@ -15,9 +15,12 @@ func (impl implementation) newHandler(topic msgbrokerin.TopicMsgBroker) (handler
 		switch topic {
 		case msgbrokerin.TopicCreate:
 			fmt.Println("topic create is received")
-			//var input *userin.CreateInput
-			//err = json.Unmarshal(msg, input)
-			//impl.usrService.Create(context.Background(), input)
+			err = impl.usrService.MsgReceiver(ctx, msg)
+		case msgbrokerin.TopicUpdate:
+			fmt.Println("topic update is received")
+			err = impl.usrService.MsgReceiver(ctx, msg)
+		case msgbrokerin.TopicDelete:
+			fmt.Println("topic delete is received")
 			err = impl.usrService.MsgReceiver(ctx, msg)
 		default:
 			fmt.Println(string(msg), "with default")

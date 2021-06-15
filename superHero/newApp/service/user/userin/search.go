@@ -7,18 +7,7 @@ import (
 
 type Search struct {
 	Type string `json:"type" validate:"required"`
-	// ID        string `json:"id" validate:"required"`
 	Value string `json:"value" validate:"required"`
-	// Tel       string `json:"tel" validate:"required"`
-} // @Name StaffCreateInput
-
-func MakeTestSearchInput() (input *Search) {
-	return &Search{
-		Type: "test",
-		// ID:        "test",
-		Value: "test",
-		// Tel:       "test",
-	}
 }
 
 func SearchInputToUserDomain(input *Search) (user *domain.SearchValue) {

@@ -5,5 +5,7 @@ const (
 	TopicCreate TopicMsgBroker = "create"
 	TopicUpdate TopicMsgBroker = "update"
 	TopicDelete TopicMsgBroker = "delete"
-	TopicResponse TopicMsgBroker = "response"
+	TopicResponseCreate TopicMsgBroker = "responseCreate"
+	TopicResponseUpdate TopicMsgBroker = "responseUpdate"
+	TopicResponseDelete TopicMsgBroker = "responseDelete"
 )

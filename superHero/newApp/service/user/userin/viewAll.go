@@ -8,15 +8,6 @@ import (
 type ViewAllInput struct {
 	PerPage int
 	Page    int
-} // @Name StaffCreateInput
-
-func MakeTestViewAllInput() (input *UpdateInput) {
-	return &UpdateInput{
-		ID: "test",
-		// ID:        "test",
-		Name: "test",
-		// Tel:       "test",
-	}
 }
 
 func ViewAllInputToUserDomain(input *ViewAllInput) (user *domain.ViewByPageQ) {
