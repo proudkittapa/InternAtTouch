@@ -2,7 +2,29 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3189d46b-384b-4e33-a612-59630a6be799" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../elasticSearch/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/../elasticSearch/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../newApp/service/user/implement/create.go" beforeDir="false" afterPath="$PROJECT_DIR$/../newApp/service/user/implement/create.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../newApp/service/user/implement/delete.go" beforeDir="false" afterPath="$PROJECT_DIR$/../newApp/service/user/implement/delete.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../newApp/service/user/implement/init.go" beforeDir="false" afterPath="$PROJECT_DIR$/../newApp/service/user/implement/init.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../newApp/service/user/implement/search.go" beforeDir="false" afterPath="$PROJECT_DIR$/../newApp/service/user/implement/search.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../newApp/service/user/implement/update.go" beforeDir="false" afterPath="$PROJECT_DIR$/../newApp/service/user/implement/update.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../newApp/service/user/implement/view.go" beforeDir="false" afterPath="$PROJECT_DIR$/../newApp/service/user/implement/view.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../newApp/service/user/implement/viewAll.go" beforeDir="false" afterPath="$PROJECT_DIR$/../newApp/service/user/implement/viewAll.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../newApp/service/user/interface.go" beforeDir="false" afterPath="$PROJECT_DIR$/../newApp/service/user/interface.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../newApp/service/user/userin/create.go" beforeDir="false" afterPath="$PROJECT_DIR$/../newApp/service/user/userin/create.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../newApp/service/user/userin/delete.go" beforeDir="false" afterPath="$PROJECT_DIR$/../newApp/service/user/userin/delete.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../newApp/service/user/userin/search.go" beforeDir="false" afterPath="$PROJECT_DIR$/../newApp/service/user/userin/search.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../newApp/service/user/userin/update.go" beforeDir="false" afterPath="$PROJECT_DIR$/../newApp/service/user/userin/update.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../newApp/service/user/userin/view.go" beforeDir="false" afterPath="$PROJECT_DIR$/../newApp/service/user/userin/view.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../newApp/service/user/userin/viewAll.go" beforeDir="false" afterPath="$PROJECT_DIR$/../newApp/service/user/userin/viewAll.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../newApp/service/util/repository.go" beforeDir="false" afterPath="$PROJECT_DIR$/../newApp/service/util/repository.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../newApp/service/validator/init.go" beforeDir="false" afterPath="$PROJECT_DIR$/../newApp/service/validator/init.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/newApp/repository/mongodb/init.go" beforeDir="false" afterPath="$PROJECT_DIR$/newApp/repository/mongodb/init.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/newApp2/service/msgbroker/implement/init.go" beforeDir="false" afterPath="$PROJECT_DIR$/newApp2/service/msgbroker/implement/init.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/newApp2/service/msgbroker/implement/private.go" beforeDir="false" afterPath="$PROJECT_DIR$/newApp2/service/msgbroker/implement/private.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/newApp2/service/msgbroker/implement/receiver.go" beforeDir="false" afterPath="$PROJECT_DIR$/newApp2/service/msgbroker/implement/receiver.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/newApp2/service/msgbroker/msgbrokerin/action.go" beforeDir="false" afterPath="$PROJECT_DIR$/newApp2/service/msgbroker/msgbrokerin/action.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/newApp2/service/msgbroker/msgbrokerin/topic.go" beforeDir="false" afterPath="$PROJECT_DIR$/newApp2/service/msgbroker/msgbrokerin/topic.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,7 +51,7 @@
     <property name="go.import.settings.migrated" value="true" />
     <property name="go.sdk.automatically.set" value="true" />
     <property name="go.tried.to.enable.integration.vgo.integrator" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../elasticSearch" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="preferences.fileTypes" />
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />

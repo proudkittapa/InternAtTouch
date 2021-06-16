@@ -1,7 +1,6 @@
 package main
-var r  map[string]interface{}
 
-type Sp struct {
+type InsertStruct struct {
 	Name      		string   `bson:"name" json:"name" validate:"required"`
 	ActualName 		string   `bson:"actual_name" json:"actual_name"`
 	ActualLastName  string   `bson:"actual_lastname" json:"actual_lastname"`
@@ -17,7 +16,24 @@ type Sp struct {
 	About			string	 `bson:"about" json:"about"`
 }
 
-var SpList =  []Sp{
+type UpdateStruct struct {
+	ID				string	 `bson:"_id" json:"_id"`
+	Name      		string   `bson:"name" json:"name" validate:"required"`
+	ActualName 		string   `bson:"actual_name" json:"actual_name"`
+	ActualLastName  string   `bson:"actual_lastname" json:"actual_lastname"`
+	Gender     		string   `bson:"gender" json:"gender"`
+	BirthDate  		int64    `bson:"birth_date" json:"birth_date"`
+	Height     		int      `bson:"height" json:"height" validate:"gte=0"`
+	SuperPower 		[]string `bson:"super_power" json:"super_power"`
+	Alive      		bool     `bson:"alive" json:"alive"`
+	Universe 		string	 `bson:"universe" json:"universe"`
+	Movies			[]string `bson:"movies" json:"movies"`
+	Enemies			[]string `bson:"enemies" json:"enemies"`
+	FamilyMember	[]string `bson:"family_member" json:"family_member"`
+	About			string	 `bson:"about" json:"about"`
+}
+
+var SpList =  []InsertStruct{
 	{"Spider-Man", "Peter", "Parker", "Male", 997401600, 178, []string{"Web-shooting"}, true, "Marvel", []string{"Spiderman", "The Avengers"}, []string{"Globlin", "Doctor Octopus"}, []string{"Richard Parker", "Mary Parker"}, "A boy who has been bitten by a spider and become superhero."},
 	{"Batman", "Bruce", "Wayne", "Male", 261619200, 188, []string{"Rich"}, true, "DC", []string{"Batman", "Justice League", "The Dark Knight"}, []string{"Joker", "Superman"}, []string{"Tim Drake", "Cassandra Cain"}, "A rich man who want to be a superhero."},
 	{"Superman", "Clark", "Kent", "Male", 230169600, 191, []string{"Flight", "Strength"}, true, "DC", []string{"Superman", "Man of Steel", "Justice League"}, []string{"Batman", "Justice league"}, []string{"Kara Kent", "Linda Danvers"}, "A alien who come from Krypton and become superhero in the earth."},

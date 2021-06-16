@@ -2,9 +2,6 @@ package mongodb
 
 import (
 	"context"
-	"errors"
-	"log"
-
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/domain"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -50,30 +47,4 @@ func (repo *Repository) ViewAll(ctx context.Context, perPage int, page int) ([]d
 	}
 	cursor, err := repo.Coll.Find(nil, bson.M{}, &opts)
 	return AddToArray(cursor, err, ctx)
-}
-
-func (repo *Repository) checkExistID(ctx context.Context, id string) (bool, error) {
-	count, err := repo.Coll.CountDocuments(ctx, bson.D{{"_id", id}})
-	if count < 1 {
-		err = errors.New("ID does not exist")
-		return false, err
-	}
-	return true, err
-}
-
-func (repo *Repository) CheckExistName(ctx context.Context, name string) (bool, error) {
-	log.Println("checkexistname")
-	count, err := repo.Coll.CountDocuments(ctx, bson.D{{"name", name}})
-	if count < 1 {
-		return false, err
-	}
-	return true, err
-}
-
-func (repo *Repository) CheckExistActualName(ctx context.Context, actualName string) (bool, error) {
-	count, err := repo.Coll.CountDocuments(ctx, bson.D{{"actual_name", actualName}})
-	if count < 1 {
-		return false, err
-	}
-	return true, err
 }

@@ -10,18 +10,18 @@ import (
 	// "github.com/touchtechnologies-product/go-blueprint-clean-architecture/service/util"
 )
 
-func (impl *implementation) Search(ctx context.Context, input *userin.Search) (result string, err error) {
-	err = impl.validator.Validate(input)
+func (impl *implementation) Search(ctx context.Context, input *userin.Search) (map[string]interface{}, error) {
+	err := impl.validator.Validate(input)
 	if err != nil {
-		fmt.Println("validte", err)
-		return "validate error", err
+		fmt.Println("validate", err)
+		return nil, err
 	}
 	user := userin.SearchInputToUserDomain(input)
 	fmt.Println("user input search:", user)
-	a, err := impl.repo.Search(ctx, user)
+	a, err := impl.elasRepo.Search(user.Value, ctx)
 	fmt.Println("output search:", user)
 	if err != nil {
-		return "", err
+		return a, err
 	}
 
 	return a, nil

@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	// "github.com/touchtechnologies-product/go-blueprint-clean-architecture/service/util"
 )
 
 const errorStatus = "ERROR"
@@ -14,14 +13,12 @@ type ErrResp struct {
 	Status string `json:"status"`
 	Code   int    `json:"code"`
 	Errors string `json:"errors"`
-} // @Name ErrorResponse
-
+}
 type ErrResp2 struct {
 	Status string `json:"status"`
 	Code   int    `json:"code"`
 	Errors error  `json:"errors"`
-} // @Name ErrorResponse
-
+}
 type ErrItem struct {
 	Cause   string `json:"cause"`
 	Code    string `json:"code"`
