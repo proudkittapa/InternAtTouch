@@ -17,6 +17,7 @@ import (
 
 func newApp(appConfig *config.Config) *app.App {
 	ctx := context.Background()
+	//elasRepo, err := elasRepo.New(appConfig.ElasticDBEndpoint, appConfig.ElasticDBUsername, appConfig.ElasticDBPassword, "superhero")
 	uRepo, err := userRepo.New(ctx, appConfig.MongoDBEndpoint, appConfig.MongoDBName, appConfig.MongoDBHeroTableName)
 	panicIfErr(err)
 	kRepo, err := kafka.New(configKafka(appConfig))

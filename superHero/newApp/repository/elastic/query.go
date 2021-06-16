@@ -12,7 +12,7 @@ func (repo *Repository)query(ctx context.Context,buf bytes.Buffer) (map[string]i
 	var r  map[string]interface{}
 	res, err := es.Search(
 		es.Search.WithContext(ctx),
-		es.Search.WithIndex("superhero"),
+		es.Search.WithIndex(repo.Index),
 		es.Search.WithBody(&buf),
 		es.Search.WithTrackTotalHits(true),
 		es.Search.WithPretty(),
