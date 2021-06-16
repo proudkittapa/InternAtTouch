@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/config"
+	elasRepo "github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/repository/elastic"
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/repository/kafka"
 	msgBrokerService "github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/msgbroker/implement"
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/msgbroker/msgbrokerin"
@@ -17,14 +18,15 @@ import (
 
 func newApp(appConfig *config.Config) *app.App {
 	ctx := context.Background()
-	//elasRepo, err := elasRepo.New(appConfig.ElasticDBEndpoint, appConfig.ElasticDBUsername, appConfig.ElasticDBPassword, "superhero")
+	elasRepo, err := elasRepo.New(appConfig.ElasticDBEndpoint, appConfig.ElasticDBUsername, appConfig.ElasticDBPassword, "superhero")
+	panicIfErr(err)
 	uRepo, err := userRepo.New(ctx, appConfig.MongoDBEndpoint, appConfig.MongoDBName, appConfig.MongoDBHeroTableName)
 	panicIfErr(err)
 	kRepo, err := kafka.New(configKafka(appConfig))
 	panicIfErr(err)
-	validator := validatorService.New(uRepo)
+	validator := validatorService.New(uRepo, elasRepo)
 
-	user := userService.New(validator, uRepo, kRepo)
+	user := userService.New(validator, uRepo, kRepo, elasRepo)
 	msgService := msgBrokerService.New(kRepo, user)
 	//wg.Add(1)
 	msgService.Receiver(topics)

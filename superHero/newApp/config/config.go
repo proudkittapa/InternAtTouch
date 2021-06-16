@@ -23,6 +23,10 @@ type Config struct {
 	MessageBrokerGroup        string   `env:"MESSAGE_BROKER_GROUP" envDefault:"my-group"`
 	MessageBrokerVersion      string   `env:"MESSAGE_BROKER_VERSION" envDefault:"2.6.1"`
 
+	ElasticDBEndpoint     string `env:"ELASTIC_ENDPOINT" envDefault:"http://localhost:9200"`
+	ElasticDBUsername     string `env:"ELASTIC_USERNAME" envDefault:"touch"`
+	ElasticDBPassword	  string `env:"ELASTIC_PASSWORD" envDefault:"touchja"`
+
 }
 
 func Get() *Config {

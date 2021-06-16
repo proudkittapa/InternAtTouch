@@ -39,17 +39,17 @@ func (repo *Repository)query(ctx context.Context,buf bytes.Buffer) (map[string]i
 	return r, err
 }
 
-func (repo *Repository)search(keyword string,ctx context.Context)(map[string]interface{}, error){
+func (repo *Repository)Search(keyword string,ctx context.Context)(map[string]interface{}, error){
 	result, err := repo.query(ctx,buildSearchRequest(keyword))
 	return result, err
 }
 
-func (repo *Repository)view(id string,ctx context.Context)(map[string]interface{}, error){
+func (repo *Repository)View(id string,ctx context.Context)(map[string]interface{}, error){
 	result, err := repo.query(ctx,buildViewRequest(id))
 	return result, err
 }
 
-func (repo *Repository)viewAll(page int, size int,ctx context.Context)(map[string]interface{}, error){
+func (repo *Repository)ViewAll(page int, size int,ctx context.Context)(map[string]interface{}, error){
 	result, err := repo.query(ctx,buildViewAllRequest(page, size))
 	return result, err
 }
