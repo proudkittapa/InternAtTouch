@@ -4,11 +4,9 @@ import (
 	"bytes"
 	"encoding/json"
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/domain"
-	"log"
 )
 
-func BuildUpdateRequest(t *domain.UpdateStruct) bytes.Buffer {
-	var buf bytes.Buffer
+func BuildUpdateRequest(t *domain.UpdateStruct) (buf bytes.Buffer, err error) {
 	query := map[string]interface{}{
 		"doc": map[string]interface{}{
 			"name" : t.Name,
@@ -25,7 +23,63 @@ func BuildUpdateRequest(t *domain.UpdateStruct) bytes.Buffer {
 
 	}
 	if err := json.NewEncoder(&buf).Encode(query); err != nil {
-		log.Fatalf("Error encoding query: %s", err)
+		return buf , err
 	}
-	return buf
+	return buf , err
+}
+
+func BuildCheckIndexRequest(indexname string)  (buf bytes.Buffer, err error) {
+	query := map[string]interface{}{
+		"query" : map[string]interface{}{
+			"match": map[string]interface{}{
+				"_index": indexname,
+			},
+		},
+	}
+	if err := json.NewEncoder(&buf).Encode(query); err != nil {
+		return buf , err
+	}
+	return buf , err
+}
+
+func BuildCheckIDRequest(id string)  (buf bytes.Buffer, err error) {
+	query := map[string]interface{}{
+		"query" : map[string]interface{}{
+			"match": map[string]interface{}{
+				"_id": id,
+			},
+		},
+	}
+	if err := json.NewEncoder(&buf).Encode(query); err != nil {
+		return buf , err
+	}
+	return buf , err
+}
+
+func BuildCheckNameRequest(name string)  (buf bytes.Buffer, err error) {
+	query := map[string]interface{}{
+		"query" : map[string]interface{}{
+			"match": map[string]interface{}{
+				"name": name,
+			},
+		},
+	}
+	if err := json.NewEncoder(&buf).Encode(query); err != nil {
+		return buf , err
+	}
+	return buf , err
+}
+
+func BuildCheckActualNameRequest(actualName string)  (buf bytes.Buffer, err error) {
+	query := map[string]interface{}{
+		"query" : map[string]interface{}{
+			"match": map[string]interface{}{
+				"actual_name": actualName,
+			},
+		},
+	}
+	if err := json.NewEncoder(&buf).Encode(query); err != nil {
+		return buf , err
+	}
+	return buf , err
 }

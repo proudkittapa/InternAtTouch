@@ -1,6 +1,7 @@
 package elastic
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"github.com/elastic/go-elasticsearch/v8/esapi"
@@ -8,6 +9,38 @@ import (
 	"log"
 	"strings"
 )
+
+func (repo *Repository)query(ctx context.Context,buf bytes.Buffer) (map[string]interface{}, error){
+	es := repo.Client
+	var r  map[string]interface{}
+	res, err := es.Search(
+		es.Search.WithContext(ctx),
+		es.Search.WithIndex(repo.Index),
+		es.Search.WithBody(&buf),
+		es.Search.WithTrackTotalHits(true),
+		es.Search.WithPretty(),
+	)
+	if err != nil {
+		log.Fatalf("Error getting response: %s", err)
+	}
+	defer res.Body.Close()
+	if res.IsError() {
+		var e map[string]interface{}
+		if err := json.NewDecoder(res.Body).Decode(&e); err != nil {
+			log.Fatalf("Error parsing the response body: %s", err)
+		} else {
+			log.Fatalf("[%s] %s: %s",
+				res.Status(),
+				e["error"].(map[string]interface{})["type"],
+				e["error"].(map[string]interface{})["reason"],
+			)
+		}
+	}
+	if err := json.NewDecoder(res.Body).Decode(&r); err != nil {
+		log.Fatalf("Error parsing the response body: %s", err)
+	}
+	return r, err
+}
 
 func (repo *Repository) Insert(ctx context.Context, title *domain.UpdateStruct) error{
 	out, err := json.Marshal(title)
@@ -33,7 +66,10 @@ func (repo *Repository) Insert(ctx context.Context, title *domain.UpdateStruct) 
 }
 
 func (repo *Repository)Update(ctx context.Context, title *domain.UpdateStruct) error{
-	buf := BuildUpdateRequest(title)
+	buf, err := BuildUpdateRequest(title)
+	if err != nil {
+		return err
+	}
 	res, err := repo.Client.Update(
 		repo.Index, title.ID, &buf,
 		repo.Client.Update.WithContext(ctx),
@@ -74,3 +110,5 @@ func (repo *Repository)Delete(ctx context.Context, id string) error{
 
 	return err
 }
+
+
