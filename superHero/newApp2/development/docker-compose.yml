@@ -17,6 +17,9 @@ services: # each service run simultaneously (parallel)
       MESSAGE_BROKER_ENDPOINT: "kafka:9094"
       MESSAGE_BROKER_GROUP: "my-group"
       MESSAGE_BROKER_VERSION: "2.6.1"
+      ELASTIC_ENDPOINT": "http://localhost:9200"
+      ELASTIC_USERNAME: "touch"
+      ELASTIC_PASSWORD: "touchja"
 
   my-app2:
     image: app3:1.15
@@ -28,6 +31,11 @@ services: # each service run simultaneously (parallel)
       ELASTIC_ENDPOINT" : "http://localhost:9200"
       ELASTIC_USERNAME : "touch"
       ELASTIC_PASSWORD : "touchja"
+      MESSAGE_BROKER_BACKOFF_TIME: "2"
+      MESSAGE_BROKER_MAXIMUM_RETRY: "3"
+      MESSAGE_BROKER_ENDPOINT: "kafka:9094"
+      MESSAGE_BROKER_GROUP: "my-group"
+      MESSAGE_BROKER_VERSION: "2.6.1"
 
   zookeeper:
     image: confluentinc/cp-zookeeper:6.1.0
