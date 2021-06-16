@@ -41,9 +41,9 @@ func (impl *implementation) MsgReceiver(ctx context.Context, msg []byte) (err er
 }
 
 func (impl *implementation) receiveCreateAction(ctx context.Context, msgBrokerInput *userin.MsgBrokerCreate) (err error) {
-	input := msgBrokerInput.ToCreateInput()
-	domainUser := input.CreateInputToUserDomain()
-	err = impl.repo.Create(ctx, domainUser)
+	//input := msgBrokerInput.ToCreateInput()
+	//domainUser := input.CreateInputToUserDomain()
+	//err = impl.repo.Create(ctx, domainUser)
 	if err != nil {
 		return err
 	}
@@ -52,9 +52,9 @@ func (impl *implementation) receiveCreateAction(ctx context.Context, msgBrokerIn
 }
 
 func (impl *implementation) receiveUpdateAction(ctx context.Context, msgBrokerInput *userin.MsgBrokerCreate) (err error) {
-	input := msgBrokerInput.ToCreateInput()
-	domainUser := input.UpdateInputToUserDomain()
-	err = impl.repo.Update(ctx, domainUser, domainUser.ID)
+	//input := msgBrokerInput.ToCreateInput()
+	//domainUser := input.UpdateInputToUserDomain()
+	//err = impl.repo.Update(ctx, domainUser, domainUser.ID)
 	if err != nil {
 		return err
 	}
@@ -63,9 +63,9 @@ func (impl *implementation) receiveUpdateAction(ctx context.Context, msgBrokerIn
 }
 
 func (impl *implementation) receiveDeleteAction(ctx context.Context, msgBrokerInput *userin.MsgBrokerCreate) (err error) {
-	input := msgBrokerInput.ToCreateInput()
-	domainUser := input.DeleteInputToUserDomain()
-	err = impl.repo.Delete(ctx, domainUser.ID)
+	//input := msgBrokerInput.ToCreateInput()
+	//domainUser := input.DeleteInputToUserDomain()
+	//err = impl.repo.Delete(ctx, domainUser.ID)
 	if err != nil {
 		return err
 	}
