@@ -7,7 +7,7 @@ import (
 	"log"
 )
 
-func BuildUpdateRequest(t domain.UpdateStruct) bytes.Buffer {
+func BuildUpdateRequest(t *domain.UpdateStruct) bytes.Buffer {
 	var buf bytes.Buffer
 	query := map[string]interface{}{
 		"doc": map[string]interface{}{
