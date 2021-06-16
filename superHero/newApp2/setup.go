@@ -3,10 +3,14 @@ package main
 import (
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/app"
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/config"
+	elasRepo "github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/repository/elastic"
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/repository/kafka"
-
+	msgBrokerService "github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/msgbroker/implement"
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/msgbroker/msgbrokerin"
+	userService "github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/user/implement"
+	validatorService "github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/validator"
 	"log"
+	"time"
 )
 
 //func newApp(appConfig *config.Config) *app.App {
@@ -25,21 +29,22 @@ import (
 //	//return app.New(user)
 //}
 
-func newApp(appConfig *config.Config) (a *app.App) {
+func newApp(appConfig *config.Config) (*app.App) {
 	//ctx := context.Background()
 	//uRepo, err := userRepo.New(ctx, appConfig.MongoDBEndpoint, appConfig.MongoDBName, appConfig.MongoDBHeroTableName)
 	//panicIfErr(err)
-	//kRepo, err := kafka.New(configKafka(appConfig))
-	//panicIfErr(err)
-	//validator := validatorService.New(uRepo)
+	elasRepo, err := elasRepo.New("http://localhost:9200", "touch", "touchja")
+	kRepo, err := kafka.New(configKafka(appConfig))
+	panicIfErr(err)
+	validator := validatorService.New(elasRepo)
 
-	//user := userService.New(validator, uRepo, kRepo)
-	//msgService := msgBrokerService.New(kRepo, user)
+	user := userService.New(validator, elasRepo, kRepo)
+	msgService := msgBrokerService.New(kRepo, user)
 	//wg.Add(1)
-	//msgService.Receiver(topics)
-	//time.Sleep(10 * time.Second)
-	//return app.New(user)
-	return a
+	msgService.Receiver(topics)
+	time.Sleep(10 * time.Second)
+	return app.New(user)
+	//return a
 }
 
 
