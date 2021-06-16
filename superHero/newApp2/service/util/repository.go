@@ -8,8 +8,8 @@ import (
 )
 
 type Repository interface {
-	Insert(ctx context.Context, title domain.UpdateStruct) error
-	Update(ctx context.Context, title domain.UpdateStruct) error
+	Insert(ctx context.Context, title *domain.UpdateStruct) error
+	Update(ctx context.Context, title *domain.UpdateStruct) error
 	Delete(ctx context.Context, id string) error
 }
 //	Search(ctx context.Context, s *domain.SearchValue) (result string, err error)

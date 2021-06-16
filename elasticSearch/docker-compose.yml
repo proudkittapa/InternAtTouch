@@ -2,7 +2,7 @@ version: '3'
 services:
   elas:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.13.1
-    container_name: elas
+    container_name: elas2
     environment:
 #      - node.name=es01
 #      - cluster.name=es-docker-cluster

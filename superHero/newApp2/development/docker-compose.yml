@@ -1,12 +1,11 @@
-version: '3.8'
+version: '3'
 services: # each service run simultaneously (parallel)
 
   my-app1:
-    image: app:1.21
+    image: app1:latest
     depends_on:
       - "mongodb"
       - "kafka"
-      - "elas"
     restart: always
     ports:
       - 8080:8080
@@ -22,9 +21,8 @@ services: # each service run simultaneously (parallel)
       ELASTIC_PASSWORD: "touchja"
 
   my-app2:
-    image: app3:1.15
+    image: app2:latest
     depends_on:
-      - "elas"
       - "kafka"
     restart: always
     environment: # variable of the server or OS
@@ -101,7 +99,6 @@ services: # each service run simultaneously (parallel)
     ports:
       - 9200:9200
     restart: always
-
 
   kibana:
     image: docker.elastic.co/kibana/kibana:7.13.1

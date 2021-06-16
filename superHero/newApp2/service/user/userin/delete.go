@@ -13,3 +13,8 @@ func DeleteInputToUserDomain(input *DeleteInput) (user *domain.DeleteQ) {
 		ID: input.ID,
 	}
 }
+func (input *DeleteInput)DeleteInputToUserDomain() (user *domain.DeleteQ) {
+	return &domain.DeleteQ{
+		ID:             input.ID,
+	}
+}

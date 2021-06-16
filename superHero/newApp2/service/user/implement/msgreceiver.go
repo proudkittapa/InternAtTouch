@@ -7,6 +7,7 @@ import (
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/msgbroker/msgbrokerin"
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/user/userin"
 	"github.com/modern-go/reflect2"
+	//"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/user/util"
 	"log"
 )
 
@@ -45,10 +46,10 @@ func (impl *implementation) MsgReceiver(ctx context.Context, msg []byte) (err er
 
 func (impl *implementation) receiveCreateAction(ctx context.Context, msgBrokerInput *userin.MsgBrokerCreate) (err error) {
 	input := msgBrokerInput.ToCreateInput()
-	//domainUser := input.CreateInputToUserDomain()
+	domainUser := input.CreateInputToUserDomain()
 	fmt.Println("reached receive create action")
 	//err = impl.repo.Create(ctx, domainUser)
-
+	err = impl.repo.Insert(ctx, domainUser)
 	defer func(){
 		if !reflect2.IsNil(err){
 			return
@@ -64,9 +65,9 @@ func (impl *implementation) receiveCreateAction(ctx context.Context, msgBrokerIn
 
 func (impl *implementation) receiveUpdateAction(ctx context.Context, msgBrokerInput *userin.MsgBrokerCreate) (err error) {
 	input := msgBrokerInput.ToUpdateInput()
-	//domainUser := input.CreateInputToUserDomain()
+	domainUser := input.UpdateInputToUserDomain()
 	fmt.Println("reached receive Update action")
-	//err = impl.repo.Create(ctx, domainUser)
+	err = impl.repo.Update(ctx, domainUser)
 	defer func(){
 		if !reflect2.IsNil(err){
 			return
@@ -81,9 +82,9 @@ func (impl *implementation) receiveUpdateAction(ctx context.Context, msgBrokerIn
 }
 func (impl *implementation) receiveDeleteAction(ctx context.Context, msgBrokerInput *userin.MsgBrokerCreate) (err error) {
 	input := msgBrokerInput.ToDeleteInput()
-	//domainUser := input.CreateInputToUserDomain()
-	fmt.Println("reached receive create action")
-	//err = impl.repo.Create(ctx, domainUser)
+	domainUser := input.DeleteInputToUserDomain()
+	//fmt.Println("reached receive create action")
+	err = impl.repo.Delete(ctx, domainUser.ID)
 
 	defer func(){
 		if !reflect2.IsNil(err){

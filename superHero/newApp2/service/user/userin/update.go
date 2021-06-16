@@ -39,3 +39,22 @@ func UpdateInputToUserDomain(input *UpdateInput) (user *domain.UpdateStruct) {
 		About:          input.About,
 	}
 }
+
+func (input *UpdateInput)UpdateInputToUserDomain() (user *domain.UpdateStruct) {
+	return &domain.UpdateStruct{
+		ID:             input.ID,
+		Name:           input.Name,
+		ActualName:     input.ActualName,
+		ActualLastName: input.ActualLastName,
+		Gender:         input.Gender,
+		BirthDate:      input.BirthDate,
+		Height:         input.Height,
+		SuperPower:     input.SuperPower,
+		Alive:          input.Alive,
+		Universe:       input.Universe,
+		Movies:         input.Movies,
+		Enemies:        input.Enemies,
+		FamilyMember:   input.FamilyMember,
+		About:          input.About,
+	}
+}
