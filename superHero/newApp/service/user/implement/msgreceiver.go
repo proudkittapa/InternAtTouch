@@ -52,7 +52,7 @@ func (impl *implementation) receiveCreateAction(ctx context.Context, msgBrokerIn
 }
 
 func (impl *implementation) receiveUpdateAction(ctx context.Context, msgBrokerInput *userin.MsgBrokerCreate) (err error) {
-	input := msgBrokerInput.ToCreateInput()
+	input := msgBrokerInput.ToUpdateInput()
 	domainUser := input.UpdateInputToUserDomain()
 	err = impl.repo.Update(ctx, domainUser, domainUser.ID)
 	if err != nil {

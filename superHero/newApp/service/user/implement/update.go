@@ -24,23 +24,23 @@ func (impl *implementation) Update(ctx context.Context, input *userin.UpdateInpu
 	}()
 	err = impl.validator.Validate(input)
 	if err != nil {
-		fmt.Println("validte", err)
+		fmt.Println("validate", err)
 		return "validate error", err
 	}
 
-	user := userin.UpdateInputToUserDomain(input)
-
+	//user := userin.UpdateInputToUserDomain(input)
+	user := input.UpdateInputToUserDomain()
 	//err = impl.repo.Update(ctx, user, user.ID)
-	if err != nil {
-		// fmt.Println("er")
-		return "", err
-	}
+	//if err != nil {
+	//	// fmt.Println("er")
+	//	return "", err
+	//}
 
 	return user.Name, nil
 }
 
 func (impl *implementation) sendMsgUpdate(input *userin.UpdateInput) (err error) {
-	return impl.MsgSender("update", userin.MsgBrokerCreate{
+	return impl.MsgSender("update", userin.MsgBrokerUpdate{
 		Action:     msgbrokerin.ActionUpdate,
 		ID:             input.ID,
 		Name:           input.Name,

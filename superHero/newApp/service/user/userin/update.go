@@ -7,7 +7,7 @@ import (
 
 type UpdateInput struct {
 	ID         string   `json:"id"`
-	Name       string   `son:"name" validate:"required"`
+	Name       string   `json:"name" validate:"required"`
 	ActualName string   `json:"actual_name" validate:"required"`
 	ActualLastName string `json:"actual_last_name"`
 	Gender     string   `json:"gender"`
@@ -41,7 +41,7 @@ func UpdateInputToUserDomain(input *UpdateInput) (user *domain.UpdateQ) {
 	}
 }
 
-func (input *CreateInput)UpdateInputToUserDomain() (user *domain.UpdateQ) {
+func (input *UpdateInput)UpdateInputToUserDomain() (user *domain.UpdateQ) {
 	return &domain.UpdateQ{
 		ID:             input.ID,
 		Name:           input.Name,

@@ -58,7 +58,7 @@ type MsgBrokerUpdate struct {
 	About          string   `json:"about"`
 }
 
-func (msg MsgBrokerUpdate) ToUpdateInput()(input *UpdateInput) {
+func (msg MsgBrokerCreate) ToUpdateInput()(input *UpdateInput) {
 	input = &UpdateInput{
 		ID:         msg.ID,
 		Name:       msg.Name,

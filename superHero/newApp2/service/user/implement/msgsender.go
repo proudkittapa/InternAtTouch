@@ -18,12 +18,12 @@ func (impl *implementation) MsgSender(topic msgbrokerin.TopicMsgBroker, input in
 			return err
 		}
 	case msgbrokerin.TopicResponseUpdate:
-		err = impl.senderResponseCreate(topic, input)
+		err = impl.senderResponseUpdate(topic, input)
 		if err != nil {
 			return err
 		}
 	case msgbrokerin.TopicResponseDelete:
-		err = impl.senderResponseCreate(topic, input)
+		err = impl.senderResponseDelete(topic, input)
 		if err != nil {
 			return err
 		}
@@ -53,7 +53,7 @@ func (impl *implementation) senderResponseCreate(topic msgbrokerin.TopicMsgBroke
 }
 
 func (impl *implementation) senderResponseUpdate(topic msgbrokerin.TopicMsgBroker, input interface{}) (err error) {
-	create, ok := input.(userin.MsgBrokerCreate) //set data that will be send to kafka
+	create, ok := input.(userin.MsgBrokerUpdate) //set data that will be send to kafka
 	if !ok {
 		return errors.New(InvalidInputTypeErr)
 	}
@@ -71,7 +71,7 @@ func (impl *implementation) senderResponseUpdate(topic msgbrokerin.TopicMsgBroke
 	return
 }
 func (impl *implementation) senderResponseDelete(topic msgbrokerin.TopicMsgBroker, input interface{}) (err error) {
-	create, ok := input.(userin.MsgBrokerCreate) //set data that will be send to kafka
+	create, ok := input.(userin.MsgBrokerDelete) //set data that will be send to kafka
 	if !ok {
 		return errors.New(InvalidInputTypeErr)
 	}
