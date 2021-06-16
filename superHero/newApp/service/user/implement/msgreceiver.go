@@ -63,7 +63,7 @@ func (impl *implementation) receiveUpdateAction(ctx context.Context, msgBrokerIn
 }
 
 func (impl *implementation) receiveDeleteAction(ctx context.Context, msgBrokerInput *userin.MsgBrokerCreate) (err error) {
-	input := msgBrokerInput.ToCreateInput()
+	input := msgBrokerInput.ToDeleteInput()
 	domainUser := input.DeleteInputToUserDomain()
 	err = impl.repo.Delete(ctx, domainUser.ID)
 	if err != nil {
@@ -71,4 +71,4 @@ func (impl *implementation) receiveDeleteAction(ctx context.Context, msgBrokerIn
 	}
 
 	return nil
-}s
+}

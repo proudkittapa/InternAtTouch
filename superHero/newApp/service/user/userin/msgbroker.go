@@ -83,7 +83,7 @@ type MsgBrokerDelete struct {
 	ID string `json:"id"`
 }
 
-func (msg MsgBrokerDelete) ToUpdateInput()(input *DeleteInput) {
+func (msg MsgBrokerCreate) ToDeleteInput()(input *DeleteInput) {
 	input = &DeleteInput{
 		ID: msg.ID,
 	}
