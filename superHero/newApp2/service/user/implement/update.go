@@ -17,7 +17,7 @@ func (impl *implementation) Update(ctx context.Context, input *userin.UpdateInpu
 
 	user := userin.UpdateInputToUserDomain(input)
 
-	err = impl.repo.Update(ctx, user, user.ID)
+	//err = impl.repo.Update(ctx, user, user.ID)
 	if err != nil {
 		// fmt.Println("er")
 		return "", err

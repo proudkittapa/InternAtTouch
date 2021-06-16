@@ -6,6 +6,7 @@ services: # each service run simultaneously (parallel)
     depends_on:
       - "mongodb"
       - "kafka"
+      - "elas"
     restart: always
     ports:
       - 8080:8080
@@ -20,7 +21,7 @@ services: # each service run simultaneously (parallel)
   my-app2:
     image: app3:1.15
     depends_on:
-      - "mongodb"
+      - "elas"
       - "kafka"
     restart: always
     environment: # variable of the server or OS
