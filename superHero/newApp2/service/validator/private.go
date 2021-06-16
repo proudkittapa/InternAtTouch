@@ -3,7 +3,6 @@ package validator
 import (
 	"context"
 	"fmt"
-	"log"
 	"regexp"
 
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/domain"
@@ -26,7 +25,7 @@ func (v *GoPlayGroundValidator) checkTH(structLV validator.StructLevel, name str
 	}
 }
 
-func (v *GoPlayGroundValidator) checkUserNameUnique(ctx context.Context, structLV validator.StructLevel, name string) (user *domain.InsertQ) {
+func (v *GoPlayGroundValidator) checkUserNameUnique(ctx context.Context, structLV validator.StructLevel, name string) (user *domain.UpdateStruct) {
 	//a, err := v.userRepo.CheckExistName(ctx, name)
 	//if err != nil {
 	//	structLV.ReportError(err, "err validation", "err validation", "error from database", "")
@@ -37,7 +36,7 @@ func (v *GoPlayGroundValidator) checkUserNameUnique(ctx context.Context, structL
 	return user
 }
 
-func (v *GoPlayGroundValidator) checkUserActualNameUnique(ctx context.Context, structLV validator.StructLevel, name string) (user *domain.InsertQ) {
+func (v *GoPlayGroundValidator) checkUserActualNameUnique(ctx context.Context, structLV validator.StructLevel, name string) (user *domain.UpdateStruct) {
 	//a, _ := v.userRepo.CheckExistActualName(ctx, name)
 	//// if err != nil {
 	//// 	structLV.ReportError(err, "err validation", "err validation", "error from database", "")
@@ -48,7 +47,7 @@ func (v *GoPlayGroundValidator) checkUserActualNameUnique(ctx context.Context, s
 	return user
 }
 
-func (v *GoPlayGroundValidator) checkUserNameUniqueUpdate(ctx context.Context, structLV validator.StructLevel, name string, actualName string, id string) (user *domain.UpdateQ) {
+func (v *GoPlayGroundValidator) checkUserNameUniqueUpdate(ctx context.Context, structLV validator.StructLevel, name string, actualName string, id string) (user *domain.UpdateStruct) {
 	//n, err := v.userRepo.CheckExistName(ctx, name)
 	//log.Println("qq", err)
 	//an, _ := v.userRepo.CheckExistActualName(ctx, actualName)
