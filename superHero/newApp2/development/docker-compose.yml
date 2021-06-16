@@ -100,6 +100,7 @@ services: # each service run simultaneously (parallel)
     #      - data01:/usr/share/elasticsearch/data
     ports:
       - 9200:9200
+    restart: always
 
 
   kibana:
