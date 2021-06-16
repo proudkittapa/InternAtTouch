@@ -33,4 +33,6 @@ type UpdateStruct struct {
 	About			string	 `bson:"about" json:"about"`
 }
 
-
+type DeleteQ struct {
+	ID string `bson:"_id" json:"id"`
+}

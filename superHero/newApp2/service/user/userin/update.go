@@ -21,8 +21,8 @@ type UpdateInput struct {
 	About          string   `json:"about"`
 }
 
-func UpdateInputToUserDomain(input *UpdateInput) (user *domain.UpdateQ) {
-	return &domain.UpdateQ{
+func UpdateInputToUserDomain(input *UpdateInput) (user *domain.UpdateStruct) {
+	return &domain.UpdateStruct{
 		ID:             input.ID,
 		Name:           input.Name,
 		ActualName:     input.ActualName,
