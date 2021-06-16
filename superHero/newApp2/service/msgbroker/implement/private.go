@@ -10,7 +10,7 @@ import (
 func (impl implementation) newHandler(topic msgbrokerin.TopicMsgBroker) (handler common.Handler) {
 	fmt.Println("enter newHandler", topic)
 	return func(ctx context.Context, msg []byte) {
-		fmt.Println("msg", msg)
+		//fmt.Println("msg", msg)
 		var err error
 		switch topic {
 		case msgbrokerin.TopicCreate:
