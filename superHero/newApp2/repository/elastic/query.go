@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-func (repo *Repository) Insert(ctx context.Context, title domain.UpdateStruct) error{
+func (repo *Repository) Insert(ctx context.Context, title *domain.UpdateStruct) error{
 	out, err := json.Marshal(title)
 	if err != nil {
 		return err
@@ -34,7 +34,7 @@ func (repo *Repository) Insert(ctx context.Context, title domain.UpdateStruct) e
 	return err
 }
 
-func (repo *Repository)Update(ctx context.Context, title domain.UpdateStruct) error{
+func (repo *Repository)Update(ctx context.Context, title *domain.UpdateStruct) error{
 	buf := BuildUpdateRequest(title)
 	res, err := repo.Client.Update(
 		//TODO update to receive the name from config as well
