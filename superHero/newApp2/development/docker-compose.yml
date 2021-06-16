@@ -28,7 +28,7 @@ services: # each service run simultaneously (parallel)
       ELASTIC_ENDPOINT" : "http://localhost:9200"
       ELASTIC_USERNAME : "touch"
       ELASTIC_PASSWORD : "touchja"
-"
+
   zookeeper:
     image: confluentinc/cp-zookeeper:6.1.0
     ports:
