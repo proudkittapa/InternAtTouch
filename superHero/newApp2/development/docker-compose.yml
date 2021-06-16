@@ -17,7 +17,7 @@ services: # each service run simultaneously (parallel)
       MESSAGE_BROKER_ENDPOINT: "kafka:9094"
       MESSAGE_BROKER_GROUP: "my-group"
       MESSAGE_BROKER_VERSION: "2.6.1"
-      ELASTIC_ENDPOINT": "http://localhost:9200"
+      ELASTIC_ENDPOINT: "http://localhost:9200"
       ELASTIC_USERNAME: "touch"
       ELASTIC_PASSWORD: "touchja"
 
@@ -28,7 +28,7 @@ services: # each service run simultaneously (parallel)
       - "kafka"
     restart: always
     environment: # variable of the server or OS
-      ELASTIC_ENDPOINT" : "http://localhost:9200"
+      ELASTIC_ENDPOINT : "http://localhost:9200"
       ELASTIC_USERNAME : "touch"
       ELASTIC_PASSWORD : "touchja"
       MESSAGE_BROKER_BACKOFF_TIME: "2"
