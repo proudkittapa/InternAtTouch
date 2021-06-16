@@ -17,10 +17,8 @@ func (repo *Repository) Insert(ctx context.Context, title *domain.UpdateStruct) 
 
 	var b strings.Builder
 	b.WriteString(string(out))
-
-	// TODO get the id from app 1 that generates that id for mongo DB
 	req := esapi.IndexRequest{
-		Index:      "superhero",
+		Index:      repo.Index,
 		DocumentID: title.ID,
 		Body:       strings.NewReader(b.String()),
 		Refresh:    "true",
@@ -37,8 +35,7 @@ func (repo *Repository) Insert(ctx context.Context, title *domain.UpdateStruct) 
 func (repo *Repository)Update(ctx context.Context, title *domain.UpdateStruct) error{
 	buf := BuildUpdateRequest(title)
 	res, err := repo.Client.Update(
-		//TODO update to receive the name from config as well
-		"superhero", title.ID, &buf,
+		repo.Index, title.ID, &buf,
 		repo.Client.Update.WithContext(ctx),
 		repo.Client.Update.WithPretty())
 
@@ -64,7 +61,7 @@ func (repo *Repository)Update(ctx context.Context, title *domain.UpdateStruct) e
 
 func (repo *Repository)Delete(ctx context.Context, id string) error{
 	req := esapi.DeleteRequest{
-		Index:      "superhero",
+		Index:      repo.Index,
 		DocumentID: id,
 		Refresh:    "true",
 	}

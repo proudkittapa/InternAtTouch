@@ -33,7 +33,7 @@ func newApp(appConfig *config.Config) (*app.App) {
 	//ctx := context.Background()
 	//uRepo, err := userRepo.New(ctx, appConfig.MongoDBEndpoint, appConfig.MongoDBName, appConfig.MongoDBHeroTableName)
 	//panicIfErr(err)
-	elasRepo, err := elasRepo.New(appConfig.ElasticDBEndpoint, appConfig.ElasticDBUsername, appConfig.ElasticDBPassword)
+	elasRepo, err := elasRepo.New(appConfig.ElasticDBEndpoint, appConfig.ElasticDBUsername, appConfig.ElasticDBPassword, "superhero")
 	kRepo, err := kafka.New(configKafka(appConfig))
 	panicIfErr(err)
 	validator := validatorService.New(elasRepo)

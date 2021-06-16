@@ -6,9 +6,10 @@ import (
 
 type Repository struct{
 	Client 	*elasticsearch.Client
+	Index 	string
 }
 
-func New(uri string, username string, password string)(repo *Repository, err error) {
+func New(uri string, username string, password string, indexName string)(repo *Repository, err error) {
 	cfg := elasticsearch.Config{
 		Addresses: []string{
 			uri,
@@ -20,5 +21,6 @@ func New(uri string, username string, password string)(repo *Repository, err err
 	es, err := elasticsearch.NewClient(cfg)
 	repo = &Repository{}
 	repo.Client = es
+	repo.Index = indexName
 	return repo , err
 }
