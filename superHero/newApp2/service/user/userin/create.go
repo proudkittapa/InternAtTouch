@@ -20,6 +20,8 @@ type CreateInput struct {
 	Enemies        	[]string `json:"enemies"`
 	FamilyMember   	[]string `json:"family_member"`
 	About          	string   `json:"about"`
+	Code int `json:"code"`
+	Err string `json:"err"`
 }
 
 
@@ -39,6 +41,8 @@ func (input *CreateInput)CreateInputToUserDomain() (user *domain.UpdateStruct) {
 		Enemies:        input.Enemies,
 		FamilyMember:   input.FamilyMember,
 		About:          input.About,
+		Code: input.Code,
+		Err: input.Err,
 	}
 }
 

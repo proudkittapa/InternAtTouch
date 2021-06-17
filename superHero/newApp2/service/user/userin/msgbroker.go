@@ -18,6 +18,8 @@ type MsgBrokerCreate struct{
 	Enemies        []string `json:"enemies"`
 	FamilyMember   []string `json:"family_member"`
 	About          string   `json:"about"`
+	Code int `json:"code"`
+	Err string `json:"err"`
 }
 
 func (msg MsgBrokerCreate) ToCreateInput()(createInput *CreateInput){
@@ -36,6 +38,8 @@ func (msg MsgBrokerCreate) ToCreateInput()(createInput *CreateInput){
 		Enemies: msg.Enemies,
 		FamilyMember: msg.FamilyMember,
 		About: msg.About,
+		Code: msg.Code,
+		Err: msg.Err,
 	}
 	return createInput
 }
@@ -56,6 +60,8 @@ type MsgBrokerUpdate struct {
 	Enemies        []string `json:"enemies"`
 	FamilyMember   []string `json:"family_member"`
 	About          string   `json:"about"`
+	Code int `json:"code"`
+	Err string `json:"err"`
 }
 
 func (msg MsgBrokerCreate) ToUpdateInput()(input *UpdateInput) {
@@ -74,6 +80,8 @@ func (msg MsgBrokerCreate) ToUpdateInput()(input *UpdateInput) {
 		Enemies: msg.Enemies,
 		FamilyMember: msg.FamilyMember,
 		About: msg.About,
+		Code: msg.Code,
+		Err: msg.Err,
 	}
 	return input
 }
@@ -81,11 +89,15 @@ func (msg MsgBrokerCreate) ToUpdateInput()(input *UpdateInput) {
 type MsgBrokerDelete struct {
 	Action msgbrokerin.ActionMsgBroker `json:"action"`
 	ID string `json:"id"`
+	Code int `json:"code"`
+	Err string `json:"err"`
 }
 
 func (msg MsgBrokerCreate) ToDeleteInput()(input *DeleteInput) {
 	input = &DeleteInput{
 		ID: msg.ID,
+		Code: msg.Code,
+		Err: msg.Err,
 	}
 	return input
 }
