@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp2/domain"
+	"log"
 )
 
 func BuildUpdateRequest(t *domain.UpdateStruct) (buf bytes.Buffer, err error) {

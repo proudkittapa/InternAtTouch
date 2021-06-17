@@ -13,6 +13,7 @@ type Repository interface {
 	Delete(ctx context.Context, id string) error
 	CheckExistName(ctx context.Context, name string) (bool, error)
 	CheckExistActualName(ctx context.Context, actualName string) (bool, error)
+	View(id string, ctx context.Context) (a domain.InsertStruct, err error)
 }
 //	Search(ctx context.Context, s *domain.SearchValue) (result string, err error)
 //	View(ctx context.Context, id string) (a domain.InsertQ, err error)

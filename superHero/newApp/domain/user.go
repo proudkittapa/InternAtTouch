@@ -5,6 +5,5 @@ type User struct {
 }
 
 type SearchValue struct {
-	Type  string `bson:"type"`
 	Value string `bson:"value"`
 }
