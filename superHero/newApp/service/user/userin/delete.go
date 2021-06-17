@@ -6,16 +6,22 @@ import (
 
 type DeleteInput struct {
 	ID string `bson:"_id" json:"id"`
+	Code int `json:"code"`
+	Err string `json:"err"`
 }
 
 func DeleteInputToUserDomain(input *DeleteInput) (user *domain.DeleteQ) {
 	return &domain.DeleteQ{
 		ID: input.ID,
+		Code: input.Code,
+		Err: input.Err,
 	}
 }
 
 func (input *DeleteInput)DeleteInputToUserDomain() (user *domain.DeleteQ) {
 	return &domain.DeleteQ{
 		ID:             input.ID,
+		Code: input.Code,
+		Err: input.Err,
 	}
 }

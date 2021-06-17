@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"fmt"
 	"log"
 )
 
@@ -46,6 +47,7 @@ func (repo *Repository)Search(keyword string,ctx context.Context)(map[string]int
 
 func (repo *Repository)View(id string,ctx context.Context)(map[string]interface{}, error){
 	result, err := repo.query(ctx,buildViewRequest(id))
+	fmt.Println(result)
 	return result, err
 }
 

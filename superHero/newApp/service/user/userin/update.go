@@ -20,6 +20,8 @@ type UpdateInput struct {
 	Enemies        []string `json:"enemies"`
 	FamilyMember   []string `json:"family_member"`
 	About          string   `json:"about"`
+	Code int `json:"code"`
+	Err string `json:"err"`
 }
 
 func UpdateInputToUserDomain(input *UpdateInput) (user *domain.UpdateQ) {
@@ -38,6 +40,8 @@ func UpdateInputToUserDomain(input *UpdateInput) (user *domain.UpdateQ) {
 		Enemies:        input.Enemies,
 		FamilyMember:   input.FamilyMember,
 		About:          input.About,
+		Code: input.Code,
+		Err: input.Err,
 	}
 }
 
@@ -57,5 +61,7 @@ func (input *UpdateInput)UpdateInputToUserDomain() (user *domain.UpdateQ) {
 		Enemies:        input.Enemies,
 		FamilyMember:   input.FamilyMember,
 		About:          input.About,
+		Code: input.Code,
+		Err: input.Err,
 	}
 }
