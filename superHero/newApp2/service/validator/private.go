@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"regexp"
 
-	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/domain"
+	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp2/domain"
 
 	"github.com/go-playground/validator/v10"
 )

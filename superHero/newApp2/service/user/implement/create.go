@@ -3,8 +3,8 @@ package implement
 import (
 	"context"
 	"fmt"
-	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/msgbroker/msgbrokerin"
-	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/user/userin"
+	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp2/service/msgbroker/msgbrokerin"
+	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp2/service/user/userin"
 	"github.com/modern-go/reflect2"
 	"log"
 )

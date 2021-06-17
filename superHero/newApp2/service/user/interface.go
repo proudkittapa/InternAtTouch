@@ -3,7 +3,7 @@ package user
 import (
 	"context"
 
-	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/user/userin"
+	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp2/service/user/userin"
 )
 
 type Service interface {

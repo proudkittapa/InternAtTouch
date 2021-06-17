@@ -1,9 +1,9 @@
 package implement
 
 import (
-	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/user"
-	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/util"
-	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/validator"
+	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp2/service/user"
+	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp2/service/util"
+	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp2/service/validator"
 )
 
 type implementation struct {

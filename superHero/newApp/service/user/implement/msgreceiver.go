@@ -40,17 +40,6 @@ func (impl *implementation) MsgReceiver(ctx context.Context, msg []byte) (err er
 	return
 }
 
-type InternalError struct {
-	Path string
-}
-
-type error interface {
-	Error() string
-}
-
-func (e *InternalError) Error() string {
-	return fmt.Sprintf("parse %v: internal error", e.Path)
-}
 
 func (impl *implementation) receiveCreateAction(ctx context.Context, msgBrokerInput *userin.MsgBrokerCreate) (err error) {
 	input := msgBrokerInput.ToCreateInput()

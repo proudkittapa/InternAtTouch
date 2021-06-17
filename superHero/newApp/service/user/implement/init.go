@@ -12,8 +12,8 @@ import (
 type implementation struct {
 	validator validator.Validator
 	repo      util.Repository
-	mBroker util.RepositoryMsgBroker
-	elasRepo util.RepositoryElas
+	mBroker   util.RepositoryMsgBroker
+	elasRepo  util.RepositoryElas
 }
 
 func New(validator validator.Validator, repo util.Repository, mBroker util.RepositoryMsgBroker, elasRepo util.RepositoryElas) (service user.Service) {
