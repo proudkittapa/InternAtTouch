@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"fmt"
 	"github.com/elastic/go-elasticsearch/v8"
 	"github.com/elastic/go-elasticsearch/v8/esapi"
 	goxid "github.com/touchtechnologies-product/xid"
@@ -100,10 +101,11 @@ func insert(ctx context.Context, es *elasticsearch.Client, title InsertStruct) e
 
 	// Set up the request object.
 	// TODO get the id from app 1 that generates that id for mongo DB
-	initID := goxid.New()
+	ID := goxid.New()
+	initID = ID.Gen()
 	req := esapi.IndexRequest{
 		Index:      "superhero",
-		DocumentID: initID.Gen(),
+		DocumentID: initID,
 		Body:       strings.NewReader(b.String()),
 		Refresh:    "true",
 	}
@@ -192,6 +194,48 @@ func Delete(ctx context.Context, es *elasticsearch.Client, id string) error{
 	return err
 }
 
+func CheckExistID(ctx context.Context, id string, es *elasticsearch.Client) (bool, error) {
+	buf, err := BuildCheckIDRequest(id)
+	if err != nil{
+		return false, err
+	}
+	result, err := query(ctx,buf, es)
+	if result != nil {} // TODO check if exist or not
+
+	return true, err
+}
+
+func query(ctx context.Context,buf bytes.Buffer, es *elasticsearch.Client) (map[string]interface{}, error){
+	var r  map[string]interface{}
+	res, err := es.Search(
+		es.Search.WithContext(ctx),
+		es.Search.WithIndex("superhero"),
+		es.Search.WithBody(&buf),
+		es.Search.WithTrackTotalHits(true),
+		es.Search.WithPretty(),
+	)
+	if err != nil {
+		log.Fatalf("Error getting response: %s", err)
+	}
+	defer res.Body.Close()
+	if res.IsError() {
+		var e map[string]interface{}
+		if err := json.NewDecoder(res.Body).Decode(&e); err != nil {
+			log.Fatalf("Error parsing the response body: %s", err)
+		} else {
+			log.Fatalf("[%s] %s: %s",
+				res.Status(),
+				e["error"].(map[string]interface{})["type"],
+				e["error"].(map[string]interface{})["reason"],
+			)
+		}
+	}
+	if err := json.NewDecoder(res.Body).Decode(&r); err != nil {
+		log.Fatalf("Error parsing the response body: %s", err)
+	}
+	return r, err
+}
+
 func main(){
 	log.SetFlags(0)
 	ctx := context.Background()
@@ -217,8 +261,13 @@ func main(){
 
 	figure := InsertStruct{"Black Panther", "T'challa", "-", "Male", 218048400, 183, []string{"Speed", "Strength"}, true, "Marvel", []string{"Black Pabther", "The Avengers0"}, []string{"Erik Killmonger"}, []string{"Shuri", "T'Chaka"}, "The king the Wakanda"}
 	//figure := UpdateStruct{"c33gl7aciaega3p5gnsg", "Black Panther", "T'challa", "-", "Female", 218048400, 183, []string{"Speed", "Strength"}, true, "Marvel", []string{"Black Pabther", "The Avengers0"}, []string{"Erik Killmonger"}, []string{"Shuri", "T'Chaka"}, "The king the Wakanda"}
-	//insert(ctx, es, figure)
-	update2(ctx, es, figure,  "c33gl7aciaega3p5gnsg")
+	insert(ctx, es, figure)
+	result , err := CheckExistID(ctx, initID, es)
+	fmt.Println(result)
+
+
+
+	//update2(ctx, es, figure,  "c33gl7aciaega3p5gnsg")
 	//Delete(ctx, es, "c33fdpaciaeqk9iid4fg")
 }
 
