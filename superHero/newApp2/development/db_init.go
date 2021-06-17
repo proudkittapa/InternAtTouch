@@ -2,11 +2,15 @@ package main
 
 import (
 	"context"
+	"encoding/json"
+	"github.com/elastic/go-elasticsearch/v8"
+	"github.com/elastic/go-elasticsearch/v8/esapi"
 	goxid "github.com/touchtechnologies-product/xid"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
+	"strings"
 	"time"
 )
 
@@ -33,12 +37,26 @@ var Sp_list =  []Sp{
 	{"Captain America", "Steve Rogers", "Male", -1625097600, 188, []string{"Immunity", "Strength"}, true},
 }
 
+func initDb(uri string, username string, password string)(*elasticsearch.Client, error){
+	cfg := elasticsearch.Config{
+		Addresses: []string{
+			uri,
+		},
+		Username: username,
+		Password: password,
+	}
+	es, err := elasticsearch.NewClient(cfg)
+
+	return es,err
+}
+
 func main(){
 	uri := "mongodb://touch:touchja@localhost:27017"
 	client, err := mongo.NewClient(options.Client().ApplyURI(uri))
 	collection := client.Database("superhero").Collection("lists")
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 	err = client.Connect(ctx)
+	es, err := initDb("http://localhost:9200", "touch", "touchja" )
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -65,6 +83,30 @@ func main(){
 		if err != nil {
 			log.Fatal(err)
 		}
+
+		out, err := json.Marshal(v)
+		if err != nil {
+			panic (err)
+		}
+
+		var b strings.Builder
+		b.WriteString(string(out))
+
+		// Set up the request object.
+		req := esapi.IndexRequest{
+			Index:      "superhero",
+			DocumentID: idGen,
+			Body:       strings.NewReader(b.String()),
+			Refresh:    "true",
+		}
+
+		// Perform the request with the client.
+		res, err := req.Do(context.Background(), es)
+		if err != nil {
+			log.Fatalf("Error getting response: %s", err)
+		}
+		defer res.Body.Close()
+
 
 	}
 	_, err = collection.Indexes().CreateOne(
