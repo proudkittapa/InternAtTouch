@@ -11,6 +11,8 @@ type Repository interface {
 	Insert(ctx context.Context, title *domain.UpdateStruct) error
 	Update(ctx context.Context, title *domain.UpdateStruct) error
 	Delete(ctx context.Context, id string) error
+	CheckExistName(ctx context.Context, name string) (bool, error)
+	CheckExistActualName(ctx context.Context, actualName string) (bool, error)
 }
 //	Search(ctx context.Context, s *domain.SearchValue) (result string, err error)
 //	View(ctx context.Context, id string) (a domain.InsertQ, err error)

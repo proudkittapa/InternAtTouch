@@ -50,12 +50,18 @@ func (impl *implementation) receiveCreateAction(ctx context.Context, msgBrokerIn
 	domainUser := input.CreateInputToUserDomain()
 	fmt.Println("reached receive create action")
 	//err = impl.repo.Create(ctx, domainUser)
+	err = impl.validator.Validate(input)
+	if err!= nil{
+		return err
+	}
 	err = impl.repo.Insert(ctx, domainUser)
 	input.Err = err
 	if err == nil{
 		input.Code = 200
+		return err
 	}else{
 		input.Code = 422
+		return err
 	}
 	defer func(){
 		if !reflect2.IsNil(err){
@@ -74,6 +80,10 @@ func (impl *implementation) receiveUpdateAction(ctx context.Context, msgBrokerIn
 	input := msgBrokerInput.ToUpdateInput()
 	domainUser := input.UpdateInputToUserDomain()
 	fmt.Println("reached receive Update action")
+	err = impl.validator.Validate(input)
+	if err!= nil{
+		return err
+	}
 	err = impl.repo.Update(ctx, domainUser)
 	input.Err = err
 	if err == nil{
