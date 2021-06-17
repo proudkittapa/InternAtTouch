@@ -55,7 +55,7 @@ func (v *GoPlayGroundValidator) checkUserNameUniqueUpdate(ctx context.Context, s
 	log.Println("qq1")
 	if n == true { //jer name
 		if an == true { //
-			temp, _ := v.elasRepo.View(ctx, id)
+			temp, _ := v.elasRepo.View(id, ctx)
 			if temp.Name != name {
 				structLV.ReportError(actualName, "actual_name", "actual_name", "unique", "")
 			}
@@ -63,7 +63,7 @@ func (v *GoPlayGroundValidator) checkUserNameUniqueUpdate(ctx context.Context, s
 	}
 	if an == true { //jer name
 		if n == true { //
-			temp, _ := v.elasRepo.View(ctx, id)
+			temp, _ := v.elasRepo.View(id, ctx)
 			if temp.ActualName != actualName {
 				structLV.ReportError(name, "name", "name", "unique", "")
 			}

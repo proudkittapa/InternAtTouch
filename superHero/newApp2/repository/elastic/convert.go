@@ -1,4 +1,12 @@
 package elastic
+
+import (
+	"fmt"
+	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp2/domain"
+	"strconv"
+	"strings"
+)
+
 func InToStruct(r map[string]interface{}) domain.InsertStruct{
 	var temp domain.InsertStruct
 		s := r["hits"].(map[string]interface{})["hits"].(map[string]interface{})["_source"]
