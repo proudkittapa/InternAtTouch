@@ -8,8 +8,6 @@ import (
 	"github.com/elastic/go-elasticsearch/v8"
 	"github.com/elastic/go-elasticsearch/v8/esapi"
 	"log"
-	"strconv"
-
 	//"math/rand"
 	//"strconv"
 
@@ -100,15 +98,30 @@ type last struct{
 //	return buf
 //}
 
-func buildRequest(page int, size int) bytes.Buffer{
+//func buildRequest(page int, size int) bytes.Buffer{
+//	var buf bytes.Buffer
+//	from := (page-1)*size
+//	query := map[string]interface{}{
+//		"from": from,
+//		"size": size,
+//		"query" : map[string]interface{}{
+//			"match": map[string]interface{}{
+//				"_index": "superhero",
+//			},
+//		},
+//	}
+//	if err := json.NewEncoder(&buf).Encode(query); err != nil {
+//		log.Fatalf("Error encoding query: %s", err)
+//	}
+//	return buf
+//}
+
+func buildRequest() bytes.Buffer{
 	var buf bytes.Buffer
-	from := (page-1)*size
 	query := map[string]interface{}{
-		"from": from,
-		"size": size,
-		"query" : map[string]interface{}{
-			"match": map[string]interface{}{
-				"_index": "superhero",
+		"query": map[string]interface{}{
+			"match" : map[string]interface{}{
+				"name" : "Superman",
 			},
 		},
 	}
@@ -117,6 +130,7 @@ func buildRequest(page int, size int) bytes.Buffer{
 	}
 	return buf
 }
+
 //
 func search(ctx context.Context,es *elasticsearch.Client, res *esapi.Response, buf bytes.Buffer, err error){
 	res, err = es.Search(
@@ -143,19 +157,11 @@ func search(ctx context.Context,es *elasticsearch.Client, res *esapi.Response, b
 			)
 		}
 	}
-
-	//s := res.String()
-//a := strings.Split(s,"hits")
-////fmt.Println(s)
-//	var s struct{}
-	//var data map[string]interface{}
-	//json.Unmarshal([]byte(res.String()), &s)
+	fmt.Println(res.String())
 	if err := json.NewDecoder(res.Body).Decode(&r); err != nil {
 		log.Fatalf("Error parsing the response body: %s", err)
 	}
-	//json.Marshal(data)
-	//fmt.Println("asd",s)
-	//fmt.Println(fmt.Sprintf("%v", data))
+
 }
 
 //func add(ctx context.Context,es *elasticsearch.Client, res *esapi.Response, buf bytes.Buffer, err error){
@@ -213,7 +219,7 @@ func main() {
 
 	// Declare empty array for the document string
 	log.Println(strings.Repeat("=", 37))
-	search(ctx, client, res, buildRequest(1, 10), err)
+	search(ctx, client, res, buildRequest(), err)
 	//log.Printf(
 	//	"[%s] %d hits; took: %dms",
 	//	res.Status(),
@@ -222,23 +228,35 @@ func main() {
 	//)
 	// Print the ID and document source for each hit.
 	//
-	var temp InsertStruct
-	var ans []InsertStruct
-	for _, hit := range r["hits"].(map[string]interface{})["hits"].([]interface{}) {
-		s := hit.(map[string]interface{})["_source"]
-		temp.Name = fmt.Sprintf("%v", s.(map[string]interface{})["name"])
-		temp.ActualName = fmt.Sprintf("%v", s.(map[string]interface{})["actual_name"])
-		temp.ActualLastName = fmt.Sprintf("%v", s.(map[string]interface{})["actual_lastname"])
-		temp.Gender = fmt.Sprintf("%v", s.(map[string]interface{})["gender"])
-		temp.BirthDate = int64(s.(map[string]interface{})["birth_date"].(float64))
-		temp.Height,_ = strconv.Atoi(fmt.Sprintf("%v", s.(map[string]interface{})["height"]))
-		temp.SuperPower = strings.Split(fmt.Sprintf("%v", s.(map[string]interface{})["super_power"]),",")
-		temp.Alive,_ = strconv.ParseBool(fmt.Sprintf("%v", s.(map[string]interface{})["alive"]))
-		temp.Universe = fmt.Sprintf("%v", s.(map[string]interface{})["universe"])
-		temp.Movies = strings.Split(fmt.Sprintf("%v", s.(map[string]interface{})["movies"]),",")
-		temp.Enemies = strings.Split(fmt.Sprintf("%v", s.(map[string]interface{})["enemies"]),",")
-		temp.FamilyMember = strings.Split(fmt.Sprintf("%v", s.(map[string]interface{})["family_member"]),",")
-		temp.About = fmt.Sprintf("%v", s.(map[string]interface{})["about"])
-		ans = append(ans, temp)
-		}
+	//var temp InsertStruct
+	//var ans []InsertStruct
+	//for _, hit := range r["hits"].(map[string]interface{})["hits"].([]interface{}) {
+	//	s := hit.(map[string]interface{})["_source"]
+	//	temp.Name = fmt.Sprintf("%v", s.(map[string]interface{})["name"])
+	//	temp.ActualName = fmt.Sprintf("%v", s.(map[string]interface{})["actual_name"])
+	//	temp.ActualLastName = fmt.Sprintf("%v", s.(map[string]interface{})["actual_lastname"])
+	//	temp.Gender = fmt.Sprintf("%v", s.(map[string]interface{})["gender"])
+	//	temp.BirthDate = int64(s.(map[string]interface{})["birth_date"].(float64))
+	//	temp.Height,_ = strconv.Atoi(fmt.Sprintf("%v", s.(map[string]interface{})["height"]))
+	//	temp.SuperPower = strings.Split(fmt.Sprintf("%v", s.(map[string]interface{})["super_power"]),",")
+	//	temp.Alive,_ = strconv.ParseBool(fmt.Sprintf("%v", s.(map[string]interface{})["alive"]))
+	//	temp.Universe = fmt.Sprintf("%v", s.(map[string]interface{})["universe"])
+	//	temp.Movies = strings.Split(fmt.Sprintf("%v", s.(map[string]interface{})["movies"]),",")
+	//	temp.Enemies = strings.Split(fmt.Sprintf("%v", s.(map[string]interface{})["enemies"]),",")
+	//	temp.FamilyMember = strings.Split(fmt.Sprintf("%v", s.(map[string]interface{})["family_member"]),",")
+	//	temp.About = fmt.Sprintf("%v", s.(map[string]interface{})["about"])
+	//	ans = append(ans, temp)
+	//	}
+	//fmt.Println(r)
+
+	a := int((r["hits"].(map[string]interface{})["total"].(map[string]interface{})["value"]).(float64))
+	fmt.Println(a)
+if a == 0{
+	fmt.Println("pond")
+} else{
+	fmt.Println("gun")
+}
+
+
+	//}
 }
