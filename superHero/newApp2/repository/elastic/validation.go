@@ -2,24 +2,19 @@ package elastic
 
 import (
 	"context"
-	"fmt"
-	"github.com/elastic/go-elasticsearch/v8/esapi"
 )
 
-func (repo *Repository) checkExistID(ctx context.Context, id string) (bool, error) {
-	req := esapi.ExistsRequest{
-		Index:      repo.Index,
-		DocumentID: id,
-	}
-
-	res, err := req.Do(ctx, repo.Client)
-	fmt.Println("res :" ,  res)
-	if err != nil {
+func (repo *Repository) CheckExistID(ctx context.Context, id string) (bool, error) {
+	buf, err := BuildCheckIDRequest(id)
+	if err != nil{
 		return false, err
 	}
-	defer res.Body.Close()
+	result, err := repo.query(ctx,buf)
+	if result != true {} // TODO check if exist or not
+
 	return true, err
 }
+
 
 func (repo *Repository) CheckExistName(ctx context.Context, name string) (bool, error) {
 	buf, err := BuildCheckNameRequest(name)
