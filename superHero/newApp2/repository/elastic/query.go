@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"fmt"
 	"github.com/elastic/go-elasticsearch/v8/esapi"
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/domain"
 	"log"
@@ -103,6 +104,7 @@ func (repo *Repository)Delete(ctx context.Context, id string) error{
 	}
 
 	res, err := req.Do(ctx, repo.Client)
+	fmt.Println("delete  :",  res)
 	if err != nil {
 		log.Fatalf("Error getting response: %s", err)
 	}
