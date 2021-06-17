@@ -113,4 +113,10 @@ func (repo *Repository)Delete(ctx context.Context, id string) error{
 	return err
 }
 
+func (repo *Repository)View(id string,ctx context.Context)(domain.InsertStruct, error){
+	q, err := repo.query(ctx,buildViewRequest(id))
+	result := InToStruct(q)
+	return result, err
+}
+
 
