@@ -1,4 +1,4 @@
-module github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp
+module github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp2
 
 go 1.16
 

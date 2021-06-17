@@ -23,6 +23,9 @@ type RepositoryElas interface {
 	Search(keyword string, ctx context.Context) ([]domain.InsertStruct, error)
 	View(id string, ctx context.Context) ([]domain.InsertStruct, error)
 	ViewAll(page int, size int, ctx context.Context) ([]domain.InsertStruct, error)
+	//Create(ctx context.Context, ent interface{}) (err error)
+	//Update(ctx context.Context, ent interface{}, ID string) (err error)
+	//Delete(ctx context.Context, id string) (err error)
 }
 
 type RepositoryUsers interface{

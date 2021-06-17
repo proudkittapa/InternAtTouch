@@ -1,5 +1,10 @@
 package main
 
+import (
+	"bytes"
+	"encoding/json"
+)
+
 type InsertStruct struct {
 	Name      		string   `bson:"name" json:"name" validate:"required"`
 	ActualName 		string   `bson:"actual_name" json:"actual_name"`
@@ -46,3 +51,59 @@ var SpList =  []InsertStruct{
 	{"Captain America", "Steve", "Rogers", "Male", -1625097600, 188, []string{"Immunity", "Strength"}, true, "Marvel", []string{"Captain America", "The Avengers"}, []string{"Red Skull", "Thanos"}, []string{"Michael Rogers"}, "A witch who become superhero."},
 }
 
+
+func BuildCheckIndexRequest(indexname string)  (buf bytes.Buffer, err error) {
+	query := map[string]interface{}{
+		"query" : map[string]interface{}{
+			"exists": map[string]interface{}{
+				"_index": indexname,
+			},
+		},
+	}
+	if err := json.NewEncoder(&buf).Encode(query); err != nil {
+		return buf , err
+	}
+	return buf , err
+}
+
+func BuildCheckIDRequest(id string)  (buf bytes.Buffer, err error) {
+	query := map[string]interface{}{
+		"query" : map[string]interface{}{
+			"exists": map[string]interface{}{
+				"_id": id,
+			},
+		},
+	}
+	if err := json.NewEncoder(&buf).Encode(query); err != nil {
+		return buf , err
+	}
+	return buf , err
+}
+
+func BuildCheckNameRequest(name string)  (buf bytes.Buffer, err error) {
+	query := map[string]interface{}{
+		"query" : map[string]interface{}{
+			"exists": map[string]interface{}{
+				"name": name,
+			},
+		},
+	}
+	if err := json.NewEncoder(&buf).Encode(query); err != nil {
+		return buf , err
+	}
+	return buf , err
+}
+
+func BuildCheckActualNameRequest(actualName string)  (buf bytes.Buffer, err error) {
+	query := map[string]interface{}{
+		"query" : map[string]interface{}{
+			"exists": map[string]interface{}{
+				"actual_name": actualName,
+			},
+		},
+	}
+	if err := json.NewEncoder(&buf).Encode(query); err != nil {
+		return buf , err
+	}
+	return buf , err
+}
