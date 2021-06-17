@@ -43,19 +43,19 @@ func (repo *Repository)query(ctx context.Context,buf bytes.Buffer) (map[string]i
 }
 
 func (repo *Repository)Search(keyword string,ctx context.Context)([]domain.InsertStruct, error){
-	result, err := repo.query(ctx,buildSearchRequest(keyword))
-	result = InToStruct(result)
+	q, err := repo.query(ctx,buildSearchRequest(keyword))
+	result := InToStruct(q)
 	return result, err
 }
 
 func (repo *Repository)View(id string,ctx context.Context)([]domain.InsertStruct, error){
-	result, err := repo.query(ctx,buildViewRequest(id))
-	result = InToStruct(result)
+	q, err := repo.query(ctx,buildViewRequest(id))
+	result := InToStruct(q)
 	return result, err
 }
 
 func (repo *Repository)ViewAll(page int, size int,ctx context.Context)([]domain.InsertStruct, error){
-	result, err := repo.query(ctx,buildViewAllRequest(page, size))
-	result = InToStruct(result)
+	q, err := repo.query(ctx,buildViewAllRequest(page, size))
+	result := InToStruct(q)
 	return result, err
 }
