@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/msgbroker/msgbrokerin"
-	"github.com/modern-go/reflect2"
 	"log"
+	"time"
 
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/user/userin"
 	// "github.com/touchtechnologies-product/go-blueprint-clean-architecture/service/util"
@@ -14,25 +14,28 @@ import (
 )
 
 func (impl *implementation) Delete(ctx context.Context, input *userin.DeleteInput) (ID string, err error) {
-	defer func(){
-		if !reflect2.IsNil(err){
-			return
-		}
-		if err == impl.sendMsgDelete(input){
-			log.Println(err)
-		}
-	}()
+	//defer func(){
+	//	if !reflect2.IsNil(err){
+	//		return
+	//	}
+	//	if err == impl.sendMsgDelete(input){
+	//		log.Println(err)
+	//	}
+	//}()
 	user := userin.DeleteInputToUserDomain(input)
 	fmt.Println("user input delete:", user)
 
 	//err = impl.repo.Delete(ctx, user.ID)
-	fmt.Println("output del:", user)
-	fmt.Println("err del:", err)
-
+	//fmt.Println("output del:", user)
+	//fmt.Println("err del:", err)
+	if err == impl.sendMsgDelete(input){
+		log.Println(err)
+	}
+	time.Sleep(5 * time.Second)
+	_, err = impl.repo.View(ctx, input.ID)
 	if err != nil {
 		return "", err
 	}
-
 	return user.ID, err
 }
 

@@ -5,20 +5,20 @@ import (
 	"fmt"
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/msgbroker/msgbrokerin"
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/user/userin"
-	"github.com/modern-go/reflect2"
 	"log"
+	"time"
 )
 
 func (impl *implementation) Create(ctx context.Context, input *userin.CreateInput) (ID string, err error) {
 	//var msg []byte
-	defer func(){
-		if !reflect2.IsNil(err){
-			return
-		}
-		if err == impl.sendMsgCreate(input){
-			log.Println(err)
-		}
-	}()
+	//defer func(){
+	//	if !reflect2.IsNil(err){
+	//		return
+	//	}
+	//	if err == impl.sendMsgCreate(input){
+	//		log.Println(err)
+	//	}
+	//}()
 	err = impl.validator.Validate(input)
 	if err != nil {
 		fmt.Println("validate", err)
@@ -32,6 +32,16 @@ func (impl *implementation) Create(ctx context.Context, input *userin.CreateInpu
 	//err = impl.repo.Create(ctx, user)
 	// fmt.Println("output create:", user)
 
+	//if err != nil {
+	//	return "", err
+	//}
+
+	if err == impl.sendMsgCreate(input) {
+		log.Println(err)
+	}
+
+	time.Sleep(5 * time.Second)
+	_, err = impl.repo.View(ctx, input.ID)
 	if err != nil {
 		return "", err
 	}
@@ -41,7 +51,7 @@ func (impl *implementation) Create(ctx context.Context, input *userin.CreateInpu
 
 func (impl *implementation) sendMsgCreate(input *userin.CreateInput) (err error) {
 	return impl.MsgSender("create", userin.MsgBrokerCreate{
-		Action:     msgbrokerin.ActionCreate,
+		Action:         msgbrokerin.ActionCreate,
 		ID:             input.ID,
 		Name:           input.Name,
 		ActualName:     input.ActualName,

@@ -46,23 +46,8 @@ func (impl *implementation) MsgReceiver(ctx context.Context, msg []byte) (err er
 
 
 func (impl *implementation) receiveCreateAction(ctx context.Context, msgBrokerInput *userin.MsgBrokerCreate) (err error) {
+
 	input := msgBrokerInput.ToCreateInput()
-	domainUser := input.CreateInputToUserDomain()
-	fmt.Println("reached receive create action")
-	//err = impl.repo.Create(ctx, domainUser)
-	err = impl.validator.Validate(input)
-	if err!= nil{
-		return err
-	}
-	err = impl.repo.Insert(ctx, domainUser)
-	input.Err = err
-	if err == nil{
-		input.Code = 200
-		return err
-	}else{
-		input.Code = 422
-		return err
-	}
 	defer func(){
 		if !reflect2.IsNil(err){
 			return
@@ -72,6 +57,26 @@ func (impl *implementation) receiveCreateAction(ctx context.Context, msgBrokerIn
 			log.Println(err)
 		}
 	}()
+	domainUser := input.CreateInputToUserDomain()
+	fmt.Println("reached receive create action")
+	//err = impl.repo.Create(ctx, domainUser)
+	err = impl.validator.Validate(input)
+	fmt.Println("err validate", err)
+	if err!= nil{
+		input.Code = 422
+		input.Err = err
+		impl.sendMsgCreate(input)
+		return err
+	}
+	err = impl.repo.Insert(ctx, domainUser)
+	input.Err = err
+	fmt.Println("err app2 insert", input.Err)
+	if err == nil{
+		input.Code = 200
+	}else{
+		input.Code = 422
+	}
+
 
 	return nil
 }
@@ -82,10 +87,13 @@ func (impl *implementation) receiveUpdateAction(ctx context.Context, msgBrokerIn
 	fmt.Println("reached receive Update action")
 	err = impl.validator.Validate(input)
 	if err!= nil{
+		input.Code = 422
+		input.Err = err
 		return err
 	}
 	err = impl.repo.Update(ctx, domainUser)
 	input.Err = err
+	//fmt.Println()
 	if err == nil{
 		input.Code = 200
 	}else{

@@ -44,6 +44,9 @@ func (impl *implementation) MsgReceiver(ctx context.Context, msg []byte) (err er
 func (impl *implementation) receiveCreateAction(ctx context.Context, msgBrokerInput *userin.MsgBrokerCreate) (err error) {
 	input := msgBrokerInput.ToCreateInput()
 	domainUser := input.CreateInputToUserDomain()
+	//if input.Code == 422{
+	//	return input.Err
+	//}
 	err = impl.repo.Create(ctx, domainUser)
 	if err != nil {
 		return err
@@ -55,14 +58,17 @@ func (impl *implementation) receiveCreateAction(ctx context.Context, msgBrokerIn
 func (impl *implementation) receiveUpdateAction(ctx context.Context, msgBrokerInput *userin.MsgBrokerCreate) (err error) {
 	input := msgBrokerInput.ToUpdateInput()
 	domainUser := input.UpdateInputToUserDomain()
-	if input.Code == 200{
-		return input.Err
-	}
+
 	err = impl.repo.Update(ctx, domainUser, domainUser.ID)
+	//if err != nil {
+	//	view.MakeErrResp2(c, 422, err)
+	//	return
+	//}
+	//
+	//view.MakeSuccessResp(c, 200, "created")
 	if err != nil {
 		return err
 	}
-
 	return nil
 }
 
@@ -70,6 +76,12 @@ func (impl *implementation) receiveDeleteAction(ctx context.Context, msgBrokerIn
 	input := msgBrokerInput.ToDeleteInput()
 	domainUser := input.DeleteInputToUserDomain()
 	err = impl.repo.Delete(ctx, domainUser.ID)
+	//if err != nil {
+	//	view.MakeErrResp2(c, 422, err)
+	//	return
+	//}
+	//
+	//view.MakeSuccessResp(c, 200, "created")
 	if err != nil {
 		return err
 	}
