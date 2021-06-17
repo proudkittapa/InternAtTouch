@@ -114,12 +114,3 @@ services: # each service run simultaneously (parallel)
     depends_on:
       - elas
 
-
-#  redis:
-#    image: redis:alpine3.13
-#    container_name: redis
-##    volumes:
-##      - "$PWD/config/redis.conf:/redis.conf"
-#    ports:
-#      - 6379:6379
-
