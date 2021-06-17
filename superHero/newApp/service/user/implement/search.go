@@ -3,6 +3,7 @@ package implement
 import (
 	"context"
 	"fmt"
+	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/domain"
 
 	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/user/userin"
 	// "github.com/touchtechnologies-product/go-blueprint-clean-architecture/service/util"
@@ -10,7 +11,7 @@ import (
 	// "github.com/touchtechnologies-product/go-blueprint-clean-architecture/service/util"
 )
 
-func (impl *implementation) Search(ctx context.Context, input *userin.Search) (map[string]interface{}, error) {
+func (impl *implementation) Search(ctx context.Context, input *userin.Search) ([]domain.InsertStruct, error) {
 	err := impl.validator.Validate(input)
 	if err != nil {
 		fmt.Println("validate", err)

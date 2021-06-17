@@ -1,7 +1,10 @@
 package elastic
 
 import (
+	"fmt"
 	domain "github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/domain"
+	"strconv"
+	"strings"
 )
 func InToStruct(r map[string]interface{}) []domain.InsertStruct{
 	var temp domain.InsertStruct
@@ -23,4 +26,5 @@ func InToStruct(r map[string]interface{}) []domain.InsertStruct{
 		temp.About = fmt.Sprintf("%v", s.(map[string]interface{})["about"])
 		result = append(result, temp)
 	}
+	return result
 }
