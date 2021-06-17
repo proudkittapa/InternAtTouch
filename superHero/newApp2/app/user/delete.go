@@ -3,8 +3,8 @@ package user
 import (
 	"fmt"
 
-	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/app/view"
-	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/user/userin"
+	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp2/app/view"
+	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp2/service/user/userin"
 
 	"github.com/gin-gonic/gin"
 )

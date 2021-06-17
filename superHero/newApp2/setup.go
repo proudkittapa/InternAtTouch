@@ -1,14 +1,14 @@
 package main
 
 import (
-	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/app"
-	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/config"
-	elasRepo "github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/repository/elastic"
-	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/repository/kafka"
-	msgBrokerService "github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/msgbroker/implement"
-	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/msgbroker/msgbrokerin"
-	userService "github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/user/implement"
-	validatorService "github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/service/validator"
+	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp2/app"
+	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp2/config"
+	elasRepo "github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp2/repository/elastic"
+	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp2/repository/kafka"
+	msgBrokerService "github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp2/service/msgbroker/implement"
+	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp2/service/msgbroker/msgbrokerin"
+	userService "github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp2/service/user/implement"
+	validatorService "github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp2/service/validator"
 	"log"
 	"time"
 )

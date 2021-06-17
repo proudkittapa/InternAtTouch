@@ -3,7 +3,7 @@ package elastic
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp/domain"
+	"github.com/gnnchya/InternAtTouch/tree/Develop-optimized/newApp2/domain"
 )
 
 func BuildUpdateRequest(t *domain.UpdateStruct) (buf bytes.Buffer, err error) {
@@ -82,4 +82,19 @@ func BuildCheckActualNameRequest(actualName string)  (buf bytes.Buffer, err erro
 		return buf , err
 	}
 	return buf , err
+}
+
+func buildViewRequest(id string) bytes.Buffer{
+	var buf bytes.Buffer
+	query := map[string]interface{}{
+		"query" : map[string]interface{}{
+			"match": map[string]interface{}{
+				"id": id,
+			},
+		},
+	}
+	if err := json.NewEncoder(&buf).Encode(query); err != nil {
+		log.Fatalf("Error encoding query: %s", err)
+	}
+	return buf
 }
