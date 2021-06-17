@@ -27,5 +27,7 @@ func (impl *implementation) sendMsgDelete(input *userin.DeleteInput) (err error)
 	return impl.MsgSender("responseDelete", userin.MsgBrokerDelete{
 		Action:     msgbrokerin.ActionDeleteResponse,
 		ID:             input.ID,
+		Code: input.Code,
+		Err: input.Err,
 	})
 }

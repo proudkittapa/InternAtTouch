@@ -65,6 +65,8 @@ func (impl *implementation) sendMsgCreate(input *userin.CreateInput) (err error)
 		Enemies:        input.Enemies,
 		FamilyMember:   input.FamilyMember,
 		About:          input.About,
+		Code: input.Code,
+		Err: input.Err,
 	})
 }
 
