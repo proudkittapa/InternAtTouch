@@ -7,7 +7,7 @@ import (
 type DeleteInput struct {
 	ID string `bson:"_id" json:"id"`
 	Code int `json:"code"`
-	Err string `json:"err"`
+	Err error `json:"err"`
 }
 
 func DeleteInputToUserDomain(input *DeleteInput) (user *domain.DeleteQ) {

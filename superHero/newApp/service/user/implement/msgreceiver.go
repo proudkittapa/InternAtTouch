@@ -40,6 +40,18 @@ func (impl *implementation) MsgReceiver(ctx context.Context, msg []byte) (err er
 	return
 }
 
+type InternalError struct {
+	Path string
+}
+
+type error interface {
+	Error() string
+}
+
+func (e *InternalError) Error() string {
+	return fmt.Sprintf("parse %v: internal error", e.Path)
+}
+
 func (impl *implementation) receiveCreateAction(ctx context.Context, msgBrokerInput *userin.MsgBrokerCreate) (err error) {
 	input := msgBrokerInput.ToCreateInput()
 	domainUser := input.CreateInputToUserDomain()
@@ -54,6 +66,9 @@ func (impl *implementation) receiveCreateAction(ctx context.Context, msgBrokerIn
 func (impl *implementation) receiveUpdateAction(ctx context.Context, msgBrokerInput *userin.MsgBrokerCreate) (err error) {
 	input := msgBrokerInput.ToUpdateInput()
 	domainUser := input.UpdateInputToUserDomain()
+	if input.Code == 200{
+		return input.Err
+	}
 	err = impl.repo.Update(ctx, domainUser, domainUser.ID)
 	if err != nil {
 		return err

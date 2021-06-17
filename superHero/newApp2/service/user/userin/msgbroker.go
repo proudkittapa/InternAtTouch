@@ -19,7 +19,7 @@ type MsgBrokerCreate struct{
 	FamilyMember   []string `json:"family_member"`
 	About          string   `json:"about"`
 	Code int `json:"code"`
-	Err string `json:"err"`
+	Err error `json:"err"`
 }
 
 func (msg MsgBrokerCreate) ToCreateInput()(createInput *CreateInput){
@@ -61,7 +61,7 @@ type MsgBrokerUpdate struct {
 	FamilyMember   []string `json:"family_member"`
 	About          string   `json:"about"`
 	Code int `json:"code"`
-	Err string `json:"err"`
+	Err error `json:"err"`
 }
 
 func (msg MsgBrokerCreate) ToUpdateInput()(input *UpdateInput) {
@@ -90,7 +90,7 @@ type MsgBrokerDelete struct {
 	Action msgbrokerin.ActionMsgBroker `json:"action"`
 	ID string `json:"id"`
 	Code int `json:"code"`
-	Err string `json:"err"`
+	Err error `json:"err"`
 }
 
 func (msg MsgBrokerCreate) ToDeleteInput()(input *DeleteInput) {

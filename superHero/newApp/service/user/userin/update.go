@@ -21,7 +21,7 @@ type UpdateInput struct {
 	FamilyMember   []string `json:"family_member"`
 	About          string   `json:"about"`
 	Code int `json:"code"`
-	Err string `json:"err"`
+	Err error `json:"err"`
 }
 
 func UpdateInputToUserDomain(input *UpdateInput) (user *domain.UpdateQ) {

@@ -15,7 +15,7 @@ type InsertStruct struct {
 	FamilyMember	[]string `bson:"family_member" json:"family_member"`
 	About			string	 `bson:"about" json:"about"`
 	Code int `json:"code"`
-	Err string `json:"err"`
+	Err error `json:"err"`
 }
 
 type UpdateStruct struct {
@@ -34,11 +34,11 @@ type UpdateStruct struct {
 	FamilyMember	[]string `bson:"family_member" json:"family_member"`
 	About			string	 `bson:"about" json:"about"`
 	Code int `json:"code"`
-	Err string `json:"err"`
+	Err error `json:"err"`
 }
 
 type DeleteQ struct {
 	ID string `bson:"_id" json:"id"`
 	Code int `json:"code"`
-	Err string `json:"err"`
+	Err error `json:"err"`
 }
