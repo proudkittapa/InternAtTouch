@@ -10,8 +10,10 @@ func (repo *Repository) CheckExistID(ctx context.Context, id string) (bool, erro
 		return false, err
 	}
 	result, err := repo.query(ctx,buf)
-	if result != true {} // TODO check if exist or not
-
+	found := int((result["hits"].(map[string]interface{})["total"].(map[string]interface{})["value"]).(float64))
+	if found == 0 {
+		return false, nil
+	}
 	return true, err
 }
 
@@ -22,8 +24,10 @@ func (repo *Repository) CheckExistName(ctx context.Context, name string) (bool, 
 		return false, err
 	}
 	result, err := repo.query(ctx,buf)
-	if result != nil {} // TODO check if exist or not
-
+	found := int((result["hits"].(map[string]interface{})["total"].(map[string]interface{})["value"]).(float64))
+	if found == 0 {
+		return false, nil
+	}
 	return true, err
 }
 
@@ -33,8 +37,10 @@ func (repo *Repository) CheckExistActualName(ctx context.Context, actualName str
 		return false, err
 	}
 	result, err := repo.query(ctx,buf)
-	if result != nil {} // TODO check if exist or not
-
+	found := int((result["hits"].(map[string]interface{})["total"].(map[string]interface{})["value"]).(float64))
+	if found == 0 {
+		return false, nil
+	}
 	return true, err
 }
 
@@ -44,7 +50,9 @@ func (repo *Repository) CheckExistIndex(ctx context.Context, Indexname string) (
 		return false, err
 	}
 	result, err := repo.query(ctx,buf)
-	if result != nil {} // TODO check if exist or not
-
+	found := int((result["hits"].(map[string]interface{})["total"].(map[string]interface{})["value"]).(float64))
+	if found == 0 {
+		return false, nil
+	}
 	return true, err
 }
