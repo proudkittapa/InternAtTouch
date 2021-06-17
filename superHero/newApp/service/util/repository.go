@@ -20,9 +20,9 @@ type Repository interface {
 }
 
 type RepositoryElas interface {
-	Search(keyword string, ctx context.Context) (map[string]interface{}, error)
-	View(id string, ctx context.Context) (map[string]interface{}, error)
-	ViewAll(page int, size int, ctx context.Context) (map[string]interface{}, error)
+	Search(keyword string, ctx context.Context) ([]domain.InsertStruct, error)
+	View(id string, ctx context.Context) ([]domain.InsertStruct, error)
+	ViewAll(page int, size int, ctx context.Context) ([]domain.InsertStruct, error)
 }
 
 type RepositoryUsers interface{

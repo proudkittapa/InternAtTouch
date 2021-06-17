@@ -44,12 +44,19 @@ func (impl *implementation) MsgReceiver(ctx context.Context, msg []byte) (err er
 	return
 }
 
+
 func (impl *implementation) receiveCreateAction(ctx context.Context, msgBrokerInput *userin.MsgBrokerCreate) (err error) {
 	input := msgBrokerInput.ToCreateInput()
 	domainUser := input.CreateInputToUserDomain()
 	fmt.Println("reached receive create action")
 	//err = impl.repo.Create(ctx, domainUser)
 	err = impl.repo.Insert(ctx, domainUser)
+	input.Err = err
+	if err == nil{
+		input.Code = 200
+	}else{
+		input.Code = 422
+	}
 	defer func(){
 		if !reflect2.IsNil(err){
 			return
@@ -68,6 +75,13 @@ func (impl *implementation) receiveUpdateAction(ctx context.Context, msgBrokerIn
 	domainUser := input.UpdateInputToUserDomain()
 	fmt.Println("reached receive Update action")
 	err = impl.repo.Update(ctx, domainUser)
+	input.Err = err
+	if err == nil{
+		input.Code = 200
+	}else{
+		input.Code = 422
+	}
+
 	defer func(){
 		if !reflect2.IsNil(err){
 			return
@@ -85,7 +99,12 @@ func (impl *implementation) receiveDeleteAction(ctx context.Context, msgBrokerIn
 	domainUser := input.DeleteInputToUserDomain()
 	//fmt.Println("reached receive create action")
 	err = impl.repo.Delete(ctx, domainUser.ID)
-
+	input.Err = err
+	if err == nil{
+		input.Code = 200
+	}else{
+		input.Code = 422
+	}
 	defer func(){
 		if !reflect2.IsNil(err){
 			return
